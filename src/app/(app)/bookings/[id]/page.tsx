@@ -5,6 +5,7 @@ import { requireBusiness } from "@/lib/business";
 import { STATUS_LABEL, staffActions, type BookingStatus } from "@/lib/bookings";
 import { daysInclusive, formatRange } from "@/lib/dates";
 import { formatNad } from "@/lib/money";
+import { quoteTotals } from "@/lib/quotes";
 import type { Booking } from "@/lib/types";
 import { moveBooking } from "../actions";
 
@@ -41,7 +42,7 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
   if (!booking) notFound();
 
   const days = daysInclusive(booking.start_date, booking.end_date);
-  const rentalTotal = booking.booking_items.reduce((sum, bi) => sum + bi.quantity * bi.daily_price * days, 0);
+  const { total } = quoteTotals({ ...booking, lines: booking.booking_items });
   const actions = staffActions(booking.status);
 
   return (
@@ -64,10 +65,19 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
               <span>{formatNad(bi.quantity * bi.daily_price * days)}</span>
             </li>
           ))}
+          {Number(booking.delivery_fee) > 0 && (
+            <li className="flex justify-between"><span>Delivery</span><span>{formatNad(booking.delivery_fee)}</span></li>
+          )}
+          {Number(booking.setup_fee) > 0 && (
+            <li className="flex justify-between"><span>Setup</span><span>{formatNad(booking.setup_fee)}</span></li>
+          )}
+          {Number(booking.discount) > 0 && (
+            <li className="flex justify-between"><span>Discount</span><span>−{formatNad(booking.discount)}</span></li>
+          )}
         </ul>
         <p className="mt-3 flex justify-between border-t border-zinc-200 pt-2 font-semibold">
-          <span>Rental</span>
-          <span>{formatNad(rentalTotal)}</span>
+          <span>Total</span>
+          <span>{formatNad(total)}</span>
         </p>
         <p className="flex justify-between text-zinc-600">
           <span>Deposit</span>

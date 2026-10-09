@@ -31,6 +31,8 @@ Full requirements: [SRS document](https://claude.ai/code/artifact/53bc03dd-b135-
 | **Sign in** | Log in with a one-time email code, then set up your business. |
 | **Inventory** | Add items with a quantity (one listing can cover 300 identical chairs), price per day, deposit, replacement value, units under repair, a low stock warning, and turnaround days for cleaning or setup. |
 | **Bookings** | Staff create bookings for phone, walk-in or WhatsApp customers. They see what is free for the dates first, then accept, decline, cancel (with a reason), check out, return and close. Every change is saved in the booking's history. |
+| **WhatsApp quotes** | Staff build a quote (items, dates, delivery, setup, discount) and send it with one tap on WhatsApp. The customer opens the link without an account, sees the total, deposit and your terms, and accepts or asks a question. Accepting checks the items are still free and turns the quote into a booking request. |
+| **Business details** | Settings page for your WhatsApp number, payment terms, rental terms and how long quotes stay valid. All of these show on quotes. |
 | **Calendar** | Shows how many units of each item are free on each day of the month. Red means fully booked, amber means stock is low. |
 | **No double bookings** | The database refuses to accept a booking if it would leave less than zero units on any day, even if two staff click "accept" at the same moment. Pending requests don't use stock until accepted. |
 
@@ -93,7 +95,7 @@ Nothing is really emailed when running locally:
 | `npm run lint` | Checks code style |
 | `npm run typecheck` | Checks TypeScript types |
 | `npm test` | Runs the unit tests |
-| `npm run test:db` | Checks the booking rules against the **local** database |
+| `npm run test:db` | Checks the booking and quote rules against the **local** database |
 | `npm run db:reset` | Rebuilds the local database from scratch (**deletes local data**) |
 | `npx supabase migration new <name>` | Starts a new database change |
 
@@ -106,8 +108,9 @@ Run `lint`, `typecheck` and `test` before every push.
 1. **Database:** create a Supabase project and push the tables (step 2 of
    [Option A](#option-a-online-database-recommended)).
 2. **Website:** import this repository at [vercel.com/new](https://vercel.com/new)
-   and add the two settings from `.env.example`, using the values from your
-   Supabase project's API settings.
+   and add the settings from `.env.example`, using the values from your
+   Supabase project's API settings. Set `NEXT_PUBLIC_SITE_URL` to your Vercel
+   address so quote links sent on WhatsApp point to it.
 3. **Login links:** in Supabase, go to **Authentication → URL Configuration**:
    - Set **Site URL** to your Vercel address.
    - Add `https://<your-vercel-address>/auth/callback` under **Redirect URLs**.
@@ -139,8 +142,11 @@ Run `lint`, `typecheck` and `test` before every push.
 | `src/app/(app)/calendar` | Month view per item |
 | `src/app/(app)/bookings` | Booking list, new booking, booking page |
 | `src/app/(app)/inventory` | Item list, add and edit |
+| `src/app/(app)/quotes` | Quote list, quote builder, quote page with the WhatsApp button |
+| `src/app/(app)/settings` | Business details shown on quotes |
+| `src/app/q/[token]` | The customer's quote page (no sign-in needed) |
 | `src/components` | Shared UI pieces |
-| `src/lib` | Dates, money, booking states, Supabase clients |
+| `src/lib` | Dates, money, booking states, quote totals, WhatsApp links, Supabase clients |
 | `src/proxy.ts` | Keeps the login fresh; sends signed-out visitors to `/login` |
 | `supabase/migrations` | Database tables, rules and security |
 | `supabase/tests` | Database rule checks (`npm run test:db`) |
@@ -158,6 +164,8 @@ Run `lint`, `typecheck` and `test` before every push.
    changes are allowed. `src/lib/bookings.ts` keeps a copy only to decide
    which buttons to show, and a test fails if the two don't match.
 3. **Every table has row level security:** each business only sees its own data.
+   Customers reach a quote only through its link, using `get_public_quote` and
+   `accept_public_quote`; they can't read any table directly.
 4. **Dates** are stored as `YYYY-MM-DD` in Namibian time. A booking includes
    both its first and last day.
 
@@ -193,12 +201,11 @@ The rest of Phase 1, in SRS order:
 
 | # | Feature | Details | Who |
 | --- | --- | --- | --- |
-| 1 | **Quotes and WhatsApp links** (FR-QT) | Quote builder, public quote page, one-tap WhatsApp share. Accepting a quote turns it into a booking request. | B: `quotes` tables and `accept_quote`. A: builder and public page. |
-| 2 | **Payment records** (FR-PY) | Amounts, methods, deposits taken and returned, and what's due, paid and outstanding on each booking. Recorded only, never collected. | |
-| 3 | **Checkout and return records** (FR-CR) | Counts per item, photos (Supabase Storage), customer confirmation by link, late-return flag. | |
-| 4 | **Scheduled jobs** | Expire unanswered requests after 24 hours (FR-BK-04) and mark overdue bookings (FR-CR-06), e.g. with Supabase Cron. | |
-| 5 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
-| 6 | **More** | Packages (FR-IN-03), item photos, editing a booking's dates or quantities (FR-BK-07), customer list and reports. | |
+| 1 | **Payment records** (FR-PY) | Amounts, methods, deposits taken and returned, and what's due, paid and outstanding on each booking. Recorded only, never collected. | |
+| 2 | **Checkout and return records** (FR-CR) | Counts per item, photos (Supabase Storage), customer confirmation by link, late-return flag. | |
+| 3 | **Scheduled jobs** | Expire unanswered requests after 24 hours (FR-BK-04) and mark overdue bookings (FR-CR-06), e.g. with Supabase Cron. | |
+| 4 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
+| 5 | **More** | Packages (FR-IN-03), item photos, editing a booking's dates or quantities (FR-BK-07), customer list and reports. | |
 
 After that, test it with 2 or 3 real hire businesses before starting the
 Phase 2 marketplace.

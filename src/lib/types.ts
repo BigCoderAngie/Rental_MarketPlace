@@ -9,6 +9,9 @@ export type Business = {
   towns: string[];
   phone: string | null;
   whatsapp: string | null;
+  quote_validity_days: number;
+  payment_terms: string | null;
+  terms: string | null;
 };
 
 export type Item = {
@@ -39,6 +42,9 @@ export type Booking = {
   start_date: string;
   end_date: string;
   deposit_amount: number;
+  delivery_fee: number;
+  setup_fee: number;
+  discount: number;
   notes: string | null;
   request_expires_at: string | null;
   created_at: string;
@@ -50,4 +56,51 @@ export type AvailabilityRow = {
   in_service: number;
   booked: number;
   available: number;
+};
+
+export type Quote = {
+  id: string;
+  reference: string;
+  public_token: string;
+  business_id: string;
+  customer_name: string;
+  customer_phone: string | null;
+  start_date: string;
+  end_date: string;
+  delivery_fee: number;
+  setup_fee: number;
+  discount: number;
+  deposit_amount: number;
+  notes: string | null;
+  status: "OPEN" | "ACCEPTED" | "CANCELLED";
+  expires_at: string;
+  booking_id: string | null;
+  created_at: string;
+};
+
+/** What get_public_quote() returns for the customer's quote page. */
+export type PublicQuote = {
+  reference: string;
+  status: "OPEN" | "ACCEPTED" | "CANCELLED" | "EXPIRED";
+  customer_name: string;
+  customer_phone: string | null;
+  start_date: string;
+  end_date: string;
+  days: number;
+  delivery_fee: number;
+  setup_fee: number;
+  discount: number;
+  deposit_amount: number;
+  total: number;
+  notes: string | null;
+  expires_at: string;
+  business: {
+    name: string;
+    towns: string[];
+    phone: string | null;
+    whatsapp: string | null;
+    payment_terms: string | null;
+    terms: string | null;
+  };
+  items: { name: string; quantity: number; daily_price: number }[];
 };

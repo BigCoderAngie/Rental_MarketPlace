@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { readLines } from "@/lib/availability";
 import { requireBusiness } from "@/lib/business";
 import type { BookingStatus } from "@/lib/bookings";
 import type { Booking } from "@/lib/types";
@@ -11,10 +12,7 @@ export async function createBooking(formData: FormData) {
   const start = String(formData.get("start_date") ?? "");
   const end = String(formData.get("end_date") ?? "");
 
-  const lines = [...formData.entries()]
-    .filter(([key]) => key.startsWith("qty:"))
-    .map(([key, value]) => ({ item_id: key.slice(4), quantity: Number(value) }))
-    .filter((line) => Number.isInteger(line.quantity) && line.quantity > 0);
+  const lines = readLines(formData);
 
   const back = (error: string) =>
     redirect(`/bookings/new?${new URLSearchParams({ start, end, error })}`);

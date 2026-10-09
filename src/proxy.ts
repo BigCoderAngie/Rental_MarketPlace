@@ -2,7 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { supabaseEnv } from "@/lib/supabase/env";
 
-const PUBLIC_PATHS = ["/login", "/auth"];
+// Signed-out visitors may open these; /q/ is the customer's quote link.
+const PUBLIC_PATHS = ["/login", "/auth", "/q/"];
 
 // Refreshes the Supabase session on every request and sends signed-out
 // visitors to the login page.
