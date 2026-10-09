@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { describeReturn, photoPath, readReturnLines } from "./handovers";
+import { describeReturn, handoverPhotoFolder, readReturnLines } from "./handovers";
 
 describe("handovers", () => {
   it("reads return counts per item", () => {
@@ -20,6 +20,6 @@ describe("handovers", () => {
   });
 
   it("puts photos in the business folder first", () => {
-    expect(photoPath("biz", "bk", "f")).toBe("biz/bk/f.jpg");
+    expect(handoverPhotoFolder("biz", "bk")).toBe("biz/bk");
   });
 });

@@ -40,9 +40,9 @@ export type PublicHandover = {
 
 export const PHOTO_BUCKET = "handover-photos";
 
-/** Storage path for a photo: the business folder first, which storage rules check. */
-export function photoPath(businessId: string, bookingId: string, fileId: string): string {
-  return `${businessId}/${bookingId}/${fileId}.jpg`;
+/** Folder for a booking's condition photos: the business folder first, which storage rules check. */
+export function handoverPhotoFolder(businessId: string, bookingId: string): string {
+  return `${businessId}/${bookingId}`;
 }
 
 /** Return counts read from a form, per item: fine, damaged and missing. */

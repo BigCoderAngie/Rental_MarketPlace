@@ -6,7 +6,7 @@ import { ItemForm } from "../item-form";
 
 export default async function NewItemPage({ searchParams }: PageProps<"/inventory/new">) {
   const { error } = await searchParams;
-  const { supabase } = await requireBusiness();
+  const { supabase, business } = await requireBusiness();
   const { data: categories } = await supabase
     .from("categories")
     .select("slug, name")
@@ -17,7 +17,7 @@ export default async function NewItemPage({ searchParams }: PageProps<"/inventor
     <>
       <PageHeader title="Add item" />
       <ErrorNote message={typeof error === "string" ? error : undefined} />
-      <ItemForm action={createItem} categories={categories ?? []} />
+      <ItemForm action={createItem} categories={categories ?? []} businessId={business.id} />
     </>
   );
 }

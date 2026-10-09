@@ -30,6 +30,7 @@ export type Item = {
   turnaround_days: number;
   low_stock_threshold: number;
   archived: boolean;
+  photo_path: string | null;
 };
 
 export type Category = { slug: string; name: string };
@@ -104,7 +105,7 @@ export type PublicQuote = {
     payment_terms: string | null;
     terms: string | null;
   };
-  items: { name: string; quantity: number; daily_price: number }[];
+  items: { name: string; quantity: number; daily_price: number; photo_path: string | null }[];
 };
 
 /** What get_public_booking() returns for the customer's booking page. */

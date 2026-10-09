@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LinkButton, PageHeader } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { formatNad } from "@/lib/money";
+import { itemPhotoUrl } from "@/lib/item-photos";
 import type { Item } from "@/lib/types";
 
 export default async function InventoryPage() {
@@ -26,7 +27,13 @@ export default async function InventoryPage() {
           {items.map((item) => (
             <li key={item.id}>
               <Link href={`/inventory/${item.id}`} className="flex items-center justify-between gap-3 px-4 py-3">
-                <span>
+                {item.photo_path ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- Supabase Storage URL
+                  <img src={itemPhotoUrl(supabase, item.photo_path)!} alt="" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
+                ) : (
+                  <span className="h-12 w-12 shrink-0 rounded-lg bg-zinc-100" aria-hidden />
+                )}
+                <span className="min-w-0 flex-1">
                   <span className="block font-medium">{item.name}</span>
                   <span className="text-sm text-zinc-600">
                     {formatNad(item.daily_price)} per day
