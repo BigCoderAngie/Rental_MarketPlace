@@ -1,0 +1,2 @@
+-- Runs after migrations on `npm run db:reset`. Categories are seeded by the
+-- migration; businesses and items are created through the app after sign-in.

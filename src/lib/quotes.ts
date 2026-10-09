@@ -1,0 +1,59 @@
+import { daysInclusive, formatRange, type IsoDate } from "./dates";
+import { formatNad } from "./money";
+
+export type QuoteStatus = "OPEN" | "ACCEPTED" | "CANCELLED" | "EXPIRED";
+
+export type QuoteMoney = {
+  start_date: IsoDate;
+  end_date: IsoDate;
+  delivery_fee: number;
+  setup_fee: number;
+  discount: number;
+  lines: { quantity: number; daily_price: number }[];
+};
+
+/** Same sum as quote_total() in the database: rental for every day, plus extras, less discount. */
+export function quoteTotals(q: QuoteMoney) {
+  const days = daysInclusive(q.start_date, q.end_date);
+  const rental = q.lines.reduce((sum, l) => sum + Number(l.quantity) * Number(l.daily_price), 0) * days;
+  const total = Math.max(rental + Number(q.delivery_fee) + Number(q.setup_fee) - Number(q.discount), 0);
+  return { days, rental, total };
+}
+
+/** An open quote past its expiry reads as expired, as on the customer's page. */
+export function effectiveQuoteStatus(status: QuoteStatus, expiresAt: string, now = new Date()): QuoteStatus {
+  return status === "OPEN" && new Date(expiresAt) < now ? "EXPIRED" : status;
+}
+
+/** The pre-filled WhatsApp message that carries the quote link (FR-QT-02). */
+export function quoteMessage(args: {
+  customerName: string;
+  businessName: string;
+  reference: string;
+  start: IsoDate;
+  end: IsoDate;
+  total: number;
+  url: string;
+}): string {
+  const firstName = args.customerName.trim().split(/\s+/)[0];
+  return [
+    `Hi ${firstName}, here is your quote ${args.reference} from ${args.businessName}`,
+    `for ${formatRange(args.start, args.end)}: ${formatNad(args.total)}.`,
+    ``,
+    `View and accept it here: ${args.url}`,
+  ].join("\n");
+}
+
+export const QUOTE_STATUS_LABEL: Record<QuoteStatus, string> = {
+  OPEN: "Open",
+  ACCEPTED: "Accepted",
+  CANCELLED: "Withdrawn",
+  EXPIRED: "Expired",
+};
+
+export const QUOTE_STATUS_TONE: Record<QuoteStatus, string> = {
+  OPEN: "bg-amber-100 text-amber-900",
+  ACCEPTED: "bg-emerald-100 text-emerald-900",
+  CANCELLED: "bg-zinc-200 text-zinc-700",
+  EXPIRED: "bg-zinc-200 text-zinc-700",
+};
