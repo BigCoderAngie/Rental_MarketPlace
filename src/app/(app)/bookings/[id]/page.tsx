@@ -76,6 +76,11 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
         <p className="font-medium">{booking.customers?.full_name}</p>
         <p className="text-sm text-zinc-600">{booking.customers?.phone}</p>
         <p className="mt-2 text-sm">{formatRange(booking.start_date, booking.end_date)} ({days} day{days > 1 ? "s" : ""})</p>
+        {booking.status === "REQUESTED" && booking.request_expires_at && (
+          <p className="mt-2 text-sm font-medium text-amber-800">
+            Accept or decline by {new Date(booking.request_expires_at).toLocaleString("en-NA", { timeZone: "Africa/Windhoek", dateStyle: "medium", timeStyle: "short" })}, or the request expires.
+          </p>
+        )}
         {booking.notes && <p className="mt-2 text-sm text-zinc-600">{booking.notes}</p>}
       </section>
 

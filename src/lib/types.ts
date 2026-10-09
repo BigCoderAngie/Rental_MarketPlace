@@ -11,6 +11,7 @@ export type Business = {
   phone: string | null;
   whatsapp: string | null;
   quote_validity_days: number;
+  request_expiry_hours: number;
   payment_terms: string | null;
   terms: string | null;
 };

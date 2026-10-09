@@ -19,6 +19,7 @@ export async function updateBusiness(formData: FormData) {
       phone: text("phone"),
       whatsapp: text("whatsapp"),
       quote_validity_days: Number(formData.get("quote_validity_days") || 7),
+      request_expiry_hours: Number(formData.get("request_expiry_hours") || 24),
       payment_terms: text("payment_terms"),
       terms: text("terms"),
     })

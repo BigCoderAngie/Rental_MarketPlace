@@ -30,12 +30,12 @@ Full requirements: [SRS document](https://claude.ai/code/artifact/53bc03dd-b135-
 | --- | --- |
 | **Sign in** | Log in with a one-time email code, then set up your business. |
 | **Inventory** | Add items with a quantity (one listing can cover 300 identical chairs), price per day, deposit, replacement value, units under repair, a low stock warning, and turnaround days for cleaning or setup. |
-| **Bookings** | Staff create bookings for phone, walk-in or WhatsApp customers. They see what is free for the dates first, then accept, decline, cancel (with a reason), check out, return and close. Every change is saved in the booking's history. |
+| **Bookings** | Staff create bookings for phone, walk-in or WhatsApp customers. They see what is free for the dates first, then accept, decline, cancel (with a reason), check out, return and close. Requests nobody answers expire after 24 hours (you can change this in Settings). Every change is saved in the booking's history. |
 | **WhatsApp quotes** | Staff build a quote (items, dates, delivery, setup, discount) and send it with one tap on WhatsApp. The customer opens the link without an account, sees the total, deposit and your terms, and accepts or asks a question. Accepting checks the items are still free and turns the quote into a booking request. |
 | **Payment records** | Each booking shows what is due, paid and outstanding, and how much deposit you hold. Staff record payments, refunds, deposits received, returned or kept (with a reason) by cash, EFT, eWallet or card. Mistakes are voided with a reason, never deleted. Recorded only: the money goes to you directly. |
 | **Checkout and return** | At handover, staff count what goes out, tick that they checked the customer's ID, and take condition photos with the phone camera. At return they count, per item, how many came back fine, damaged or missing. Late returns are marked, and every night bookings past their end date that are still out become **Overdue**. |
 | **Customer booking link** | Send the customer their booking on WhatsApp. They see what they booked, what they still owe and the payments you recorded, and can confirm each one. They also see the checkout and return records and tap "This is correct" or say what is wrong. Disputing a return opens a problem on the booking. |
-| **Business details** | Settings page for your WhatsApp number, payment terms, rental terms and how long quotes stay valid. All of these show on quotes. |
+| **Business details** | Settings page for your WhatsApp number, payment terms, rental terms, how long quotes stay valid and how long you have to answer a booking request. |
 | **Calendar** | Shows how many units of each item are free on each day of the month. Red means fully booked, amber means stock is low. |
 | **No double bookings** | The database refuses to accept a booking if it would leave less than zero units on any day, even if two staff click "accept" at the same moment. Pending requests don't use stock until accepted. |
 
@@ -98,7 +98,7 @@ Nothing is really emailed when running locally:
 | `npm run lint` | Checks code style |
 | `npm run typecheck` | Checks TypeScript types |
 | `npm test` | Runs the unit tests |
-| `npm run test:db` | Checks the booking, quote, payment, checkout and return rules against the **local** database |
+| `npm run test:db` | Checks the booking, quote, payment, checkout, return and request expiry rules against the **local** database |
 | `npm run db:reset` | Rebuilds the local database from scratch (**deletes local data**) |
 | `npx supabase migration new <name>` | Starts a new database change |
 
@@ -110,8 +110,9 @@ Run `lint`, `typecheck` and `test` before every push.
 
 1. **Database:** create a Supabase project and push the tables (step 2 of
    [Option A](#option-a-online-database-recommended)).
-   This also creates the photo storage bucket and the nightly overdue check
-   (you can see it in Supabase under **Integrations → Cron**).
+   This also creates the photo storage bucket and two scheduled jobs: the
+   nightly overdue check and a request expiry check every 15 minutes (see
+   them in Supabase under **Integrations → Cron**).
 2. **Website:** import this repository at [vercel.com/new](https://vercel.com/new)
    and add the settings from `.env.example`, using the values from your
    Supabase project's API settings. Set `NEXT_PUBLIC_SITE_URL` to your Vercel
@@ -217,9 +218,8 @@ The rest of Phase 1, in SRS order:
 
 | # | Feature | Details | Who |
 | --- | --- | --- | --- |
-| 1 | **Expire unanswered requests** (FR-BK-04) | After 24 hours, as a nightly or hourly job like the overdue one. | |
-| 2 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
-| 3 | **More** | Packages (FR-IN-03), item photos, editing a booking's dates or quantities (FR-BK-07), customer list and reports. | |
+| 1 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
+| 2 | **More** | Packages (FR-IN-03), item photos, editing a booking's dates or quantities (FR-BK-07), customer list and reports. | |
 
 After that, test it with 2 or 3 real hire businesses before starting the
 Phase 2 marketplace.
