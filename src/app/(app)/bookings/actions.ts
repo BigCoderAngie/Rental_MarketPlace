@@ -56,3 +56,40 @@ export async function moveBooking(id: string, to: BookingStatus, formData: FormD
   revalidatePath(`/bookings/${id}`);
   redirect(error ? `/bookings/${id}?error=${encodeURIComponent(error.message)}` : `/bookings/${id}`);
 }
+
+// FR-PY-01 / FR-PY-02: record money the business received, paid back, or kept.
+export async function recordPayment(bookingId: string, formData: FormData) {
+  const { supabase } = await requireBusiness();
+  const { error } = await supabase.rpc("record_payment", {
+    p_booking_id: bookingId,
+    p_kind: String(formData.get("kind") ?? "RENTAL"),
+    p_amount: Number(formData.get("amount") || 0),
+    p_method: String(formData.get("method") ?? "cash"),
+    p_paid_on: String(formData.get("paid_on") ?? "") || null,
+    p_note: String(formData.get("note") ?? "").trim() || null,
+  });
+
+  revalidatePath("/bookings");
+  revalidatePath(`/bookings/${bookingId}`);
+  redirect(
+    error
+      ? `/bookings/${bookingId}?error=${encodeURIComponent(error.message)}#money`
+      : `/bookings/${bookingId}#money`,
+  );
+}
+
+export async function voidPayment(bookingId: string, paymentId: string, formData: FormData) {
+  const { supabase } = await requireBusiness();
+  const { error } = await supabase.rpc("void_payment", {
+    p_payment_id: paymentId,
+    p_reason: String(formData.get("reason") ?? ""),
+  });
+
+  revalidatePath("/bookings");
+  revalidatePath(`/bookings/${bookingId}`);
+  redirect(
+    error
+      ? `/bookings/${bookingId}?error=${encodeURIComponent(error.message)}#money`
+      : `/bookings/${bookingId}#money`,
+  );
+}

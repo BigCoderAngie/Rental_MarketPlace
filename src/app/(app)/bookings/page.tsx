@@ -4,6 +4,8 @@ import { StatusBadge } from "@/components/status-badge";
 import { requireBusiness } from "@/lib/business";
 import { formatRange } from "@/lib/dates";
 import type { BookingStatus } from "@/lib/bookings";
+import { formatNad } from "@/lib/money";
+import { paymentState, type Balance } from "@/lib/payments";
 
 type Row = {
   id: string;
@@ -33,6 +35,13 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
   const { data: bookings, error } = await query.returns<Row[]>();
   if (error) throw error;
 
+  const { data: balances } = await supabase
+    .from("booking_balances")
+    .select("booking_id, amount_due, amount_paid, outstanding")
+    .in("booking_id", bookings.map((b) => b.id))
+    .returns<(Pick<Balance, "amount_due" | "amount_paid" | "outstanding"> & { booking_id: string })[]>();
+  const balanceById = new Map((balances ?? []).map((b) => [b.booking_id, b]));
+
   return (
     <>
       <PageHeader title="Bookings" action={<LinkButton href="/bookings/new">New booking</LinkButton>} />
@@ -57,6 +66,7 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
                 </span>
                 <span className="block text-sm text-zinc-600">
                   {formatRange(b.start_date, b.end_date)} · {b.reference}
+                  {balanceById.has(b.id) && ` · ${moneyLine(balanceById.get(b.id)!)}`}
                 </span>
                 <span className="block truncate text-sm text-zinc-500">
                   {b.booking_items.map((bi) => `${bi.quantity} × ${bi.items?.name}`).join(", ")}
@@ -68,4 +78,9 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
       )}
     </>
   );
+}
+
+function moneyLine(b: Pick<Balance, "amount_due" | "amount_paid" | "outstanding">) {
+  const state = paymentState(b);
+  return state === "Paid" ? "Paid" : `${formatNad(Math.max(Number(b.outstanding), 0))} outstanding`;
 }

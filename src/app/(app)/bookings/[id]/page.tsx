@@ -6,10 +6,15 @@ import { STATUS_LABEL, staffActions, type BookingStatus } from "@/lib/bookings";
 import { daysInclusive, formatRange } from "@/lib/dates";
 import { formatNad } from "@/lib/money";
 import { quoteTotals } from "@/lib/quotes";
+import type { Balance, Payment } from "@/lib/payments";
+import { siteUrl } from "@/lib/site-url";
 import type { Booking } from "@/lib/types";
 import { moveBooking } from "../actions";
+import { MoneySection } from "./money-section";
 
 type Detail = Booking & {
+  public_token: string;
+  payments: Payment[];
   customers: { full_name: string; phone: string } | null;
   booking_items: { quantity: number; daily_price: number; items: { name: string } | null }[];
   booking_events: { id: number; from_status: BookingStatus | null; to_status: BookingStatus; note: string | null; created_at: string }[];
@@ -31,15 +36,25 @@ const NEEDS_NOTE: BookingStatus[] = ["CANCELLED", "DECLINED", "PROBLEM_OPEN"];
 export default async function BookingPage({ params, searchParams }: PageProps<"/bookings/[id]">) {
   const { id } = await params;
   const { error } = await searchParams;
-  const { supabase } = await requireBusiness();
+  const { supabase, business } = await requireBusiness();
 
   const { data: booking } = await supabase
     .from("bookings")
-    .select("*, customers(full_name, phone), booking_items(quantity, daily_price, items(name)), booking_events(id, from_status, to_status, note, created_at)")
+    .select("*, customers(full_name, phone), booking_items(quantity, daily_price, items(name)), booking_events(id, from_status, to_status, note, created_at), payments(*)")
     .eq("id", id)
     .order("id", { referencedTable: "booking_events" })
+    .order("paid_on", { referencedTable: "payments" })
     .maybeSingle<Detail>();
   if (!booking) notFound();
+
+  const { data: balance } = await supabase
+    .from("booking_balances")
+    .select("*")
+    .eq("booking_id", id)
+    .single<Balance>();
+  const link = `${await siteUrl()}/b/${booking.public_token}`;
+  const firstName = booking.customers?.full_name.split(/\s+/)[0] ?? "";
+  const shareMessage = `Hi ${firstName}, here are the details of your booking ${booking.reference} with ${business.name}: ${link}`;
 
   const days = daysInclusive(booking.start_date, booking.end_date);
   const { total } = quoteTotals({ ...booking, lines: booking.booking_items });
@@ -79,14 +94,19 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
           <span>Total</span>
           <span>{formatNad(total)}</span>
         </p>
-        <p className="flex justify-between text-zinc-600">
-          <span>Deposit</span>
-          <span>{formatNad(booking.deposit_amount)}</span>
-        </p>
-        <p className="mt-2 text-xs text-zinc-500">
-          The customer pays your business directly. Payment records come in the next step of Phase 1.
-        </p>
       </section>
+
+      {balance && (
+        <MoneySection
+          bookingId={booking.id}
+          balance={balance}
+          expectedDeposit={booking.deposit_amount}
+          payments={booking.payments}
+          link={link}
+          shareMessage={shareMessage}
+          customerPhone={booking.customers?.phone}
+        />
+      )}
 
       {actions.length > 0 && (
         <section className="mb-4 space-y-3">

@@ -32,6 +32,8 @@ Full requirements: [SRS document](https://claude.ai/code/artifact/53bc03dd-b135-
 | **Inventory** | Add items with a quantity (one listing can cover 300 identical chairs), price per day, deposit, replacement value, units under repair, a low stock warning, and turnaround days for cleaning or setup. |
 | **Bookings** | Staff create bookings for phone, walk-in or WhatsApp customers. They see what is free for the dates first, then accept, decline, cancel (with a reason), check out, return and close. Every change is saved in the booking's history. |
 | **WhatsApp quotes** | Staff build a quote (items, dates, delivery, setup, discount) and send it with one tap on WhatsApp. The customer opens the link without an account, sees the total, deposit and your terms, and accepts or asks a question. Accepting checks the items are still free and turns the quote into a booking request. |
+| **Payment records** | Each booking shows what is due, paid and outstanding, and how much deposit you hold. Staff record payments, refunds, deposits received, returned or kept (with a reason) by cash, EFT, eWallet or card. Mistakes are voided with a reason, never deleted. Recorded only: the money goes to you directly. |
+| **Customer booking link** | Send the customer their booking on WhatsApp. They see what they booked, what they still owe and the payments you recorded, and can confirm each one. |
 | **Business details** | Settings page for your WhatsApp number, payment terms, rental terms and how long quotes stay valid. All of these show on quotes. |
 | **Calendar** | Shows how many units of each item are free on each day of the month. Red means fully booked, amber means stock is low. |
 | **No double bookings** | The database refuses to accept a booking if it would leave less than zero units on any day, even if two staff click "accept" at the same moment. Pending requests don't use stock until accepted. |
@@ -95,7 +97,7 @@ Nothing is really emailed when running locally:
 | `npm run lint` | Checks code style |
 | `npm run typecheck` | Checks TypeScript types |
 | `npm test` | Runs the unit tests |
-| `npm run test:db` | Checks the booking and quote rules against the **local** database |
+| `npm run test:db` | Checks the booking, quote and payment rules against the **local** database |
 | `npm run db:reset` | Rebuilds the local database from scratch (**deletes local data**) |
 | `npx supabase migration new <name>` | Starts a new database change |
 
@@ -145,6 +147,7 @@ Run `lint`, `typecheck` and `test` before every push.
 | `src/app/(app)/quotes` | Quote list, quote builder, quote page with the WhatsApp button |
 | `src/app/(app)/settings` | Business details shown on quotes |
 | `src/app/q/[token]` | The customer's quote page (no sign-in needed) |
+| `src/app/b/[token]` | The customer's booking page, with payment confirmation (no sign-in needed) |
 | `src/components` | Shared UI pieces |
 | `src/lib` | Dates, money, booking states, quote totals, WhatsApp links, Supabase clients |
 | `src/proxy.ts` | Keeps the login fresh; sends signed-out visitors to `/login` |
@@ -164,10 +167,15 @@ Run `lint`, `typecheck` and `test` before every push.
    changes are allowed. `src/lib/bookings.ts` keeps a copy only to decide
    which buttons to show, and a test fails if the two don't match.
 3. **Every table has row level security:** each business only sees its own data.
-   Customers reach a quote only through its link, using `get_public_quote` and
-   `accept_public_quote`; they can't read any table directly.
+   Customers reach a quote or booking only through its link, using
+   `get_public_quote`, `accept_public_quote`, `get_public_booking` and
+   `confirm_public_payment`; they can't read any table directly.
 4. **Dates** are stored as `YYYY-MM-DD` in Namibian time. A booking includes
    both its first and last day.
+5. **Payments are recorded through `record_payment` and corrected with
+   `void_payment`.** Records are never edited or deleted, and the database
+   refuses refunds above what was paid or deposit returns above what was
+   received.
 
 ---
 
@@ -201,11 +209,10 @@ The rest of Phase 1, in SRS order:
 
 | # | Feature | Details | Who |
 | --- | --- | --- | --- |
-| 1 | **Payment records** (FR-PY) | Amounts, methods, deposits taken and returned, and what's due, paid and outstanding on each booking. Recorded only, never collected. | |
-| 2 | **Checkout and return records** (FR-CR) | Counts per item, photos (Supabase Storage), customer confirmation by link, late-return flag. | |
-| 3 | **Scheduled jobs** | Expire unanswered requests after 24 hours (FR-BK-04) and mark overdue bookings (FR-CR-06), e.g. with Supabase Cron. | |
-| 4 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
-| 5 | **More** | Packages (FR-IN-03), item photos, editing a booking's dates or quantities (FR-BK-07), customer list and reports. | |
+| 1 | **Checkout and return records** (FR-CR) | Counts per item, photos (Supabase Storage), customer confirmation on the booking link, late-return flag. | |
+| 2 | **Scheduled jobs** | Expire unanswered requests after 24 hours (FR-BK-04) and mark overdue bookings (FR-CR-06), e.g. with Supabase Cron. | |
+| 3 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
+| 4 | **More** | Packages (FR-IN-03), item photos, editing a booking's dates or quantities (FR-BK-07), customer list and reports. | |
 
 After that, test it with 2 or 3 real hire businesses before starting the
 Phase 2 marketplace.
