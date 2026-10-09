@@ -33,6 +33,9 @@ export default async function SettingsPage({ searchParams }: PageProps<"/setting
         <Field label="Quotes are valid for (days)">
           <input name="quote_validity_days" type="number" min={1} max={90} defaultValue={business.quote_validity_days} className={inputClass} />
         </Field>
+        <Field label="Answer booking requests within (hours)" hint="Requests you haven't accepted or declined by then expire automatically">
+          <input name="request_expiry_hours" type="number" min={1} max={168} defaultValue={business.request_expiry_hours} className={inputClass} />
+        </Field>
         <Field label="Payment terms" hint="Shown on every quote, for example: 50% to confirm, balance on delivery. EFT or cash.">
           <textarea name="payment_terms" rows={2} defaultValue={business.payment_terms ?? ""} className={inputClass} />
         </Field>

@@ -10,7 +10,7 @@ export async function requireBusiness() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("businesses")
-    .select("id, name, towns, phone, whatsapp, quote_validity_days, payment_terms, terms")
+    .select("id, name, towns, phone, whatsapp, quote_validity_days, request_expiry_hours, payment_terms, terms")
     .order("created_at")
     .limit(1)
     .maybeSingle<Business>();
