@@ -87,6 +87,9 @@ export function staffActions(status: BookingStatus): BookingStatus[] {
   return NEXT_STATUSES[status].filter((s) => !notButtons.includes(s));
 }
 
+/** Bookings whose dates and quantities can still be changed (before checkout). */
+export const EDITABLE_STATUSES: BookingStatus[] = ["REQUESTED", "ACCEPTED", "FEE_PENDING", "CONFIRMED"];
+
 /** A checked-out booking past its end date, even before the nightly job marks it. */
 export function isOverdue(status: BookingStatus, endDate: string, today: string): boolean {
   return status === "OVERDUE" || (status === "CHECKED_OUT" && endDate < today);

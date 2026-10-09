@@ -126,3 +126,28 @@ export async function recordReturn(bookingId: string, formData: FormData) {
   });
   backToBooking(bookingId, error);
 }
+
+// FR-BK-07: new dates and quantities. The database checks the new version
+// fits and refuses the whole change if it doesn't.
+export async function updateBooking(bookingId: string, formData: FormData) {
+  const { supabase } = await requireBusiness();
+  const start = String(formData.get("start_date") ?? "");
+  const end = String(formData.get("end_date") ?? "");
+  const lines = readLines(formData);
+
+  const { error } =
+    lines.length === 0
+      ? { error: { message: "Enter a quantity for at least one item" } }
+      : await supabase.rpc("update_booking", {
+          p_booking_id: bookingId,
+          p_start_date: start,
+          p_end_date: end,
+          p_lines: lines,
+          p_note: String(formData.get("note") ?? "").trim() || null,
+        });
+
+  if (error) {
+    redirect(`/bookings/${bookingId}/edit?${new URLSearchParams({ start, end, error: error.message })}`);
+  }
+  backToBooking(bookingId);
+}

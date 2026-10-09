@@ -5,13 +5,15 @@ import type { AvailabilityRow, Item } from "./types";
 /**
  * The business's items, and for each the lowest number of units free on any
  * day from start to end (plus that item's turnaround days, which a new
- * booking would also hold). Pass end = null to skip the availability lookup.
+ * booking would also hold). Pass end = null to skip the availability lookup,
+ * and excludeBookingId to leave out a booking's own units while editing it.
  */
 export async function itemsWithFreeUnits(
   supabase: SupabaseClient,
   businessId: string,
   start: IsoDate,
   end: IsoDate | null,
+  excludeBookingId?: string,
 ) {
   const { data: items, error } = await supabase
     .from("items")
@@ -29,6 +31,7 @@ export async function itemsWithFreeUnits(
       p_business_id: businessId,
       p_from: start,
       p_to: addDays(end, longestTurnaround),
+      ...(excludeBookingId ? { p_exclude_booking: excludeBookingId } : {}),
     });
     if (rpcError) throw rpcError;
 
