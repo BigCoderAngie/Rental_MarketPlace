@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { readLines } from "@/lib/availability";
+import { readReturnLines } from "@/lib/handovers";
 import { requireBusiness } from "@/lib/business";
 import type { BookingStatus } from "@/lib/bookings";
 import type { Booking } from "@/lib/types";
@@ -92,4 +93,36 @@ export async function voidPayment(bookingId: string, paymentId: string, formData
       ? `/bookings/${bookingId}?error=${encodeURIComponent(error.message)}#money`
       : `/bookings/${bookingId}#money`,
   );
+}
+
+function backToBooking(bookingId: string, error?: { message: string } | null): never {
+  revalidatePath("/bookings");
+  revalidatePath("/calendar");
+  revalidatePath(`/bookings/${bookingId}`);
+  redirect(error ? `/bookings/${bookingId}?error=${encodeURIComponent(error.message)}` : `/bookings/${bookingId}`);
+}
+
+// FR-CR-01 / FR-CR-03: counts handed over, condition photos, ID checked.
+export async function recordCheckout(bookingId: string, formData: FormData) {
+  const { supabase } = await requireBusiness();
+  const { error } = await supabase.rpc("record_checkout", {
+    p_booking_id: bookingId,
+    p_lines: readLines(formData),
+    p_id_checked: formData.get("id_checked") === "on",
+    p_photo_paths: formData.getAll("photo").map(String),
+    p_note: String(formData.get("note") ?? "").trim() || null,
+  });
+  backToBooking(bookingId, error);
+}
+
+// FR-CR-04: per item, how many came back fine, damaged or missing.
+export async function recordReturn(bookingId: string, formData: FormData) {
+  const { supabase } = await requireBusiness();
+  const { error } = await supabase.rpc("record_return", {
+    p_booking_id: bookingId,
+    p_lines: readReturnLines(formData),
+    p_photo_paths: formData.getAll("photo").map(String),
+    p_note: String(formData.get("note") ?? "").trim() || null,
+  });
+  backToBooking(bookingId, error);
 }

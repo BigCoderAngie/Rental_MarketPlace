@@ -6,17 +6,20 @@ import { STATUS_LABEL, staffActions, type BookingStatus } from "@/lib/bookings";
 import { daysInclusive, formatRange } from "@/lib/dates";
 import { formatNad } from "@/lib/money";
 import { quoteTotals } from "@/lib/quotes";
+import { PHOTO_BUCKET, type Handover } from "@/lib/handovers";
 import type { Balance, Payment } from "@/lib/payments";
 import { siteUrl } from "@/lib/site-url";
 import type { Booking } from "@/lib/types";
 import { moveBooking } from "../actions";
+import { HandoverSection } from "./handover-section";
 import { MoneySection } from "./money-section";
 
 type Detail = Booking & {
   public_token: string;
   payments: Payment[];
+  handovers: Handover[];
   customers: { full_name: string; phone: string } | null;
-  booking_items: { quantity: number; daily_price: number; items: { name: string } | null }[];
+  booking_items: { item_id: string; quantity: number; daily_price: number; items: { name: string } | null }[];
   booking_events: { id: number; from_status: BookingStatus | null; to_status: BookingStatus; note: string | null; created_at: string }[];
 };
 
@@ -24,9 +27,6 @@ const ACTION_LABEL: Partial<Record<BookingStatus, string>> = {
   ACCEPTED: "Accept and confirm",
   DECLINED: "Decline",
   CANCELLED: "Cancel booking",
-  CHECKED_OUT: "Mark checked out",
-  OVERDUE: "Mark overdue",
-  RETURNED: "Mark returned",
   PROBLEM_OPEN: "Report a problem",
   CLOSED: "Close booking",
 };
@@ -40,7 +40,7 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
 
   const { data: booking } = await supabase
     .from("bookings")
-    .select("*, customers(full_name, phone), booking_items(quantity, daily_price, items(name)), booking_events(id, from_status, to_status, note, created_at), payments(*)")
+    .select("*, customers(full_name, phone), booking_items(item_id, quantity, daily_price, items(name)), booking_events(id, from_status, to_status, note, created_at), payments(*), handovers(*, handover_lines(*, items(name)), handover_photos(id, storage_path))")
     .eq("id", id)
     .order("id", { referencedTable: "booking_events" })
     .order("paid_on", { referencedTable: "payments" })
@@ -52,6 +52,13 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
     .select("*")
     .eq("booking_id", id)
     .single<Balance>();
+  const photoPaths = booking.handovers.flatMap((h) => h.handover_photos.map((p) => p.storage_path));
+  const photoUrls: Record<string, string> = {};
+  if (photoPaths.length > 0) {
+    const { data: signed } = await supabase.storage.from(PHOTO_BUCKET).createSignedUrls(photoPaths, 3600);
+    for (const s of signed ?? []) if (s.path && s.signedUrl) photoUrls[s.path] = s.signedUrl;
+  }
+
   const link = `${await siteUrl()}/b/${booking.public_token}`;
   const firstName = booking.customers?.full_name.split(/\s+/)[0] ?? "";
   const shareMessage = `Hi ${firstName}, here are the details of your booking ${booking.reference} with ${business.name}: ${link}`;
@@ -107,6 +114,15 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
           customerPhone={booking.customers?.phone}
         />
       )}
+
+      <HandoverSection
+        businessId={business.id}
+        bookingId={booking.id}
+        status={booking.status}
+        bookedItems={booking.booking_items.map((bi) => ({ item_id: bi.item_id, name: bi.items?.name ?? "", quantity: bi.quantity }))}
+        handovers={booking.handovers}
+        photoUrls={photoUrls}
+      />
 
       {actions.length > 0 && (
         <section className="mb-4 space-y-3">

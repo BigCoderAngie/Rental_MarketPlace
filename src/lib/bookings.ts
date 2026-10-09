@@ -77,12 +77,17 @@ export const STATUS_TONE: Record<BookingStatus, string> = {
 };
 
 /**
- * The moves staff can make from the booking page in Phase 1. Accepting runs
- * the double-booking check; FEE_PENDING belongs to marketplace bookings (Phase 2)
- * and EXPIRED is set by the system, not by staff.
+ * The one-tap moves staff can make from the booking page. Accepting runs the
+ * double-booking check; FEE_PENDING belongs to marketplace bookings (Phase 2);
+ * EXPIRED and OVERDUE are set by the system; checkout and return have their
+ * own forms with counts and photos.
  */
 export function staffActions(status: BookingStatus): BookingStatus[] {
-  return NEXT_STATUSES[status].filter(
-    (s) => s !== "FEE_PENDING" && s !== "CONFIRMED" && s !== "EXPIRED",
-  );
+  const notButtons: BookingStatus[] = ["FEE_PENDING", "CONFIRMED", "EXPIRED", "OVERDUE", "CHECKED_OUT", "RETURNED"];
+  return NEXT_STATUSES[status].filter((s) => !notButtons.includes(s));
+}
+
+/** A checked-out booking past its end date, even before the nightly job marks it. */
+export function isOverdue(status: BookingStatus, endDate: string, today: string): boolean {
+  return status === "OVERDUE" || (status === "CHECKED_OUT" && endDate < today);
 }

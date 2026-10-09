@@ -33,7 +33,8 @@ Full requirements: [SRS document](https://claude.ai/code/artifact/53bc03dd-b135-
 | **Bookings** | Staff create bookings for phone, walk-in or WhatsApp customers. They see what is free for the dates first, then accept, decline, cancel (with a reason), check out, return and close. Every change is saved in the booking's history. |
 | **WhatsApp quotes** | Staff build a quote (items, dates, delivery, setup, discount) and send it with one tap on WhatsApp. The customer opens the link without an account, sees the total, deposit and your terms, and accepts or asks a question. Accepting checks the items are still free and turns the quote into a booking request. |
 | **Payment records** | Each booking shows what is due, paid and outstanding, and how much deposit you hold. Staff record payments, refunds, deposits received, returned or kept (with a reason) by cash, EFT, eWallet or card. Mistakes are voided with a reason, never deleted. Recorded only: the money goes to you directly. |
-| **Customer booking link** | Send the customer their booking on WhatsApp. They see what they booked, what they still owe and the payments you recorded, and can confirm each one. |
+| **Checkout and return** | At handover, staff count what goes out, tick that they checked the customer's ID, and take condition photos with the phone camera. At return they count, per item, how many came back fine, damaged or missing. Late returns are marked, and every night bookings past their end date that are still out become **Overdue**. |
+| **Customer booking link** | Send the customer their booking on WhatsApp. They see what they booked, what they still owe and the payments you recorded, and can confirm each one. They also see the checkout and return records and tap "This is correct" or say what is wrong. Disputing a return opens a problem on the booking. |
 | **Business details** | Settings page for your WhatsApp number, payment terms, rental terms and how long quotes stay valid. All of these show on quotes. |
 | **Calendar** | Shows how many units of each item are free on each day of the month. Red means fully booked, amber means stock is low. |
 | **No double bookings** | The database refuses to accept a booking if it would leave less than zero units on any day, even if two staff click "accept" at the same moment. Pending requests don't use stock until accepted. |
@@ -97,7 +98,7 @@ Nothing is really emailed when running locally:
 | `npm run lint` | Checks code style |
 | `npm run typecheck` | Checks TypeScript types |
 | `npm test` | Runs the unit tests |
-| `npm run test:db` | Checks the booking, quote and payment rules against the **local** database |
+| `npm run test:db` | Checks the booking, quote, payment, checkout and return rules against the **local** database |
 | `npm run db:reset` | Rebuilds the local database from scratch (**deletes local data**) |
 | `npx supabase migration new <name>` | Starts a new database change |
 
@@ -109,6 +110,8 @@ Run `lint`, `typecheck` and `test` before every push.
 
 1. **Database:** create a Supabase project and push the tables (step 2 of
    [Option A](#option-a-online-database-recommended)).
+   This also creates the photo storage bucket and the nightly overdue check
+   (you can see it in Supabase under **Integrations → Cron**).
 2. **Website:** import this repository at [vercel.com/new](https://vercel.com/new)
    and add the settings from `.env.example`, using the values from your
    Supabase project's API settings. Set `NEXT_PUBLIC_SITE_URL` to your Vercel
@@ -128,7 +131,7 @@ Run `lint`, `typecheck` and `test` before every push.
 | Part | Tool |
 | --- | --- |
 | Website | [Next.js 16](https://nextjs.org), TypeScript, Tailwind CSS (mobile first) |
-| Database and logins | [Supabase](https://supabase.com) (Postgres, Auth, row level security) |
+| Database and logins | [Supabase](https://supabase.com) (Postgres, Auth, row level security, Storage for photos, Cron for nightly jobs) |
 | Hosting | [Vercel](https://vercel.com) |
 | Tests | Vitest for TypeScript, a SQL script for database rules. Both run on GitHub Actions. |
 
@@ -147,9 +150,9 @@ Run `lint`, `typecheck` and `test` before every push.
 | `src/app/(app)/quotes` | Quote list, quote builder, quote page with the WhatsApp button |
 | `src/app/(app)/settings` | Business details shown on quotes |
 | `src/app/q/[token]` | The customer's quote page (no sign-in needed) |
-| `src/app/b/[token]` | The customer's booking page, with payment confirmation (no sign-in needed) |
+| `src/app/b/[token]` | The customer's booking page, where they confirm payments and handover records (no sign-in needed) |
 | `src/components` | Shared UI pieces |
-| `src/lib` | Dates, money, booking states, quote totals, WhatsApp links, Supabase clients |
+| `src/lib` | Dates, money, booking states, quote totals, handover counts, WhatsApp links, Supabase clients |
 | `src/proxy.ts` | Keeps the login fresh; sends signed-out visitors to `/login` |
 | `supabase/migrations` | Database tables, rules and security |
 | `supabase/tests` | Database rule checks (`npm run test:db`) |
@@ -159,8 +162,8 @@ Run `lint`, `typecheck` and `test` before every push.
 ## Rules to know before changing code
 
 1. **Bookings only change through database functions:** `create_booking`,
-   `accept_booking`, `decline_booking`, `cancel_booking` and
-   `set_booking_status`. The website calls them with `supabase.rpc(...)`.
+   `accept_booking`, `decline_booking`, `cancel_booking`,
+   `record_checkout`, `record_return` and `set_booking_status`. The website calls them with `supabase.rpc(...)`.
    Nobody can edit the bookings table directly, so the double-booking check
    can't be skipped.
 2. **Booking states follow SRS section 4.2.** The database decides which
@@ -168,14 +171,19 @@ Run `lint`, `typecheck` and `test` before every push.
    which buttons to show, and a test fails if the two don't match.
 3. **Every table has row level security:** each business only sees its own data.
    Customers reach a quote or booking only through its link, using
-   `get_public_quote`, `accept_public_quote`, `get_public_booking` and
-   `confirm_public_payment`; they can't read any table directly.
+   `get_public_quote`, `accept_public_quote`, `get_public_booking`,
+   `confirm_public_payment`, `get_public_handovers` and
+   `respond_public_handover`; they can't read any table directly.
 4. **Dates** are stored as `YYYY-MM-DD` in Namibian time. A booking includes
    both its first and last day.
 5. **Payments are recorded through `record_payment` and corrected with
    `void_payment`.** Records are never edited or deleted, and the database
    refuses refunds above what was paid or deposit returns above what was
    received.
+6. **Handover photos live in the private `handover-photos` storage bucket**,
+   in a folder per business and booking (`<business id>/<booking id>/`).
+   The phone uploads them straight to Supabase, so large photos never pass
+   through Vercel. Only that business's staff can open them.
 
 ---
 
@@ -209,10 +217,9 @@ The rest of Phase 1, in SRS order:
 
 | # | Feature | Details | Who |
 | --- | --- | --- | --- |
-| 1 | **Checkout and return records** (FR-CR) | Counts per item, photos (Supabase Storage), customer confirmation on the booking link, late-return flag. | |
-| 2 | **Scheduled jobs** | Expire unanswered requests after 24 hours (FR-BK-04) and mark overdue bookings (FR-CR-06), e.g. with Supabase Cron. | |
-| 3 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
-| 4 | **More** | Packages (FR-IN-03), item photos, editing a booking's dates or quantities (FR-BK-07), customer list and reports. | |
+| 1 | **Expire unanswered requests** (FR-BK-04) | After 24 hours, as a nightly or hourly job like the overdue one. | |
+| 2 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
+| 3 | **More** | Packages (FR-IN-03), item photos, editing a booking's dates or quantities (FR-BK-07), customer list and reports. | |
 
 After that, test it with 2 or 3 real hire businesses before starting the
 Phase 2 marketplace.

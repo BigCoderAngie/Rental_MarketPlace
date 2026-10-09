@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { BOOKING_STATUSES, HOLDS_STOCK, NEXT_STATUSES, staffActions } from "./bookings";
+import { BOOKING_STATUSES, HOLDS_STOCK, NEXT_STATUSES, isOverdue, staffActions } from "./bookings";
 
 const migrationsDir = join(__dirname, "../../supabase/migrations");
 const sql = readdirSync(migrationsDir)
@@ -29,7 +29,16 @@ describe("booking states", () => {
 
   it("offers staff the Phase 1 moves only", () => {
     expect(staffActions("REQUESTED")).toEqual(["ACCEPTED", "DECLINED"]);
-    expect(staffActions("CONFIRMED")).toEqual(["CHECKED_OUT", "CANCELLED"]);
+    expect(staffActions("CONFIRMED")).toEqual(["CANCELLED"]);
+    expect(staffActions("CHECKED_OUT")).toEqual([]);
+    expect(staffActions("RETURNED")).toEqual(["CLOSED", "PROBLEM_OPEN"]);
     expect(staffActions("CLOSED")).toEqual([]);
+  });
+
+  it("flags overdue bookings before the nightly job runs", () => {
+    expect(isOverdue("CHECKED_OUT", "2030-01-09", "2030-01-10")).toBe(true);
+    expect(isOverdue("CHECKED_OUT", "2030-01-10", "2030-01-10")).toBe(false);
+    expect(isOverdue("OVERDUE", "2030-01-12", "2030-01-10")).toBe(true);
+    expect(isOverdue("CONFIRMED", "2030-01-01", "2030-01-10")).toBe(false);
   });
 });

@@ -13,3 +13,17 @@ export async function confirmPayment(token: string, paymentId: string) {
 
   redirect(error ? `/b/${token}?error=${encodeURIComponent(error.message)}` : `/b/${token}`);
 }
+
+// FR-CR-02 / FR-CR-05: the customer agrees with a checkout or return record,
+// or disputes it with a note.
+export async function respondToHandover(token: string, handoverId: string, agree: boolean, formData: FormData) {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("respond_public_handover", {
+    p_token: token,
+    p_handover_id: handoverId,
+    p_agree: agree,
+    p_note: String(formData.get("note") ?? "").trim() || null,
+  });
+
+  redirect(error ? `/b/${token}?error=${encodeURIComponent(error.message)}` : `/b/${token}`);
+}
