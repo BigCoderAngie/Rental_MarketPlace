@@ -2,8 +2,8 @@ import Link from "next/link";
 import { LinkButton, PageHeader } from "@/components/ui";
 import { StatusBadge } from "@/components/status-badge";
 import { requireBusiness } from "@/lib/business";
-import { formatRange } from "@/lib/dates";
-import type { BookingStatus } from "@/lib/bookings";
+import { formatRange, namibiaToday } from "@/lib/dates";
+import { isOverdue, type BookingStatus } from "@/lib/bookings";
 import { formatNad } from "@/lib/money";
 import { paymentState, type Balance } from "@/lib/payments";
 
@@ -40,6 +40,7 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
     .select("booking_id, amount_due, amount_paid, outstanding")
     .in("booking_id", bookings.map((b) => b.id))
     .returns<(Pick<Balance, "amount_due" | "amount_paid" | "outstanding"> & { booking_id: string })[]>();
+  const today = namibiaToday();
   const balanceById = new Map((balances ?? []).map((b) => [b.booking_id, b]));
 
   return (
@@ -62,7 +63,12 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
               <Link href={`/bookings/${b.id}`} className="block px-4 py-3">
                 <span className="flex items-center justify-between gap-2">
                   <span className="font-medium">{b.customers?.full_name}</span>
-                  <StatusBadge status={b.status} />
+                  <span className="flex shrink-0 items-center gap-1">
+                    {b.status === "CHECKED_OUT" && isOverdue(b.status, b.end_date, today) && (
+                      <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-900">Late</span>
+                    )}
+                    <StatusBadge status={b.status} />
+                  </span>
                 </span>
                 <span className="block text-sm text-zinc-600">
                   {formatRange(b.start_date, b.end_date)} · {b.reference}

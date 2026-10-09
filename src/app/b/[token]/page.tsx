@@ -3,12 +3,14 @@ import { notFound } from "next/navigation";
 import { StatusBadge } from "@/components/status-badge";
 import { ErrorNote, secondaryButtonClass } from "@/components/ui";
 import { formatDate, formatRange } from "@/lib/dates";
+import type { PublicHandover } from "@/lib/handovers";
 import { formatNad } from "@/lib/money";
 import { KIND_LABEL, METHOD_LABEL, isOutgoing } from "@/lib/payments";
 import { createClient } from "@/lib/supabase/server";
 import type { PublicBooking } from "@/lib/types";
 import { whatsAppLink } from "@/lib/whatsapp";
 import { confirmPayment } from "./actions";
+import { HandoverRecords } from "./handover-records";
 
 export const metadata: Metadata = {
   title: "Your booking",
@@ -16,7 +18,8 @@ export const metadata: Metadata = {
 };
 
 // The customer's booking page: what they booked, what they owe, and the
-// payments the business recorded, each of which they can confirm (FR-PY-04).
+// payments the business recorded, each of which they can confirm (FR-PY-04),
+// and the checkout and return records they can agree with or dispute (FR-CR).
 export default async function PublicBookingPage({ params, searchParams }: PageProps<"/b/[token]">) {
   const { token } = await params;
   const { error } = await searchParams;
@@ -26,6 +29,10 @@ export default async function PublicBookingPage({ params, searchParams }: PagePr
   if (lookupError) throw lookupError;
   const booking = data as PublicBooking | null;
   if (!booking) notFound();
+
+  const { data: handoverData, error: handoverError } = await supabase.rpc("get_public_handovers", { p_token: token });
+  if (handoverError) throw handoverError;
+  const handovers = (handoverData ?? []) as PublicHandover[];
 
   const b = booking.business;
   const contact = b.whatsapp ?? b.phone;
@@ -113,6 +120,8 @@ export default async function PublicBookingPage({ params, searchParams }: PagePr
           </p>
         </section>
       )}
+
+      <HandoverRecords token={token} businessName={b.name} records={handovers} />
 
       {b.payment_terms && (
         <p className="mt-4 text-sm text-zinc-700"><span className="font-medium">Payment: </span>{b.payment_terms}</p>
