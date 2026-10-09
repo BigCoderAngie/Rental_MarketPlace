@@ -1,8 +1,9 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ErrorNote, Field, PageHeader, buttonClass, inputClass, secondaryButtonClass } from "@/components/ui";
 import { StatusBadge } from "@/components/status-badge";
 import { requireBusiness } from "@/lib/business";
-import { STATUS_LABEL, staffActions, type BookingStatus } from "@/lib/bookings";
+import { EDITABLE_STATUSES, STATUS_LABEL, staffActions, type BookingStatus } from "@/lib/bookings";
 import { daysInclusive, formatRange } from "@/lib/dates";
 import { formatNad } from "@/lib/money";
 import { quoteTotals } from "@/lib/quotes";
@@ -82,6 +83,11 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
           </p>
         )}
         {booking.notes && <p className="mt-2 text-sm text-zinc-600">{booking.notes}</p>}
+        {EDITABLE_STATUSES.includes(booking.status) && (
+          <Link href={`/bookings/${booking.id}/edit`} className="mt-3 inline-block text-sm font-medium text-emerald-800 underline">
+            Change dates or items
+          </Link>
+        )}
       </section>
 
       <section className="mb-4 rounded-xl border border-zinc-200 bg-white p-4 text-sm">

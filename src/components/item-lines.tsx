@@ -29,12 +29,15 @@ export function ItemLines({
   start,
   end,
   capAtFree,
+  quantities,
 }: {
   items: Item[];
   free: Map<string, number>;
   start: IsoDate;
   end: IsoDate;
   capAtFree: boolean;
+  /** Starting quantities, when editing a booking. */
+  quantities?: Map<string, number>;
 }) {
   const days = daysInclusive(start, end);
   return (
@@ -58,7 +61,7 @@ export function ItemLines({
                 name={`qty:${item.id}`}
                 min={0}
                 max={capAtFree ? available : undefined}
-                defaultValue={0}
+                defaultValue={quantities?.get(item.id) ?? 0}
                 disabled={capAtFree && available === 0}
                 aria-label={`Quantity of ${item.name}`}
                 className={`${inputClass} w-20 text-right`}

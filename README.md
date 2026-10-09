@@ -30,7 +30,7 @@ Full requirements: [SRS document](https://claude.ai/code/artifact/53bc03dd-b135-
 | --- | --- |
 | **Sign in** | Log in with a one-time email code, then set up your business. |
 | **Inventory** | Add items with a quantity (one listing can cover 300 identical chairs), price per day, deposit, replacement value, units under repair, a low stock warning, and turnaround days for cleaning or setup. |
-| **Bookings** | Staff create bookings for phone, walk-in or WhatsApp customers. They see what is free for the dates first, then accept, decline, cancel (with a reason), check out, return and close. Requests nobody answers expire after 24 hours (you can change this in Settings). Every change is saved in the booking's history. |
+| **Bookings** | Staff create bookings for phone, walk-in or WhatsApp customers. They see what is free for the dates first, then accept, decline, cancel (with a reason), check out, return and close. Dates and quantities can be changed until the items go out; the double-booking check runs again and the change is logged. Requests nobody answers expire after 24 hours (you can change this in Settings). Every change is saved in the booking's history. |
 | **WhatsApp quotes** | Staff build a quote (items, dates, delivery, setup, discount) and send it with one tap on WhatsApp. The customer opens the link without an account, sees the total, deposit and your terms, and accepts or asks a question. Accepting checks the items are still free and turns the quote into a booking request. |
 | **Payment records** | Each booking shows what is due, paid and outstanding, and how much deposit you hold. Staff record payments, refunds, deposits received, returned or kept (with a reason) by cash, EFT, eWallet or card. Mistakes are voided with a reason, never deleted. Recorded only: the money goes to you directly. |
 | **Checkout and return** | At handover, staff count what goes out, tick that they checked the customer's ID, and take condition photos with the phone camera. At return they count, per item, how many came back fine, damaged or missing. Late returns are marked, and every night bookings past their end date that are still out become **Overdue**. |
@@ -98,7 +98,7 @@ Nothing is really emailed when running locally:
 | `npm run lint` | Checks code style |
 | `npm run typecheck` | Checks TypeScript types |
 | `npm test` | Runs the unit tests |
-| `npm run test:db` | Checks the booking, quote, payment, checkout, return and request expiry rules against the **local** database |
+| `npm run test:db` | Checks the booking, quote, payment, checkout, return, booking edit and request expiry rules against the **local** database |
 | `npm run db:reset` | Rebuilds the local database from scratch (**deletes local data**) |
 | `npx supabase migration new <name>` | Starts a new database change |
 
@@ -164,7 +164,8 @@ Run `lint`, `typecheck` and `test` before every push.
 
 1. **Bookings only change through database functions:** `create_booking`,
    `accept_booking`, `decline_booking`, `cancel_booking`,
-   `record_checkout`, `record_return` and `set_booking_status`. The website calls them with `supabase.rpc(...)`.
+   `update_booking`, `record_checkout`, `record_return` and
+   `set_booking_status`. The website calls them with `supabase.rpc(...)`.
    Nobody can edit the bookings table directly, so the double-booking check
    can't be skipped.
 2. **Booking states follow SRS section 4.2.** The database decides which
@@ -219,7 +220,7 @@ The rest of Phase 1, in SRS order:
 | # | Feature | Details | Who |
 | --- | --- | --- | --- |
 | 1 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
-| 2 | **More** | Packages (FR-IN-03), item photos, editing a booking's dates or quantities (FR-BK-07), customer list and reports. | |
+| 2 | **More** | Item photos, packages (FR-IN-03), customer list and reports. | |
 
 After that, test it with 2 or 3 real hire businesses before starting the
 Phase 2 marketplace.
