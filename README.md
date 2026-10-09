@@ -1,152 +1,204 @@
 # Rental Marketplace
 
-Booking software for Namibian hire businesses, growing into a public rental
-marketplace later. This repository is **Phase 1**: the tools a hire business
-uses every day. The requirements live in the
-[SRS](https://claude.ai/code/artifact/53bc03dd-b135-487b-ada0-49254fd9d247).
+Booking software for hire businesses in Namibia.
 
-The platform never holds rental money. Customers pay the business directly and
-the app only records it.
+- **Now (Phase 1):** the everyday tools a hire business needs: stock, bookings
+  and a calendar.
+- **Later (Phase 2):** a public marketplace where customers find and book
+  rentals.
+
+> The platform never holds rental money. Customers pay the business directly;
+> the app only records the payment.
+
+Full requirements: [SRS document](https://claude.ai/code/artifact/53bc03dd-b135-487b-ada0-49254fd9d247)
+
+**Contents**
+
+1. [What works so far](#what-works-so-far)
+2. [Run it on your computer](#run-it-on-your-computer)
+3. [Put it online](#put-it-online)
+4. [How the code is organised](#how-the-code-is-organised)
+5. [Rules to know before changing code](#rules-to-know-before-changing-code)
+6. [Working as two partners](#working-as-two-partners)
+7. [What to build next](#what-to-build-next)
+
+---
 
 ## What works so far
 
-- **Sign in** with a one-time email code, then set up your business.
-- **Inventory**: items with quantities (one listing covers 300 identical
-  chairs), price per day, deposit, replacement value, units under repair, a
-  low stock warning and turnaround days for cleaning or setup.
-- **Bookings**: staff create a booking for a phone, walk-in or WhatsApp
-  customer, see what is free for the dates first, and move it through the
-  SRS section 4.2 states (accept, decline, cancel with a reason, checkout,
-  return, close). Every change is kept in the booking's history.
-- **Calendar**: units free per item per day for a month, red when fully
-  booked, amber when stock is low, with the bookings that hold the item.
-- **Double-booking protection** in the database: accepting a booking that would
-  leave fewer than zero units on any day is refused, even when two staff
-  accept at the same moment. A pending request does not use stock until it is
-  accepted.
-
-## Stack
-
-| Part | Choice |
+| Feature | What it does |
 | --- | --- |
-| Website | [Next.js 16](https://nextjs.org) (App Router, Server Actions), TypeScript, Tailwind CSS. Mobile first. |
-| Database and logins | [Supabase](https://supabase.com) (Postgres, Auth, row level security) |
-| Hosting | [Vercel](https://vercel.com) |
-| Tests | Vitest for TypeScript, a SQL script for database rules, both run in GitHub Actions |
+| **Sign in** | Log in with a one-time email code, then set up your business. |
+| **Inventory** | Add items with a quantity (one listing can cover 300 identical chairs), price per day, deposit, replacement value, units under repair, a low stock warning, and turnaround days for cleaning or setup. |
+| **Bookings** | Staff create bookings for phone, walk-in or WhatsApp customers. They see what is free for the dates first, then accept, decline, cancel (with a reason), check out, return and close. Every change is saved in the booking's history. |
+| **Calendar** | Shows how many units of each item are free on each day of the month. Red means fully booked, amber means stock is low. |
+| **No double bookings** | The database refuses to accept a booking if it would leave less than zero units on any day, even if two staff click "accept" at the same moment. Pending requests don't use stock until accepted. |
 
-Next.js 16 changed some conventions you may know from older versions (for
-example `middleware.ts` is now `proxy.ts`, and `params` and `searchParams`
-are promises). The docs for the installed version are in
-`node_modules/next/dist/docs/`.
+---
 
 ## Run it on your computer
 
-You need Node.js 22 or newer and Docker Desktop (Supabase runs locally in
-Docker).
+### What you need
 
-```bash
-npm install
-npm run db:start            # starts Supabase locally and applies the migrations
-cp .env.example .env.local  # then paste the API URL and publishable key it printed
-npm run dev                 # http://localhost:3000
-```
+- **Node.js 22** or newer
+- **A Supabase database**, either:
+  - **Online (easiest):** a free project at [supabase.com](https://supabase.com).
+    Best for computers with less than 8 GB of RAM.
+  - **Local:** runs inside [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+    Needs about 8 GB of RAM or more. On Windows, Docker also needs WSL
+    (run `wsl --install` as administrator, then restart).
 
-Sign in with any email address. Locally no email is sent: open Mailpit at
-http://127.0.0.1:54324 to read the code. Supabase Studio, for browsing the
-database, is at http://127.0.0.1:54323.
+### Option A: online database (recommended)
 
-Useful commands:
-
-| Command | What it does |
-| --- | --- |
-| `npm run lint` / `npm run typecheck` / `npm test` | Fast checks; run before every push |
-| `npm run test:db` | Checks the booking and availability rules against the local database |
-| `npm run db:reset` | Rebuilds the local database from the migrations (deletes local data) |
-| `npx supabase migration new <name>` | Starts a new database change |
-
-## Put it online
-
-1. Create a project at [supabase.com](https://supabase.com), then link and
-   push the schema:
+1. Create a free project at [supabase.com](https://supabase.com).
+2. Set up the tables (run these in the VS Code terminal):
    ```bash
+   npm install
    npx supabase login
    npx supabase link --project-ref <your-project-ref>
    npx supabase db push
    ```
-2. Import this repository at [vercel.com/new](https://vercel.com/new) and add
-   the two variables from `.env.example`, using the values in your Supabase
-   project's API settings.
-3. In Supabase, under Authentication, URL Configuration, set the Site URL to
-   your Vercel address and add `https://<your-vercel-address>/auth/callback`
-   as a redirect URL. To let people type the code instead of tapping the link,
-   add `{{ .Token }}` to the Magic Link email template.
+   The project ref is the code in your Supabase dashboard address, for
+   example `supabase.com/dashboard/project/`**`abcd1234`**.
+3. Copy `.env.example` to `.env.local` and fill in your **Project URL** and
+   **publishable key** from Supabase → Project Settings → API.
+4. Start the website:
+   ```bash
+   npm run dev
+   ```
+5. Open <http://localhost:3000> and sign in with your email. Supabase emails
+   you a login link. (See [Put it online](#put-it-online), step 3, to get a
+   typed code instead.)
+
+### Option B: local database (Docker)
+
+```bash
+npm install
+npm run db:start            # starts Supabase in Docker and creates the tables
+cp .env.example .env.local  # paste in the API URL and key that db:start printed
+npm run dev                 # open http://localhost:3000
+```
+
+Nothing is really emailed when running locally:
+
+| Tool | Address | Use it to |
+| --- | --- | --- |
+| Mailpit | <http://127.0.0.1:54324> | Read your login code |
+| Supabase Studio | <http://127.0.0.1:54323> | Browse the database |
+
+### Useful commands
+
+| Command | What it does |
+| --- | --- |
+| `npm run lint` | Checks code style |
+| `npm run typecheck` | Checks TypeScript types |
+| `npm test` | Runs the unit tests |
+| `npm run test:db` | Checks the booking rules against the **local** database |
+| `npm run db:reset` | Rebuilds the local database from scratch (**deletes local data**) |
+| `npx supabase migration new <name>` | Starts a new database change |
+
+Run `lint`, `typecheck` and `test` before every push.
+
+---
+
+## Put it online
+
+1. **Database:** create a Supabase project and push the tables (step 2 of
+   [Option A](#option-a-online-database-recommended)).
+2. **Website:** import this repository at [vercel.com/new](https://vercel.com/new)
+   and add the two settings from `.env.example`, using the values from your
+   Supabase project's API settings.
+3. **Login links:** in Supabase, go to **Authentication → URL Configuration**:
+   - Set **Site URL** to your Vercel address.
+   - Add `https://<your-vercel-address>/auth/callback` under **Redirect URLs**.
+   - To let people type a code instead of clicking a link, add `{{ .Token }}`
+     to the **Magic Link** email template.
+
+---
 
 ## How the code is organised
 
-```
-src/app/login, setup        Sign in and first-time business setup
-src/app/(app)/calendar      Month view per item
-src/app/(app)/bookings      Booking list, new booking, booking page
-src/app/(app)/inventory     Item list, add and edit
-src/components              Shared UI pieces
-src/lib                     Dates, money, booking states, Supabase clients
-src/proxy.ts                Keeps the login session fresh, sends signed-out visitors to /login
-supabase/migrations         Database schema, rules and row level security
-supabase/tests              Database rule checks (npm run test:db)
-```
+### Tools used
 
-Rules worth knowing before you change anything:
+| Part | Tool |
+| --- | --- |
+| Website | [Next.js 16](https://nextjs.org), TypeScript, Tailwind CSS (mobile first) |
+| Database and logins | [Supabase](https://supabase.com) (Postgres, Auth, row level security) |
+| Hosting | [Vercel](https://vercel.com) |
+| Tests | Vitest for TypeScript, a SQL script for database rules. Both run on GitHub Actions. |
 
-- **Bookings are only changed through database functions** (`create_booking`,
-  `accept_booking`, `decline_booking`, `cancel_booking`, `set_booking_status`).
-  The website calls them with `supabase.rpc(...)`. Clients cannot update the
-  bookings table directly, so the double-booking check cannot be skipped.
-- **Booking states** follow SRS section 4.2. The database decides what is
-  allowed; `src/lib/bookings.ts` keeps a copy only to choose which buttons to
-  show, and a unit test fails if the two drift apart.
-- **Every table has row level security**: people only see their own
-  business's data.
-- **Dates** are `YYYY-MM-DD` strings in Namibian time, and both ends of a
-  booking are included.
+> **Note:** Next.js 16 works differently from older versions. For example,
+> `middleware.ts` is now `proxy.ts`, and `params` / `searchParams` are
+> promises. The docs for this version are in `node_modules/next/dist/docs/`.
+
+### Folders
+
+| Folder | What's inside |
+| --- | --- |
+| `src/app/login`, `src/app/setup` | Sign in and first-time business setup |
+| `src/app/(app)/calendar` | Month view per item |
+| `src/app/(app)/bookings` | Booking list, new booking, booking page |
+| `src/app/(app)/inventory` | Item list, add and edit |
+| `src/components` | Shared UI pieces |
+| `src/lib` | Dates, money, booking states, Supabase clients |
+| `src/proxy.ts` | Keeps the login fresh; sends signed-out visitors to `/login` |
+| `supabase/migrations` | Database tables, rules and security |
+| `supabase/tests` | Database rule checks (`npm run test:db`) |
+
+---
+
+## Rules to know before changing code
+
+1. **Bookings only change through database functions:** `create_booking`,
+   `accept_booking`, `decline_booking`, `cancel_booking` and
+   `set_booking_status`. The website calls them with `supabase.rpc(...)`.
+   Nobody can edit the bookings table directly, so the double-booking check
+   can't be skipped.
+2. **Booking states follow SRS section 4.2.** The database decides which
+   changes are allowed. `src/lib/bookings.ts` keeps a copy only to decide
+   which buttons to show, and a test fails if the two don't match.
+3. **Every table has row level security:** each business only sees its own data.
+4. **Dates** are stored as `YYYY-MM-DD` in Namibian time. A booking includes
+   both its first and last day.
+
+---
 
 ## Working as two partners
 
-The cleanest split is by layer, so you rarely edit the same files:
+Split the work by layer so you rarely edit the same files:
 
 | | Partner A: screens | Partner B: data and rules |
 | --- | --- | --- |
-| Owns | `src/app`, `src/components` | `supabase/migrations`, `supabase/tests`, `src/lib` |
-| Does | Pages, forms, mobile layout, WhatsApp links, wording | Tables, database functions, permissions, tests, background jobs |
+| **Owns** | `src/app`, `src/components` | `supabase/migrations`, `supabase/tests`, `src/lib` |
+| **Does** | Pages, forms, mobile layout, WhatsApp links, wording | Tables, database functions, permissions, tests, background jobs |
 
-For each feature, Partner B adds the migration, the function and its tests
-first and opens a pull request; Partner A builds the screen on top of it. Agree
-on the function names and inputs at the start, in the pull request or an issue,
-so both can work at once.
+**For each feature:** agree on the function names and inputs first (in an
+issue or pull request). Partner B then builds the database part and its tests
+while Partner A builds the screen on top.
 
-Day to day:
+**Day to day:**
 
-1. Pull the latest `main`, then make a branch per feature: `git switch -c quotes-whatsapp`.
-2. Keep pull requests small (one feature). CI runs lint, typecheck, unit tests,
-   the build and the database checks on every pull request.
-3. The other partner reviews and merges. Never push straight to `main`.
-4. Never edit a migration that is already on `main`; add a new one instead.
+1. Pull the latest `main`, then make a branch for the feature:
+   `git switch -c quotes-whatsapp`
+2. Keep each pull request small (one feature). GitHub automatically runs lint,
+   typecheck, tests, the build and the database checks.
+3. The other partner reviews and merges. **Never push straight to `main`.**
+4. **Never edit a migration that is already on `main`.** Add a new one instead.
 
-## What to build next (rest of Phase 1)
+---
 
-In SRS order, with a suggested owner:
+## What to build next
 
-1. **Quotes and WhatsApp links** (FR-QT): quote builder, public quote page,
-   one-tap WhatsApp share, accept turns it into a request. B: `quotes` tables
-   and `accept_quote`. A: builder and public page.
-2. **Payment records** (FR-PY): amounts, methods, deposits taken and returned,
-   due, paid and outstanding on each booking. Recorded only, never collected.
-3. **Checkout and return records** (FR-CR): counts per item, photos (Supabase
-   Storage), customer confirmation from a link, late-return flag.
-4. **Scheduled jobs**: expire unanswered requests after 24 hours (FR-BK-04)
-   and mark overdue bookings (FR-CR-06), for example with Supabase Cron.
-5. **Phone sign-in** (FR-AC-01) once an SMS provider is chosen, plus staff
-   invites and roles.
-6. **Packages** (FR-IN-03), item photos, editing a booking's dates or
-   quantities (FR-BK-07), customers list and reports.
+The rest of Phase 1, in SRS order:
 
-Then pilot with 2 or 3 hire businesses before starting the Phase 2 marketplace.
+| # | Feature | Details | Who |
+| --- | --- | --- | --- |
+| 1 | **Quotes and WhatsApp links** (FR-QT) | Quote builder, public quote page, one-tap WhatsApp share. Accepting a quote turns it into a booking request. | B: `quotes` tables and `accept_quote`. A: builder and public page. |
+| 2 | **Payment records** (FR-PY) | Amounts, methods, deposits taken and returned, and what's due, paid and outstanding on each booking. Recorded only, never collected. | |
+| 3 | **Checkout and return records** (FR-CR) | Counts per item, photos (Supabase Storage), customer confirmation by link, late-return flag. | |
+| 4 | **Scheduled jobs** | Expire unanswered requests after 24 hours (FR-BK-04) and mark overdue bookings (FR-CR-06), e.g. with Supabase Cron. | |
+| 5 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
+| 6 | **More** | Packages (FR-IN-03), item photos, editing a booking's dates or quantities (FR-BK-07), customer list and reports. | |
+
+After that, test it with 2 or 3 real hire businesses before starting the
+Phase 2 marketplace.
