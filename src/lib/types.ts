@@ -1,4 +1,5 @@
 import type { BookingStatus } from "./bookings";
+import type { PaymentKind, PaymentMethod } from "./payments";
 
 // Hand-written row types. Once the schema settles, replace with
 // `npx supabase gen types typescript --local > src/lib/database.types.ts`.
@@ -103,4 +104,30 @@ export type PublicQuote = {
     terms: string | null;
   };
   items: { name: string; quantity: number; daily_price: number }[];
+};
+
+/** What get_public_booking() returns for the customer's booking page. */
+export type PublicBooking = {
+  reference: string;
+  status: BookingStatus;
+  customer_name: string;
+  start_date: string;
+  end_date: string;
+  days: number;
+  delivery_fee: number;
+  setup_fee: number;
+  discount: number;
+  deposit_amount: number;
+  business: PublicQuote["business"];
+  items: { name: string; quantity: number; daily_price: number }[];
+  balance: { amount_due: number; amount_paid: number; outstanding: number; deposit_held: number };
+  payments: {
+    id: string;
+    kind: PaymentKind;
+    amount: number;
+    method: PaymentMethod | null;
+    paid_on: string;
+    note: string | null;
+    customer_confirmed_at: string | null;
+  }[];
 };
