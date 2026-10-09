@@ -44,12 +44,19 @@ begin
 exception when check_violation then null;
 end $$;
 
--- 3. The other business can't delete this business's photo.
+-- 3. Only this business can reach the file through storage, which removing it
+--    needs. (Supabase refuses SQL deletes on storage tables, so this checks
+--    the read rule that the Storage API's delete goes through.)
+do $$
+begin
+  assert (select count(*) from storage.objects where bucket_id = 'item-photos') = 1,
+    'the owner can reach their photo';
+end $$;
 set local request.jwt.claims to '{"sub": "00000000-0000-0000-0000-00000000000b", "role": "authenticated"}';
 do $$
 begin
-  delete from storage.objects where name = '10000000-0000-0000-0000-000000000001/items/tent.jpg';
-  assert not found, 'another business must not delete the photo';
+  assert (select count(*) from storage.objects where bucket_id = 'item-photos') = 0,
+    'another business cannot reach the photo';
 end $$;
 
 -- 4. The customer's quote shows the photo.
