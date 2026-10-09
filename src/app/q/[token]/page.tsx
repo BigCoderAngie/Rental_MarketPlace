@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ErrorNote, Field, buttonClass, inputClass, secondaryButtonClass } from "@/components/ui";
 import { formatRange } from "@/lib/dates";
+import { itemPhotoUrl } from "@/lib/item-photos";
 import { formatNad } from "@/lib/money";
 import { createClient } from "@/lib/supabase/server";
 import type { PublicQuote } from "@/lib/types";
@@ -46,8 +47,14 @@ export default async function PublicQuotePage({ params, searchParams }: PageProp
 
         <ul className="mt-3 space-y-1">
           {quote.items.map((item) => (
-            <li key={item.name} className="flex justify-between gap-2">
-              <span>{item.quantity} × {item.name}</span>
+            <li key={item.name} className="flex items-center justify-between gap-2">
+              <span className="flex items-center gap-2">
+                {item.photo_path && (
+                  // eslint-disable-next-line @next/next/no-img-element -- Supabase Storage URL
+                  <img src={itemPhotoUrl(supabase, item.photo_path)!} alt="" className="h-10 w-10 shrink-0 rounded-md object-cover" />
+                )}
+                <span>{item.quantity} × {item.name}</span>
+              </span>
               <span>{formatNad(item.quantity * item.daily_price * quote.days)}</span>
             </li>
           ))}

@@ -1,7 +1,7 @@
 import { PhotoUpload } from "@/components/photo-upload";
 import { Field, buttonClass, inputClass } from "@/components/ui";
 import type { BookingStatus } from "@/lib/bookings";
-import { describeReturn, type Handover } from "@/lib/handovers";
+import { PHOTO_BUCKET, describeReturn, handoverPhotoFolder, type Handover } from "@/lib/handovers";
 import { recordCheckout, recordReturn } from "../actions";
 
 const countClass = `${inputClass} w-20 text-center`;
@@ -116,7 +116,7 @@ export function HandoverSection({
             <input name="id_checked" type="checkbox" className="h-5 w-5" />
             I checked the customer&apos;s ID
           </label>
-          <PhotoUpload businessId={businessId} bookingId={bookingId} />
+          <PhotoUpload bucket={PHOTO_BUCKET} folder={handoverPhotoFolder(businessId, bookingId)} />
           <Field label="Note (optional)">
             <input name="note" className={inputClass} placeholder="e.g. One chair has a scratch" />
           </Field>
@@ -147,7 +147,7 @@ export function HandoverSection({
               </div>
             </fieldset>
           ))}
-          <PhotoUpload businessId={businessId} bookingId={bookingId} />
+          <PhotoUpload bucket={PHOTO_BUCKET} folder={handoverPhotoFolder(businessId, bookingId)} />
           <Field label="Note (optional)">
             <input name="note" className={inputClass} placeholder="e.g. Tent returned wet" />
           </Field>

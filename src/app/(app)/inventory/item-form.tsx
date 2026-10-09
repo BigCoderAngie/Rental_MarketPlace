@@ -1,4 +1,6 @@
+import { PhotoUpload } from "@/components/photo-upload";
 import { Field, buttonClass, inputClass } from "@/components/ui";
+import { ITEM_PHOTO_BUCKET, itemPhotoFolder } from "@/lib/item-photos";
 import type { Category, Item } from "@/lib/types";
 
 // One form for adding and editing items (FR-IN-01, FR-IN-02, FR-IN-04, FR-CA-05).
@@ -6,10 +8,15 @@ export function ItemForm({
   action,
   categories,
   item,
+  businessId,
+  photoUrl,
 }: {
   action: (formData: FormData) => Promise<void>;
   categories: Category[];
   item?: Item;
+  businessId: string;
+  /** Public address of the item's current photo, if it has one. */
+  photoUrl?: string | null;
 }) {
   return (
     <form action={action} className="space-y-4">
@@ -30,6 +37,21 @@ export function ItemForm({
       <Field label="Description">
         <textarea name="description" rows={2} defaultValue={item?.description ?? ""} className={inputClass} />
       </Field>
+
+      <PhotoUpload
+        bucket={ITEM_PHOTO_BUCKET}
+        folder={itemPhotoFolder(businessId)}
+        name="photo_path"
+        label="Photo"
+        multiple={false}
+        current={item?.photo_path && photoUrl ? { path: item.photo_path, url: photoUrl } : undefined}
+      />
+      {item?.photo_path && (
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" name="remove_photo" className="h-5 w-5" />
+          Remove the photo
+        </label>
+      )}
 
       <div className="grid grid-cols-2 gap-3">
         <Field label="Units owned" hint="300 identical chairs is one item">

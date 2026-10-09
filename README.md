@@ -29,9 +29,9 @@ Full requirements: [SRS document](https://claude.ai/code/artifact/53bc03dd-b135-
 | Feature | What it does |
 | --- | --- |
 | **Sign in** | Log in with a one-time email code, then set up your business. |
-| **Inventory** | Add items with a quantity (one listing can cover 300 identical chairs), price per day, deposit, replacement value, units under repair, a low stock warning, and turnaround days for cleaning or setup. |
+| **Inventory** | Add items with a photo, a quantity (one listing can cover 300 identical chairs), price per day, deposit, replacement value, units under repair, a low stock warning, and turnaround days for cleaning or setup. |
 | **Bookings** | Staff create bookings for phone, walk-in or WhatsApp customers. They see what is free for the dates first, then accept, decline, cancel (with a reason), check out, return and close. Dates and quantities can be changed until the items go out; the double-booking check runs again and the change is logged. Requests nobody answers expire after 24 hours (you can change this in Settings). Every change is saved in the booking's history. |
-| **WhatsApp quotes** | Staff build a quote (items, dates, delivery, setup, discount) and send it with one tap on WhatsApp. The customer opens the link without an account, sees the total, deposit and your terms, and accepts or asks a question. Accepting checks the items are still free and turns the quote into a booking request. |
+| **WhatsApp quotes** | Staff build a quote (items, dates, delivery, setup, discount) and send it with one tap on WhatsApp. The customer opens the link without an account, sees each item's photo, the total, deposit and your terms, and accepts or asks a question. Accepting checks the items are still free and turns the quote into a booking request. |
 | **Payment records** | Each booking shows what is due, paid and outstanding, and how much deposit you hold. Staff record payments, refunds, deposits received, returned or kept (with a reason) by cash, EFT, eWallet or card. Mistakes are voided with a reason, never deleted. Recorded only: the money goes to you directly. |
 | **Checkout and return** | At handover, staff count what goes out, tick that they checked the customer's ID, and take condition photos with the phone camera. At return they count, per item, how many came back fine, damaged or missing. Late returns are marked, and every night bookings past their end date that are still out become **Overdue**. |
 | **Customer booking link** | Send the customer their booking on WhatsApp. They see what they booked, what they still owe and the payments you recorded, and can confirm each one. They also see the checkout and return records and tap "This is correct" or say what is wrong. Disputing a return opens a problem on the booking. |
@@ -98,7 +98,7 @@ Nothing is really emailed when running locally:
 | `npm run lint` | Checks code style |
 | `npm run typecheck` | Checks TypeScript types |
 | `npm test` | Runs the unit tests |
-| `npm run test:db` | Checks the booking, quote, payment, checkout, return, booking edit and request expiry rules against the **local** database |
+| `npm run test:db` | Checks the booking, quote, payment, checkout, return, booking edit, request expiry and item photo rules against the **local** database |
 | `npm run db:reset` | Rebuilds the local database from scratch (**deletes local data**) |
 | `npx supabase migration new <name>` | Starts a new database change |
 
@@ -110,7 +110,7 @@ Run `lint`, `typecheck` and `test` before every push.
 
 1. **Database:** create a Supabase project and push the tables (step 2 of
    [Option A](#option-a-online-database-recommended)).
-   This also creates the photo storage bucket and two scheduled jobs: the
+   This also creates the photo storage buckets and two scheduled jobs: the
    nightly overdue check and a request expiry check every 15 minutes (see
    them in Supabase under **Integrations → Cron**).
 2. **Website:** import this repository at [vercel.com/new](https://vercel.com/new)
@@ -182,10 +182,13 @@ Run `lint`, `typecheck` and `test` before every push.
    `void_payment`.** Records are never edited or deleted, and the database
    refuses refunds above what was paid or deposit returns above what was
    received.
-6. **Handover photos live in the private `handover-photos` storage bucket**,
-   in a folder per business and booking (`<business id>/<booking id>/`).
-   The phone uploads them straight to Supabase, so large photos never pass
-   through Vercel. Only that business's staff can open them.
+6. **Photos go straight from the phone to Supabase Storage.** Handover photos
+   are in the private `handover-photos` bucket; item photos are in the public
+   `item-photos` bucket so quote pages can show them. Paths always start with
+   the business id, and only that business's staff can upload there. Handover
+   photos sit in a folder per booking (`<business id>/<booking id>/`), and
+   only that business's staff can open them. Large photos never pass through
+   Vercel.
 
 ---
 
@@ -220,7 +223,7 @@ The rest of Phase 1, in SRS order:
 | # | Feature | Details | Who |
 | --- | --- | --- | --- |
 | 1 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
-| 2 | **More** | Item photos, packages (FR-IN-03), customer list and reports. | |
+| 2 | **More** | Packages (FR-IN-03), customer list and reports. | |
 
 After that, test it with 2 or 3 real hire businesses before starting the
 Phase 2 marketplace.
