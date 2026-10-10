@@ -11,7 +11,8 @@ import { updateBooking } from "../../actions";
 
 type Detail = Booking & {
   customers: { full_name: string } | null;
-  booking_items: { item_id: string; quantity: number; items: { name: string } | null }[];
+  booking_items: { item_id: string; quantity: number; package_units: number; items: { name: string } | null }[];
+  booking_packages: { package_id: string; quantity: number; packages: { name: string } | null }[];
 };
 
 // FR-BK-07: change the dates or quantities of a booking that hasn't gone out.
@@ -23,7 +24,7 @@ export default async function EditBookingPage({ params, searchParams }: PageProp
 
   const { data: booking } = await supabase
     .from("bookings")
-    .select("*, customers(full_name), booking_items(item_id, quantity, items(name))")
+    .select("*, customers(full_name), booking_items(item_id, quantity, package_units, items(name)), booking_packages(package_id, quantity, packages(name))")
     .eq("id", id)
     .maybeSingle<Detail>();
   if (!booking) notFound();
@@ -43,10 +44,15 @@ export default async function EditBookingPage({ params, searchParams }: PageProp
     );
   }
 
-  const { items, free } = await itemsWithFreeUnits(supabase, business.id, start, end, id);
-  const quantities = new Map(booking.booking_items.map((bi) => [bi.item_id, bi.quantity]));
-  // Items taken off the inventory list stay on the booking as they are.
-  const unlisted = booking.booking_items.filter((bi) => !items.some((i) => i.id === bi.item_id));
+  const { items, free, packages } = await itemsWithFreeUnits(supabase, business.id, start, end, id);
+  // Item boxes hold the extras on top of packages.
+  const quantities = new Map(booking.booking_items.map((bi) => [bi.item_id, bi.quantity - bi.package_units]));
+  const packageQuantities = new Map(booking.booking_packages.map((bp) => [bp.package_id, bp.quantity]));
+  // Items and packages taken off the lists stay on the booking as they are.
+  const unlisted = booking.booking_items.filter(
+    (bi) => bi.quantity > bi.package_units && !items.some((i) => i.id === bi.item_id),
+  );
+  const unlistedPackages = booking.booking_packages.filter((bp) => !packages.some((p) => p.id === bp.package_id));
 
   return (
     <>
@@ -61,11 +67,26 @@ export default async function EditBookingPage({ params, searchParams }: PageProp
       <form action={updateBooking.bind(null, id)} className="space-y-4">
         <input type="hidden" name="start_date" value={start} />
         <input type="hidden" name="end_date" value={end} />
-        <ItemLines items={items} free={free} start={start} end={end} capAtFree={false} quantities={quantities} />
+        <ItemLines
+          items={items}
+          free={free}
+          start={start}
+          end={end}
+          capAtFree={false}
+          quantities={quantities}
+          packages={packages}
+          packageQuantities={packageQuantities}
+        />
+        {unlistedPackages.map((bp) => (
+          <p key={bp.package_id} className="text-sm text-zinc-600">
+            <input type="hidden" name={`pkg:${bp.package_id}`} value={bp.quantity} />
+            {bp.quantity} × {bp.packages?.name} stays on the booking (no longer in your packages).
+          </p>
+        ))}
         {unlisted.map((bi) => (
           <p key={bi.item_id} className="text-sm text-zinc-600">
-            <input type="hidden" name={`qty:${bi.item_id}`} value={bi.quantity} />
-            {bi.quantity} × {bi.items?.name} stays on the booking (no longer in your inventory list).
+            <input type="hidden" name={`qty:${bi.item_id}`} value={bi.quantity - bi.package_units} />
+            {bi.quantity - bi.package_units} × {bi.items?.name} stays on the booking (no longer in your inventory list).
           </p>
         ))}
         <p className="text-xs text-zinc-500">

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { readLines } from "@/lib/availability";
+import { readPackageLines } from "@/lib/packages";
 import { requireBusiness } from "@/lib/business";
 import type { Quote } from "@/lib/types";
 
@@ -11,12 +12,12 @@ export async function createQuote(formData: FormData) {
   const start = String(formData.get("start_date") ?? "");
   const end = String(formData.get("end_date") ?? "");
   const money = (key: string) => Number(formData.get(key) || 0);
-  const lines = readLines(formData);
+  const lines = [...readPackageLines(formData), ...readLines(formData)];
 
   const back = (error: string) =>
     redirect(`/quotes/new?${new URLSearchParams({ start, end, error })}`);
 
-  if (lines.length === 0) back("Enter a quantity for at least one item");
+  if (lines.length === 0) back("Enter a quantity for at least one item or package");
 
   const { data, error } = await supabase
     .rpc("create_quote", {

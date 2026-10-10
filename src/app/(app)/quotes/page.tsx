@@ -7,13 +7,13 @@ import { formatNad } from "@/lib/money";
 import { effectiveQuoteStatus, quoteTotals } from "@/lib/quotes";
 import type { Quote } from "@/lib/types";
 
-type Row = Quote & { quote_items: { quantity: number; daily_price: number }[] };
+type Row = Quote & { quote_items: { quantity: number; package_units: number; daily_price: number }[]; quote_packages: { quantity: number; daily_price: number }[] };
 
 export default async function QuotesPage() {
   const { supabase, business } = await requireBusiness();
   const { data: quotes, error } = await supabase
     .from("quotes")
-    .select("*, quote_items(quantity, daily_price)")
+    .select("*, quote_items(quantity, package_units, daily_price), quote_packages(quantity, daily_price)")
     .eq("business_id", business.id)
     .order("created_at", { ascending: false })
     .limit(100)
@@ -38,7 +38,7 @@ export default async function QuotesPage() {
                   <QuoteBadge status={effectiveQuoteStatus(q.status, q.expires_at)} />
                 </span>
                 <span className="block text-sm text-zinc-600">
-                  {formatRange(q.start_date, q.end_date)} · {formatNad(quoteTotals({ ...q, lines: q.quote_items }).total)} · {q.reference}
+                  {formatRange(q.start_date, q.end_date)} · {formatNad(quoteTotals({ ...q, lines: q.quote_items, packages: q.quote_packages }).total)} · {q.reference}
                 </span>
               </Link>
             </li>

@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ErrorNote, Field, PageHeader, buttonClass, inputClass, secondaryButtonClass } from "@/components/ui";
+import { PackageLines } from "@/components/package-lines";
 import { StatusBadge } from "@/components/status-badge";
 import { requireBusiness } from "@/lib/business";
 import { EDITABLE_STATUSES, STATUS_LABEL, staffActions, type BookingStatus } from "@/lib/bookings";
 import { daysInclusive, formatRange } from "@/lib/dates";
 import { formatNad } from "@/lib/money";
+import { packageContents, type Package, type PackageItem } from "@/lib/packages";
 import { quoteTotals } from "@/lib/quotes";
 import { PHOTO_BUCKET, type Handover } from "@/lib/handovers";
 import type { Balance, Payment } from "@/lib/payments";
@@ -20,7 +22,8 @@ type Detail = Booking & {
   payments: Payment[];
   handovers: Handover[];
   customers: { full_name: string; phone: string } | null;
-  booking_items: { item_id: string; quantity: number; daily_price: number; items: { name: string } | null }[];
+  booking_items: { item_id: string; quantity: number; package_units: number; daily_price: number; items: { name: string } | null }[];
+  booking_packages: { quantity: number; daily_price: number; packages: (Pick<Package, "name"> & { package_items: PackageItem[] }) | null }[];
   booking_events: { id: number; from_status: BookingStatus | null; to_status: BookingStatus; note: string | null; created_at: string }[];
 };
 
@@ -41,7 +44,7 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
 
   const { data: booking } = await supabase
     .from("bookings")
-    .select("*, customers(full_name, phone), booking_items(item_id, quantity, daily_price, items(name)), booking_events(id, from_status, to_status, note, created_at), payments(*), handovers(*, handover_lines(*, items(name)), handover_photos(id, storage_path))")
+    .select("*, customers(full_name, phone), booking_items(item_id, quantity, package_units, daily_price, items(name)), booking_packages(quantity, daily_price, packages(name, package_items(item_id, quantity, items(name)))), booking_events(id, from_status, to_status, note, created_at), payments(*), handovers(*, handover_lines(*, items(name)), handover_photos(id, storage_path))")
     .eq("id", id)
     .order("id", { referencedTable: "booking_events" })
     .order("paid_on", { referencedTable: "payments" })
@@ -65,7 +68,7 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
   const shareMessage = `Hi ${firstName}, here are the details of your booking ${booking.reference} with ${business.name}: ${link}`;
 
   const days = daysInclusive(booking.start_date, booking.end_date);
-  const { total } = quoteTotals({ ...booking, lines: booking.booking_items });
+  const { total } = quoteTotals({ ...booking, lines: booking.booking_items, packages: booking.booking_packages });
   const actions = staffActions(booking.status);
 
   return (
@@ -92,10 +95,19 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
 
       <section className="mb-4 rounded-xl border border-zinc-200 bg-white p-4 text-sm">
         <ul className="space-y-1">
-          {booking.booking_items.map((bi, i) => (
+          <PackageLines
+            days={days}
+            packages={booking.booking_packages.map((bp) => ({
+              name: bp.packages?.name ?? "",
+              quantity: bp.quantity,
+              daily_price: bp.daily_price,
+              contents: bp.packages ? packageContents(bp.packages) : undefined,
+            }))}
+          />
+          {booking.booking_items.filter((bi) => bi.quantity > bi.package_units).map((bi, i) => (
             <li key={i} className="flex justify-between gap-2">
-              <span>{bi.quantity} × {bi.items?.name}</span>
-              <span>{formatNad(bi.quantity * bi.daily_price * days)}</span>
+              <span>{bi.quantity - bi.package_units} × {bi.items?.name}</span>
+              <span>{formatNad((bi.quantity - bi.package_units) * bi.daily_price * days)}</span>
             </li>
           ))}
           {Number(booking.delivery_fee) > 0 && (

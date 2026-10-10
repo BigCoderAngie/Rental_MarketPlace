@@ -3,6 +3,7 @@ import { LinkButton, PageHeader } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { formatNad } from "@/lib/money";
 import { itemPhotoUrl } from "@/lib/item-photos";
+import { packageContents, type Package } from "@/lib/packages";
 import type { Item } from "@/lib/types";
 
 export default async function InventoryPage() {
@@ -15,6 +16,13 @@ export default async function InventoryPage() {
     .order("name")
     .returns<Item[]>();
   if (error) throw error;
+  const { data: packages } = await supabase
+    .from("packages")
+    .select("*, package_items(item_id, quantity, items(name))")
+    .eq("business_id", business.id)
+    .eq("archived", false)
+    .order("name")
+    .returns<Package[]>();
 
   return (
     <>
@@ -50,6 +58,36 @@ export default async function InventoryPage() {
             </li>
           ))}
         </ul>
+      )}
+
+      {items.length > 0 && (
+        <section className="mt-8">
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <h2 className="font-semibold">Packages</h2>
+            <Link href="/inventory/packages/new" className="text-sm font-medium text-emerald-800 underline">
+              Add package
+            </Link>
+          </div>
+          {(packages ?? []).length === 0 ? (
+            <p className="text-sm text-zinc-600">
+              Group items you rent together, like a tent with 100 chairs, and give them one price per day.
+            </p>
+          ) : (
+            <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white">
+              {packages!.map((pkg) => (
+                <li key={pkg.id}>
+                  <Link href={`/inventory/packages/${pkg.id}`} className="flex items-center justify-between gap-3 px-4 py-3">
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-medium">{pkg.name}</span>
+                      <span className="text-sm text-zinc-600">{packageContents(pkg)}</span>
+                    </span>
+                    <span className="text-right text-sm font-semibold">{formatNad(pkg.daily_price)} per day</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
       )}
     </>
   );

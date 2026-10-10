@@ -16,7 +16,7 @@ export default async function NewBookingPage({ searchParams }: PageProps<"/booki
   const datesChosen = isIsoDate(params.start);
 
   const { supabase, business } = await requireBusiness();
-  const { items, free } = await itemsWithFreeUnits(supabase, business.id, start, datesChosen ? end : null);
+  const { items, free, packages } = await itemsWithFreeUnits(supabase, business.id, start, datesChosen ? end : null);
 
   return (
     <>
@@ -29,7 +29,7 @@ export default async function NewBookingPage({ searchParams }: PageProps<"/booki
         <form action={createBooking} className="space-y-4">
           <input type="hidden" name="start_date" value={start} />
           <input type="hidden" name="end_date" value={end} />
-          <ItemLines items={items} free={free} start={start} end={end} capAtFree />
+          <ItemLines items={items} free={free} start={start} end={end} capAtFree packages={packages} />
 
           <Field label="Customer name">
             <input name="customer_name" required autoComplete="off" className={inputClass} />
