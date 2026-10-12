@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { PublicQuote } from "@/lib/types";
 import { whatsAppLink } from "@/lib/whatsapp";
 import { acceptQuote } from "./actions";
+import { PackageLines } from "@/components/package-lines";
 
 export const metadata: Metadata = {
   title: "Your quote",
@@ -46,6 +47,7 @@ export default async function PublicQuotePage({ params, searchParams }: PageProp
         <p className="mt-1">{formatRange(quote.start_date, quote.end_date)} ({quote.days} day{quote.days > 1 ? "s" : ""})</p>
 
         <ul className="mt-3 space-y-1">
+          <PackageLines packages={quote.packages ?? []} days={quote.days} />
           {quote.items.map((item) => (
             <li key={item.name} className="flex items-center justify-between gap-2">
               <span className="flex items-center gap-2">

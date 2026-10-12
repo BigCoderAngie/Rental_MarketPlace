@@ -11,6 +11,7 @@ import type { PublicBooking } from "@/lib/types";
 import { whatsAppLink } from "@/lib/whatsapp";
 import { confirmPayment } from "./actions";
 import { HandoverRecords } from "./handover-records";
+import { PackageLines } from "@/components/package-lines";
 
 export const metadata: Metadata = {
   title: "Your booking",
@@ -53,6 +54,7 @@ export default async function PublicBookingPage({ params, searchParams }: PagePr
           {formatRange(booking.start_date, booking.end_date)} ({booking.days} day{booking.days > 1 ? "s" : ""}) · {booking.reference}
         </p>
         <ul className="mt-3 space-y-1">
+          <PackageLines packages={booking.packages ?? []} days={booking.days} />
           {booking.items.map((item) => (
             <li key={item.name} className="flex justify-between gap-2">
               <span>{item.quantity} × {item.name}</span>

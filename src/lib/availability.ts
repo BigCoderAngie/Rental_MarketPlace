@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { addDays, type IsoDate } from "./dates";
+import type { Package } from "./packages";
 import type { AvailabilityRow, Item } from "./types";
 
 /**
@@ -24,6 +25,15 @@ export async function itemsWithFreeUnits(
     .returns<Item[]>();
   if (error) throw error;
 
+  const { data: packages, error: packageError } = await supabase
+    .from("packages")
+    .select("*, package_items(item_id, quantity, items(name))")
+    .eq("business_id", businessId)
+    .eq("archived", false)
+    .order("name")
+    .returns<Package[]>();
+  if (packageError) throw packageError;
+
   const free = new Map<string, number>();
   if (end && items.length) {
     const longestTurnaround = Math.max(...items.map((i) => i.turnaround_days));
@@ -42,7 +52,7 @@ export async function itemsWithFreeUnits(
     }
   }
 
-  return { items, free };
+  return { items, free, packages };
 }
 
 /** Item lines from a form whose quantity inputs are named "qty:<item id>". */

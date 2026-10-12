@@ -15,7 +15,7 @@ export default async function NewQuotePage({ searchParams }: PageProps<"/quotes/
   const datesChosen = isIsoDate(params.start);
 
   const { supabase, business } = await requireBusiness();
-  const { items, free } = await itemsWithFreeUnits(supabase, business.id, start, datesChosen ? end : null);
+  const { items, free, packages } = await itemsWithFreeUnits(supabase, business.id, start, datesChosen ? end : null);
 
   return (
     <>
@@ -28,7 +28,7 @@ export default async function NewQuotePage({ searchParams }: PageProps<"/quotes/
         <form action={createQuote} className="space-y-4">
           <input type="hidden" name="start_date" value={start} />
           <input type="hidden" name="end_date" value={end} />
-          <ItemLines items={items} free={free} start={start} end={end} capAtFree={false} />
+          <ItemLines items={items} free={free} start={start} end={end} capAtFree={false} packages={packages} />
 
           <div className="grid grid-cols-3 gap-3">
             <Field label="Delivery (N$)">

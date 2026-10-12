@@ -9,13 +9,18 @@ export type QuoteMoney = {
   delivery_fee: number;
   setup_fee: number;
   discount: number;
-  lines: { quantity: number; daily_price: number }[];
+  /** package_units of a line are charged through its package, not the item price. */
+  lines: { quantity: number; daily_price: number; package_units?: number }[];
+  packages?: { quantity: number; daily_price: number }[];
 };
 
 /** Same sum as quote_total() in the database: rental for every day, plus extras, less discount. */
 export function quoteTotals(q: QuoteMoney) {
   const days = daysInclusive(q.start_date, q.end_date);
-  const rental = q.lines.reduce((sum, l) => sum + Number(l.quantity) * Number(l.daily_price), 0) * days;
+  const perDay =
+    q.lines.reduce((sum, l) => sum + (Number(l.quantity) - Number(l.package_units ?? 0)) * Number(l.daily_price), 0) +
+    (q.packages ?? []).reduce((sum, p) => sum + Number(p.quantity) * Number(p.daily_price), 0);
+  const rental = perDay * days;
   const total = Math.max(rental + Number(q.delivery_fee) + Number(q.setup_fee) - Number(q.discount), 0);
   return { days, rental, total };
 }

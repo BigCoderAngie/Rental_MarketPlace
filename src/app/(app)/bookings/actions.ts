@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { readLines } from "@/lib/availability";
+import { readPackageLines } from "@/lib/packages";
 import { readReturnLines } from "@/lib/handovers";
 import { requireBusiness } from "@/lib/business";
 import type { BookingStatus } from "@/lib/bookings";
@@ -13,12 +14,12 @@ export async function createBooking(formData: FormData) {
   const start = String(formData.get("start_date") ?? "");
   const end = String(formData.get("end_date") ?? "");
 
-  const lines = readLines(formData);
+  const lines = [...readPackageLines(formData), ...readLines(formData)];
 
   const back = (error: string) =>
     redirect(`/bookings/new?${new URLSearchParams({ start, end, error })}`);
 
-  if (lines.length === 0) back("Enter a quantity for at least one item");
+  if (lines.length === 0) back("Enter a quantity for at least one item or package");
 
   const { data, error } = await supabase
     .rpc("create_booking", {
@@ -133,11 +134,11 @@ export async function updateBooking(bookingId: string, formData: FormData) {
   const { supabase } = await requireBusiness();
   const start = String(formData.get("start_date") ?? "");
   const end = String(formData.get("end_date") ?? "");
-  const lines = readLines(formData);
+  const lines = [...readPackageLines(formData), ...readLines(formData)];
 
   const { error } =
     lines.length === 0
-      ? { error: { message: "Enter a quantity for at least one item" } }
+      ? { error: { message: "Enter a quantity for at least one item or package" } }
       : await supabase.rpc("update_booking", {
           p_booking_id: bookingId,
           p_start_date: start,

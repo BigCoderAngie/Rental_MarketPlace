@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CopyButton } from "@/components/copy-button";
+import { PackageLines } from "@/components/package-lines";
 import { QuoteBadge } from "@/components/quote-badge";
 import { ErrorNote, PageHeader, buttonClass, secondaryButtonClass } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { formatRange } from "@/lib/dates";
 import { formatNad } from "@/lib/money";
+import { packageContents, type Package, type PackageItem } from "@/lib/packages";
 import { effectiveQuoteStatus, quoteMessage, quoteTotals } from "@/lib/quotes";
 import { siteUrl } from "@/lib/site-url";
 import type { Quote } from "@/lib/types";
@@ -13,7 +15,8 @@ import { whatsAppLink } from "@/lib/whatsapp";
 import { cancelQuote } from "../actions";
 
 type Detail = Quote & {
-  quote_items: { quantity: number; daily_price: number; items: { name: string } | null }[];
+  quote_items: { quantity: number; package_units: number; daily_price: number; items: { name: string } | null }[];
+  quote_packages: { quantity: number; daily_price: number; packages: (Pick<Package, "name"> & { package_items: PackageItem[] }) | null }[];
   bookings: { reference: string } | null;
 };
 
@@ -24,13 +27,13 @@ export default async function QuotePage({ params, searchParams }: PageProps<"/qu
 
   const { data: quote } = await supabase
     .from("quotes")
-    .select("*, quote_items(quantity, daily_price, items(name)), bookings(reference)")
+    .select("*, quote_items(quantity, package_units, daily_price, items(name)), quote_packages(quantity, daily_price, packages(name, package_items(item_id, quantity, items(name)))), bookings(reference)")
     .eq("id", id)
     .maybeSingle<Detail>();
   if (!quote) notFound();
 
   const status = effectiveQuoteStatus(quote.status, quote.expires_at);
-  const { days, total } = quoteTotals({ ...quote, lines: quote.quote_items });
+  const { days, total } = quoteTotals({ ...quote, lines: quote.quote_items, packages: quote.quote_packages });
   const url = `${await siteUrl()}/q/${quote.public_token}`;
   const message = quoteMessage({
     customerName: quote.customer_name,
@@ -53,10 +56,19 @@ export default async function QuotePage({ params, searchParams }: PageProps<"/qu
         <p className="mt-2">{formatRange(quote.start_date, quote.end_date)} ({days} day{days > 1 ? "s" : ""})</p>
 
         <ul className="mt-3 space-y-1">
-          {quote.quote_items.map((qi, i) => (
+          <PackageLines
+            days={days}
+            packages={quote.quote_packages.map((qp) => ({
+              name: qp.packages?.name ?? "",
+              quantity: qp.quantity,
+              daily_price: qp.daily_price,
+              contents: qp.packages ? packageContents(qp.packages) : undefined,
+            }))}
+          />
+          {quote.quote_items.filter((qi) => qi.quantity > qi.package_units).map((qi, i) => (
             <li key={i} className="flex justify-between gap-2">
-              <span>{qi.quantity} × {qi.items?.name}</span>
-              <span>{formatNad(qi.quantity * qi.daily_price * days)}</span>
+              <span>{qi.quantity - qi.package_units} × {qi.items?.name}</span>
+              <span>{formatNad((qi.quantity - qi.package_units) * qi.daily_price * days)}</span>
             </li>
           ))}
           {Number(quote.delivery_fee) > 0 && (

@@ -105,8 +105,13 @@ export type PublicQuote = {
     payment_terms: string | null;
     terms: string | null;
   };
+  /** Items charged at their own price (units in packages are left out). */
   items: { name: string; quantity: number; daily_price: number; photo_path: string | null }[];
+  packages: PublicPackage[];
 };
+
+/** A package line on the customer's quote or booking page. */
+export type PublicPackage = { name: string; quantity: number; daily_price: number; contents: string };
 
 /** What get_public_booking() returns for the customer's booking page. */
 export type PublicBooking = {
@@ -122,6 +127,7 @@ export type PublicBooking = {
   deposit_amount: number;
   business: PublicQuote["business"];
   items: { name: string; quantity: number; daily_price: number }[];
+  packages: PublicPackage[];
   balance: { amount_due: number; amount_paid: number; outstanding: number; deposit_held: number };
   payments: {
     id: string;

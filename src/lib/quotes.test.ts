@@ -18,6 +18,23 @@ describe("quote totals", () => {
     expect(t).toEqual({ days: 2, rental: 1680, total: 1780 });
   });
 
+  it("charges package units at the package price", () => {
+    // Matches the database test: (800 package + 20 extra chairs x 5) x 2 days.
+    const t = quoteTotals({
+      start_date: "2030-05-01",
+      end_date: "2030-05-02",
+      delivery_fee: 0,
+      setup_fee: 0,
+      discount: 0,
+      lines: [
+        { quantity: 120, package_units: 100, daily_price: 5 },
+        { quantity: 1, package_units: 1, daily_price: 500 },
+      ],
+      packages: [{ quantity: 1, daily_price: 800 }],
+    });
+    expect(t.total).toBe(1800);
+  });
+
   it("never goes below zero", () => {
     const t = quoteTotals({
       start_date: "2030-03-10",
