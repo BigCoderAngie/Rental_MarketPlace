@@ -19,6 +19,10 @@ insert into public.items (id, business_id, name, category, quantity_owned, daily
   ('20000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001', 'Tent', 'events', 2, 500, 1000),
   ('20000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000001', 'Chair', 'events', 100, 5, 0);
 
+-- Full reports come with Pro and Business.
+update public.subscriptions set plan_code = 'pro', expires_at = now() + interval '1 year'
+where business_id = '10000000-0000-0000-0000-000000000001';
+
 set local role authenticated;
 set local request.jwt.claims to '{"sub": "00000000-0000-0000-0000-00000000000a", "role": "authenticated"}';
 
@@ -92,7 +96,22 @@ begin
     format('top customers: %s', j -> 'top_customers');
 end $$;
 
--- 7. Periods must make sense.
+-- 7. On Free, only money recorded and bookings are included.
+reset role;
+update public.subscriptions set expires_at = now() - interval '1 day'
+where business_id = '10000000-0000-0000-0000-000000000001';
+set local role authenticated;
+do $$
+declare
+  j jsonb := public.business_report('10000000-0000-0000-0000-000000000001', '2030-04-01', '2030-04-30');
+begin
+  assert (j ->> 'full')::boolean = false and j ? 'revenue' and j ? 'bookings'
+     and not j ? 'items' and not j ? 'outstanding' and not j ? 'deposits_held' and not j ? 'top_customers',
+    format('free report keys: %s', (select array_agg(k) from jsonb_object_keys(j) k));
+  assert (j -> 'revenue' ->> 'total')::numeric = 1300, 'free report still has the money recorded';
+end $$;
+
+-- 8. Periods must make sense.
 do $$
 begin
   perform public.business_report('10000000-0000-0000-0000-000000000001', '2030-04-30', '2030-04-01');
@@ -108,7 +127,7 @@ exception when others then
   if sqlerrm <> 'Choose a period of a year or less' then raise; end if;
 end $$;
 
--- 8. Another business cannot read this report, and visitors cannot call it.
+-- 9. Another business cannot read this report, and visitors cannot call it.
 set local request.jwt.claims to '{"sub": "00000000-0000-0000-0000-00000000000b", "role": "authenticated"}';
 do $$
 begin

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireBusiness } from "@/lib/business";
+import { loadPlan, planReminder } from "@/lib/plans";
 
 const NAV = [
   { href: "/calendar", label: "Calendar" },
@@ -10,13 +11,20 @@ const NAV = [
 ];
 
 export default async function AppLayout({ children }: LayoutProps<"/">) {
-  const { business } = await requireBusiness();
+  const { supabase, business } = await requireBusiness();
+  const [{ subscription, plans }, { data: isAdmin }] = await Promise.all([
+    loadPlan(supabase, business.id),
+    supabase.rpc("is_platform_admin"),
+  ]);
+  const paidPlan = plans.find((p) => p.code === subscription?.plan_code);
+  const reminder = planReminder(subscription, paidPlan?.name ?? "");
 
   return (
     <div className="mx-auto flex min-h-screen max-w-3xl flex-col">
       <header className="flex items-center justify-between gap-3 border-b border-zinc-200 bg-white px-4 py-3">
         <span className="truncate font-semibold">{business.name}</span>
         <div className="flex shrink-0 items-center gap-4">
+          {isAdmin && <Link href="/admin" className="text-sm text-zinc-600 underline">Admin</Link>}
           <Link href="/reports" className="text-sm text-zinc-600 underline">Reports</Link>
           <Link href="/settings" className="text-sm text-zinc-600 underline">Settings</Link>
           <form action="/auth/signout" method="post">
@@ -24,6 +32,15 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
           </form>
         </div>
       </header>
+
+      {reminder && (
+        <Link
+          href="/plan"
+          className={`block px-4 py-2 text-sm ${reminder.tone === "warn" ? "bg-amber-50 text-amber-900" : "bg-zinc-100 text-zinc-800"}`}
+        >
+          {reminder.text} <span className="font-semibold underline">See plans</span>
+        </Link>
+      )}
 
       <main className="flex-1 px-4 pt-4 pb-24">{children}</main>
 

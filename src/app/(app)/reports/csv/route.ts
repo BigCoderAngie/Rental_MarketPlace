@@ -17,7 +17,10 @@ export async function GET(request: NextRequest) {
   });
   if (error) return new Response(error.message, { status: 400 });
 
-  const { filename, csv } = sectionCsv(data as Report, section);
+  const report = data as Report;
+  if (!report.full) return new Response("CSV downloads come with the Pro and Business plans.", { status: 403 });
+
+  const { filename, csv } = sectionCsv(report, section);
   // A byte order mark so Excel reads N$ amounts and names as UTF-8.
   return new Response(`﻿${csv}`, {
     headers: {

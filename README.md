@@ -38,6 +38,7 @@ Full requirements: [SRS document](https://claude.ai/code/artifact/53bc03dd-b135-
 | **Business details** | Settings page for your WhatsApp number, payment terms, rental terms, how long quotes stay valid and how long you have to answer a booking request. |
 | **Customers** | Every customer who has booked, searchable by name or phone. Each customer's page shows their bookings, total value, what they still owe and any deposit you hold, with one-tap call and WhatsApp, private staff notes, and a button to book them again. |
 | **Reports** | For this month, last month, the last 30 days, this year or any dates: money recorded (by payment method), bookings and their value, how much each item was used, what customers still owe, deposits you hold, and your top customers. Each section downloads as a CSV file for Excel. |
+| **Plans** | Every business starts on Free (15 items, 1 user, money and booking reports). Pro and Business add more items and users, full reports and CSV downloads. The owner pays by bank deposit or eWallet and uploads the proof; a platform admin approves it on the Admin page and the plan runs 12 months, with an invoice. Reminders show 30 days before the end, and a lapsed plan drops back to Free without deleting anything. Businesses that join before the launch ends pay founding prices for their first year. **Prices are placeholders** (Pro N$199 founding / N$299, Business N$499 founding / N$699 a year) until the business interviews; change them on the Admin page. |
 | **Calendar** | Shows how many units of each item are free on each day of the month. Red means fully booked, amber means stock is low. |
 | **No double bookings** | The database refuses to accept a booking if it would leave less than zero units on any day, even if two staff click "accept" at the same moment. Pending requests don't use stock until accepted. |
 
@@ -100,7 +101,7 @@ Nothing is really emailed when running locally:
 | `npm run lint` | Checks code style |
 | `npm run typecheck` | Checks TypeScript types |
 | `npm test` | Runs the unit tests |
-| `npm run test:db` | Checks the booking, quote, payment, checkout, return, booking edit, request expiry, item photo, package, report and customer rules against the **local** database |
+| `npm run test:db` | Checks the booking, quote, payment, checkout, return, booking edit, request expiry, item photo, package, report, customer and plan rules against the **local** database |
 | `npm run db:reset` | Rebuilds the local database from scratch (**deletes local data**) |
 | `npx supabase migration new <name>` | Starts a new database change |
 
@@ -112,14 +113,21 @@ Run `lint`, `typecheck` and `test` before every push.
 
 1. **Database:** create a Supabase project and push the tables (step 2 of
    [Option A](#option-a-online-database-recommended)).
-   This also creates the photo storage buckets and two scheduled jobs: the
+   This also creates the photo and payment-proof storage buckets and two scheduled jobs: the
    nightly overdue check and a request expiry check every 15 minutes (see
    them in Supabase under **Integrations → Cron**).
 2. **Website:** import this repository at [vercel.com/new](https://vercel.com/new)
    and add the settings from `.env.example`, using the values from your
    Supabase project's API settings. Set `NEXT_PUBLIC_SITE_URL` to your Vercel
    address so quote links sent on WhatsApp point to it.
-3. **Login links:** in Supabase, go to **Authentication → URL Configuration**:
+3. **Admins:** after you sign in once, make yourself a platform admin in the
+   Supabase SQL editor, then open `/admin` to set the bank and eWallet details,
+   the invoice name and address, and the plan prices:
+   ```sql
+   insert into public.platform_admins (user_id)
+   select id from auth.users where email = 'you@example.com';
+   ```
+4. **Login links:** in Supabase, go to **Authentication → URL Configuration**:
    - Set **Site URL** to your Vercel address.
    - Add `https://<your-vercel-address>/auth/callback` under **Redirect URLs**.
    - To let people type a code instead of clicking a link, add `{{ .Token }}`
@@ -152,6 +160,8 @@ Run `lint`, `typecheck` and `test` before every push.
 | `src/app/(app)/inventory` | Item and package lists, add and edit |
 | `src/app/(app)/quotes` | Quote list, quote builder, quote page with the WhatsApp button |
 | `src/app/(app)/customers` | Customer list and customer page |
+| `src/app/(app)/plan` | The business's plan, paying for an upgrade, invoices |
+| `src/app/admin` | Platform admin: approve payments, set plan prices and payment details |
 | `src/app/(app)/reports` | Reports and their CSV downloads |
 | `src/app/(app)/settings` | Business details shown on quotes |
 | `src/app/q/[token]` | The customer's quote page (no sign-in needed) |
@@ -192,7 +202,12 @@ Run `lint`, `typecheck` and `test` before every push.
    that came from a package are charged at the package price, not twice.
 7. **Reports come from one function, `business_report`,** so the screen and
    the CSV files always agree. Money in reports is only what staff recorded.
-8. **Photos go straight from the phone to Supabase Storage.** Handover photos
+8. **Plans are enforced by the database.** The item and user limits are
+   checked by triggers, reports leave out the Pro sections on Free, and only
+   `review_plan_payment` (platform admins) can switch a plan on. The plan in
+   force comes from `business_plan()`, so an expired plan is Free without any
+   scheduled job.
+9. **Photos go straight from the phone to Supabase Storage.** Handover photos
    are in the private `handover-photos` bucket; item photos are in the public
    `item-photos` bucket so quote pages can show them. Paths always start with
    the business id, and only that business's staff can upload there. Handover
@@ -233,7 +248,7 @@ The rest of Phase 1, in SRS order:
 | # | Feature | Details | Who |
 | --- | --- | --- | --- |
 | 1 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
-| 2 | **Plans** | Free, Pro and Business. Reports and CSV export become Pro features then (SRS section 6); for now every business gets them. | |
+| 2 | **Notifications** (FR-NT-01) | SMS or WhatsApp messages for new requests, reminders and plan renewals (plans already remind in the app). Shares the SMS provider with phone sign-in. | |
 
 After that, test it with 2 or 3 real hire businesses before starting the
 Phase 2 marketplace.
