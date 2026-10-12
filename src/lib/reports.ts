@@ -5,7 +5,10 @@ import { addDays, isIsoDate, monthOf, monthRange, namibiaToday, shiftMonth, type
 import { STATUS_LABEL, type BookingStatus } from "./bookings";
 import { METHOD_LABEL, type PaymentMethod } from "./payments";
 
+/** Every section. On Free the database leaves out the four "full" ones. */
 export type Report = {
+  /** True on plans with full reports and CSV downloads (Pro and Business). */
+  full: boolean;
   from: IsoDate;
   to: IsoDate;
   days: number;

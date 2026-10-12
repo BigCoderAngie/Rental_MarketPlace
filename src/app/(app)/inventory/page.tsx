@@ -4,6 +4,7 @@ import { requireBusiness } from "@/lib/business";
 import { formatNad } from "@/lib/money";
 import { itemPhotoUrl } from "@/lib/item-photos";
 import { packageContents, type Package } from "@/lib/packages";
+import type { Plan } from "@/lib/plans";
 import type { Item } from "@/lib/types";
 
 export default async function InventoryPage() {
@@ -16,6 +17,8 @@ export default async function InventoryPage() {
     .order("name")
     .returns<Item[]>();
   if (error) throw error;
+  const { data: plan } = await supabase.rpc("business_plan", { p_business_id: business.id }).single<Plan>();
+  const atLimit = plan?.item_limit != null && items.length >= plan.item_limit;
   const { data: packages } = await supabase
     .from("packages")
     .select("*, package_items(item_id, quantity, items(name))")
@@ -27,6 +30,14 @@ export default async function InventoryPage() {
   return (
     <>
       <PageHeader title="Inventory" action={<LinkButton href="/inventory/new">Add item</LinkButton>} />
+      {plan?.item_limit != null && (
+        <p className={`mb-3 text-sm ${atLimit ? "text-amber-800" : "text-zinc-600"}`}>
+          {items.length} of {plan.item_limit} items on {plan.name}.{" "}
+          {items.length >= plan.item_limit - 2 && (
+            <Link href="/plan" className="font-medium underline">Upgrade for more</Link>
+          )}
+        </p>
+      )}
 
       {items.length === 0 ? (
         <p className="text-sm text-zinc-600">No items yet. Add your first item to start taking bookings.</p>
