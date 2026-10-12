@@ -6,6 +6,7 @@ const NAV = [
   { href: "/bookings", label: "Bookings" },
   { href: "/quotes", label: "Quotes" },
   { href: "/inventory", label: "Inventory" },
+  { href: "/reports", label: "Reports" },
 ];
 
 export default async function AppLayout({ children }: LayoutProps<"/">) {
@@ -27,7 +28,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
 
       {/* Bottom tab bar: thumbs reach it on a phone. */}
       <nav className="fixed inset-x-0 bottom-0 border-t border-zinc-200 bg-white">
-        <ul className="mx-auto grid max-w-3xl grid-cols-4">
+        <ul className="mx-auto grid max-w-3xl grid-cols-5">
           {NAV.map((n) => (
             <li key={n.href}>
               <Link href={n.href} className="block py-3 text-center text-sm font-medium text-zinc-700">
