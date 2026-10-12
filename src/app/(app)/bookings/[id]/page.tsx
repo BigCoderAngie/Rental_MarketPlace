@@ -77,7 +77,7 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
       <ErrorNote message={typeof error === "string" ? error : undefined} />
 
       <section className="mb-4 rounded-xl border border-zinc-200 bg-white p-4">
-        <p className="font-medium">{booking.customers?.full_name}</p>
+        <Link href={`/customers/${booking.customer_id}`} className="block font-medium underline">{booking.customers?.full_name}</Link>
         <p className="text-sm text-zinc-600">{booking.customers?.phone}</p>
         <p className="mt-2 text-sm">{formatRange(booking.start_date, booking.end_date)} ({days} day{days > 1 ? "s" : ""})</p>
         {booking.status === "REQUESTED" && booking.request_expires_at && (

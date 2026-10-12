@@ -36,6 +36,7 @@ Full requirements: [SRS document](https://claude.ai/code/artifact/53bc03dd-b135-
 | **Checkout and return** | At handover, staff count what goes out, tick that they checked the customer's ID, and take condition photos with the phone camera. At return they count, per item, how many came back fine, damaged or missing. Late returns are marked, and every night bookings past their end date that are still out become **Overdue**. |
 | **Customer booking link** | Send the customer their booking on WhatsApp. They see what they booked, what they still owe and the payments you recorded, and can confirm each one. They also see the checkout and return records and tap "This is correct" or say what is wrong. Disputing a return opens a problem on the booking. |
 | **Business details** | Settings page for your WhatsApp number, payment terms, rental terms, how long quotes stay valid and how long you have to answer a booking request. |
+| **Customers** | Every customer who has booked, searchable by name or phone. Each customer's page shows their bookings, total value, what they still owe and any deposit you hold, with one-tap call and WhatsApp, private staff notes, and a button to book them again. |
 | **Reports** | For this month, last month, the last 30 days, this year or any dates: money recorded (by payment method), bookings and their value, how much each item was used, what customers still owe, deposits you hold, and your top customers. Each section downloads as a CSV file for Excel. |
 | **Calendar** | Shows how many units of each item are free on each day of the month. Red means fully booked, amber means stock is low. |
 | **No double bookings** | The database refuses to accept a booking if it would leave less than zero units on any day, even if two staff click "accept" at the same moment. Pending requests don't use stock until accepted. |
@@ -99,7 +100,7 @@ Nothing is really emailed when running locally:
 | `npm run lint` | Checks code style |
 | `npm run typecheck` | Checks TypeScript types |
 | `npm test` | Runs the unit tests |
-| `npm run test:db` | Checks the booking, quote, payment, checkout, return, booking edit, request expiry, item photo, package and report rules against the **local** database |
+| `npm run test:db` | Checks the booking, quote, payment, checkout, return, booking edit, request expiry, item photo, package, report and customer rules against the **local** database |
 | `npm run db:reset` | Rebuilds the local database from scratch (**deletes local data**) |
 | `npx supabase migration new <name>` | Starts a new database change |
 
@@ -150,6 +151,7 @@ Run `lint`, `typecheck` and `test` before every push.
 | `src/app/(app)/bookings` | Booking list, new booking, booking page |
 | `src/app/(app)/inventory` | Item and package lists, add and edit |
 | `src/app/(app)/quotes` | Quote list, quote builder, quote page with the WhatsApp button |
+| `src/app/(app)/customers` | Customer list and customer page |
 | `src/app/(app)/reports` | Reports and their CSV downloads |
 | `src/app/(app)/settings` | Business details shown on quotes |
 | `src/app/q/[token]` | The customer's quote page (no sign-in needed) |
@@ -231,8 +233,7 @@ The rest of Phase 1, in SRS order:
 | # | Feature | Details | Who |
 | --- | --- | --- | --- |
 | 1 | **Phone sign-in** (FR-AC-01) | Once an SMS provider is chosen. Also staff invites and roles. | |
-| 2 | **Customer list** | A page per customer with their bookings, what they owe and notes. | |
-| 3 | **Plans** | Free, Pro and Business. Reports and CSV export become Pro features then (SRS section 6); for now every business gets them. | |
+| 2 | **Plans** | Free, Pro and Business. Reports and CSV export become Pro features then (SRS section 6); for now every business gets them. | |
 
 After that, test it with 2 or 3 real hire businesses before starting the
 Phase 2 marketplace.
