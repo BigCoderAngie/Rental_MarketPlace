@@ -14,6 +14,9 @@ export default async function NewBookingPage({ searchParams }: PageProps<"/booki
   const end = isIsoDate(params.end) && params.end >= start ? params.end : start;
   const error = typeof params.error === "string" ? params.error : undefined;
   const datesChosen = isIsoDate(params.start);
+  // Prefilled from a customer's page.
+  const customerName = typeof params.customer_name === "string" ? params.customer_name : undefined;
+  const customerPhone = typeof params.customer_phone === "string" ? params.customer_phone : undefined;
 
   const { supabase, business } = await requireBusiness();
   const { items, free, packages } = await itemsWithFreeUnits(supabase, business.id, start, datesChosen ? end : null);
@@ -23,7 +26,7 @@ export default async function NewBookingPage({ searchParams }: PageProps<"/booki
       <PageHeader title="New booking" />
       <ErrorNote message={error} />
 
-      <DateRangeStep start={start} end={end} />
+      <DateRangeStep start={start} end={end} keep={{ customer_name: customerName, customer_phone: customerPhone }} />
 
       {datesChosen && (
         <form action={createBooking} className="space-y-4">
@@ -32,10 +35,10 @@ export default async function NewBookingPage({ searchParams }: PageProps<"/booki
           <ItemLines items={items} free={free} start={start} end={end} capAtFree packages={packages} />
 
           <Field label="Customer name">
-            <input name="customer_name" required autoComplete="off" className={inputClass} />
+            <input name="customer_name" required autoComplete="off" defaultValue={customerName} className={inputClass} />
           </Field>
           <Field label="Customer phone" hint="Used to find returning customers">
-            <input name="customer_phone" type="tel" required placeholder="+264 81 123 4567" className={inputClass} />
+            <input name="customer_phone" type="tel" required defaultValue={customerPhone} placeholder="+264 81 123 4567" className={inputClass} />
           </Field>
           <Field label="Notes">
             <textarea name="notes" rows={2} className={inputClass} />

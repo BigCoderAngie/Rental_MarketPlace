@@ -5,9 +5,19 @@ import { packageContents, packagesFree, type Package } from "@/lib/packages";
 import type { Item } from "@/lib/types";
 
 /** Step 1 of a booking or quote: a plain GET form that reloads the page with the dates. */
-export function DateRangeStep({ start, end }: { start: IsoDate; end: IsoDate }) {
+export function DateRangeStep({
+  start,
+  end,
+  keep = {},
+}: {
+  start: IsoDate;
+  end: IsoDate;
+  /** Other query values to carry over, such as a customer chosen earlier. */
+  keep?: Record<string, string | undefined>;
+}) {
   return (
     <form method="get" className="mb-6 grid grid-cols-2 gap-3">
+      {Object.entries(keep).map(([name, value]) => value && <input key={name} type="hidden" name={name} value={value} />)}
       <Field label="From">
         <input type="date" name="start" defaultValue={start} required className={inputClass} />
       </Field>

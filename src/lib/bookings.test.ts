@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { BOOKING_STATUSES, HOLDS_STOCK, NEXT_STATUSES, isOverdue, staffActions } from "./bookings";
+import { BOOKING_STATUSES, HOLDS_STOCK, NEXT_STATUSES, isOverdue, staffActions, wentAhead } from "./bookings";
 
 const migrationsDir = join(__dirname, "../../supabase/migrations");
 const sql = readdirSync(migrationsDir)
@@ -40,5 +40,14 @@ describe("booking states", () => {
     expect(isOverdue("CHECKED_OUT", "2030-01-10", "2030-01-10")).toBe(false);
     expect(isOverdue("OVERDUE", "2030-01-12", "2030-01-10")).toBe(true);
     expect(isOverdue("CONFIRMED", "2030-01-01", "2030-01-10")).toBe(false);
+  });
+});
+
+describe("went ahead", () => {
+  it("counts accepted bookings, not requests or ones that never happened", () => {
+    expect(wentAhead("CONFIRMED")).toBe(true);
+    expect(wentAhead("CLOSED")).toBe(true);
+    expect(wentAhead("REQUESTED")).toBe(false);
+    expect(wentAhead("CANCELLED")).toBe(false);
   });
 });

@@ -94,3 +94,11 @@ export const EDITABLE_STATUSES: BookingStatus[] = ["REQUESTED", "ACCEPTED", "FEE
 export function isOverdue(status: BookingStatus, endDate: string, today: string): boolean {
   return status === "OVERDUE" || (status === "CHECKED_OUT" && endDate < today);
 }
+
+/**
+ * Bookings the business accepted, whatever happened next. Only these count
+ * towards money owed and customer history; reports use the same rule.
+ */
+export function wentAhead(status: BookingStatus): boolean {
+  return !["REQUESTED", "DECLINED", "EXPIRED", "CANCELLED"].includes(status);
+}

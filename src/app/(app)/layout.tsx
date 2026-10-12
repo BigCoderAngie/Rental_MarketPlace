@@ -5,8 +5,8 @@ const NAV = [
   { href: "/calendar", label: "Calendar" },
   { href: "/bookings", label: "Bookings" },
   { href: "/quotes", label: "Quotes" },
+  { href: "/customers", label: "Customers" },
   { href: "/inventory", label: "Inventory" },
-  { href: "/reports", label: "Reports" },
 ];
 
 export default async function AppLayout({ children }: LayoutProps<"/">) {
@@ -17,6 +17,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
       <header className="flex items-center justify-between gap-3 border-b border-zinc-200 bg-white px-4 py-3">
         <span className="truncate font-semibold">{business.name}</span>
         <div className="flex shrink-0 items-center gap-4">
+          <Link href="/reports" className="text-sm text-zinc-600 underline">Reports</Link>
           <Link href="/settings" className="text-sm text-zinc-600 underline">Settings</Link>
           <form action="/auth/signout" method="post">
             <button className="text-sm text-zinc-600 underline">Sign out</button>
@@ -31,7 +32,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
         <ul className="mx-auto grid max-w-3xl grid-cols-5">
           {NAV.map((n) => (
             <li key={n.href}>
-              <Link href={n.href} className="block py-3 text-center text-sm font-medium text-zinc-700">
+              <Link href={n.href} className="block py-3 text-center text-xs font-medium text-zinc-700 sm:text-sm">
                 {n.label}
               </Link>
             </li>
