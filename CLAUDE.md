@@ -22,6 +22,9 @@ Stack: Next.js 16 (App Router, read node_modules/next/dist/docs before using unf
 7. Run `npm run lint && npm run typecheck && npm test` and fix failures. Run `npm run build` before a PR.
 8. Show me a short summary and a suggested commit message. Don't commit until I say so.
 
+### Database changes from the other partner
+At the start of a session and after every `git pull`, check whether new files arrived in `supabase/migrations/` (for example `git diff --name-only ORIG_HEAD HEAD -- supabase/migrations` after a pull, or compare with `npx supabase migration list`). If any are not applied yet, tell me straight away, in plain words: which migrations are new, what each one does (from the comment at the top of the file), and the exact command to run (README → "After every pull: update your database"). Ask me before you run `npx supabase db push`, because it changes the live database.
+
 ### Rules
 - Front-end work (look, layout, wording in `src/app/**` and `src/components/**`) stays on the `frontend-updates` branch until it is finished; its pull request stays a draft until then. Other work (database, `src/lib` logic, new features) gets its own branch from `main`.
 - Small commits: one change per commit, so the long front-end branch stays easy to review.

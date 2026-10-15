@@ -95,6 +95,42 @@ Nothing is really emailed when running locally:
 | Mailpit | <http://127.0.0.1:54324> | Read your login code |
 | Supabase Studio | <http://127.0.0.1:54323> | Browse the database |
 
+### After every pull: update your database
+
+> **Do this every time you pull, before `npm run dev`.** When one of us adds a
+> file to `supabase/migrations/`, the other's database needs it too.
+> Otherwise pages that use it fail, for example the homepage shows no plans.
+
+**Online database (Option A):** see what's missing:
+
+```bash
+npx supabase migration list
+```
+
+Each row shows a **Local** and a **Remote** version. If every row has both,
+you're up to date and there's nothing to do (for example, because we share the
+same Supabase project and the other partner already applied them). If a row
+has a Local version but an empty Remote, apply it:
+
+```bash
+npx supabase db push
+```
+
+Type `Y` when asked. It only adds the new changes; it doesn't delete any data.
+Then run `npx supabase migration list` again: every row should now have both.
+
+**Local database (Option B):**
+
+```bash
+npx supabase migration up
+```
+
+If that fails, `npm run db:reset` rebuilds the database from scratch (this
+**deletes local data**).
+
+**What each new migration does** is written in a comment at the top of its
+file in `supabase/migrations/`.
+
 ### Useful commands
 
 | Command | What it does |
