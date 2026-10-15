@@ -16,7 +16,7 @@ function when(iso: string) {
 
 function CustomerResponse({ h }: { h: Handover }) {
   if (h.customer_confirmed_at) {
-    return <p className="mt-2 text-xs font-semibold text-brand">Customer agreed {when(h.customer_confirmed_at)}</p>;
+    return <p className="mt-2 text-xs font-semibold text-primary">Customer agreed {when(h.customer_confirmed_at)}</p>;
   }
   if (h.customer_disputed_at) {
     return (
@@ -25,18 +25,18 @@ function CustomerResponse({ h }: { h: Handover }) {
       </p>
     );
   }
-  return <p className="mt-2 text-xs text-muted">Waiting for the customer to agree on their booking link.</p>;
+  return <p className="mt-2 text-xs text-muted-foreground">Waiting for the customer to agree on their booking link.</p>;
 }
 
 function Record({ h, photoUrls }: { h: Handover; photoUrls: Record<string, string> }) {
   return (
-    <li className="rounded-xl border border-line bg-surface p-4 text-sm">
+    <li className="rounded-xl border border-border bg-card p-4 text-sm">
       <p className="flex justify-between gap-2 font-medium">
         <span>
           {h.kind === "CHECKOUT" ? "Checked out" : "Returned"}
           {h.late && <span className="ml-2 rounded bg-danger-soft px-1.5 py-0.5 text-xs text-danger-ink">Late</span>}
         </span>
-        <span className="text-muted">{when(h.recorded_at)}</span>
+        <span className="text-muted-foreground">{when(h.recorded_at)}</span>
       </p>
       <ul className="mt-2 space-y-0.5">
         {h.handover_lines.map((l) => (
@@ -48,9 +48,9 @@ function Record({ h, photoUrls }: { h: Handover; photoUrls: Record<string, strin
         ))}
       </ul>
       {h.kind === "CHECKOUT" && (
-        <p className="mt-1 text-muted">{h.id_checked ? "ID checked" : "ID not checked"}</p>
+        <p className="mt-1 text-muted-foreground">{h.id_checked ? "ID checked" : "ID not checked"}</p>
       )}
-      {h.note && <p className="mt-1 text-muted">{h.note}</p>}
+      {h.note && <p className="mt-1 text-muted-foreground">{h.note}</p>}
       {h.handover_photos.length > 0 && (
         <div className="mt-2 grid grid-cols-4 gap-2">
           {h.handover_photos.map((p) =>
@@ -95,12 +95,12 @@ export function HandoverSection({
   return (
     <section id="handover" className="mb-4 space-y-3">
       {status === "CONFIRMED" && (
-        <form action={recordCheckout.bind(null, bookingId)} className="space-y-3 rounded-xl border border-line bg-surface p-4">
+        <form action={recordCheckout.bind(null, bookingId)} className="space-y-3 rounded-xl border border-border bg-card p-4">
           <h2 className="font-semibold">Check out</h2>
-          <p className="text-sm text-muted">Count what the customer takes.</p>
+          <p className="text-sm text-muted-foreground">Count what the customer takes.</p>
           {bookedItems.map((i) => (
             <label key={i.item_id} className="flex items-center justify-between gap-3 text-sm">
-              <span>{i.name} <span className="text-muted">({i.quantity} booked)</span></span>
+              <span>{i.name} <span className="text-muted-foreground">({i.quantity} booked)</span></span>
               <input
                 name={`qty:${i.item_id}`}
                 type="number"
@@ -125,23 +125,23 @@ export function HandoverSection({
       )}
 
       {(status === "CHECKED_OUT" || status === "OVERDUE") && checkout && (
-        <form action={recordReturn.bind(null, bookingId)} className="space-y-3 rounded-xl border border-line bg-surface p-4">
+        <form action={recordReturn.bind(null, bookingId)} className="space-y-3 rounded-xl border border-border bg-card p-4">
           <h2 className="font-semibold">Record return</h2>
-          <p className="text-sm text-muted">For each item, count how many came back fine, damaged or missing.</p>
+          <p className="text-sm text-muted-foreground">For each item, count how many came back fine, damaged or missing.</p>
           {checkout.handover_lines.map((l) => (
-            <fieldset key={l.item_id} className="space-y-2 border-t border-line pt-2 text-sm">
-              <legend className="font-medium">{l.items?.name} <span className="font-normal text-muted">({l.quantity} went out)</span></legend>
+            <fieldset key={l.item_id} className="space-y-2 border-t border-border pt-2 text-sm">
+              <legend className="font-medium">{l.items?.name} <span className="font-normal text-muted-foreground">({l.quantity} went out)</span></legend>
               <div className="grid grid-cols-3 gap-2">
                 <label className="block">
-                  <span className="mb-1 block text-xs text-muted">Fine</span>
+                  <span className="mb-1 block text-xs text-muted-foreground">Fine</span>
                   <input name={`fine:${l.item_id}`} type="number" inputMode="numeric" min={0} defaultValue={l.quantity} className={countClass} />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-xs text-muted">Damaged</span>
+                  <span className="mb-1 block text-xs text-muted-foreground">Damaged</span>
                   <input name={`damaged:${l.item_id}`} type="number" inputMode="numeric" min={0} defaultValue={0} className={countClass} />
                 </label>
                 <label className="block">
-                  <span className="mb-1 block text-xs text-muted">Missing</span>
+                  <span className="mb-1 block text-xs text-muted-foreground">Missing</span>
                   <input name={`missing:${l.item_id}`} type="number" inputMode="numeric" min={0} defaultValue={0} className={countClass} />
                 </label>
               </div>
@@ -157,7 +157,7 @@ export function HandoverSection({
 
       {records.length > 0 && (
         <>
-          <h2 className="text-sm font-semibold text-ink-soft">Checkout and return</h2>
+          <h2 className="text-sm font-semibold text-foreground-soft">Checkout and return</h2>
           <ul className="space-y-3">
             {records.map((h) => (
               <Record key={h.id} h={h} photoUrls={photoUrls} />

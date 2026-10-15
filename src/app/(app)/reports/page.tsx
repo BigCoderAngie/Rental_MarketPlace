@@ -20,16 +20,16 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <section className="mb-4 rounded-xl border border-line bg-surface p-4 text-sm">
+    <section className="mb-4 rounded-xl border border-border bg-card p-4 text-sm">
       <div className="mb-2 flex items-baseline justify-between gap-3">
         <h2 className="font-semibold">{title}</h2>
         {csv && (
-          <a href={csv} className="shrink-0 text-xs font-medium text-brand underline">
+          <a href={csv} className="shrink-0 text-xs font-medium text-primary underline">
             Download CSV
           </a>
         )}
       </div>
-      {note && <p className="mb-2 text-xs text-muted">{note}</p>}
+      {note && <p className="mb-2 text-xs text-muted-foreground">{note}</p>}
       {children}
     </section>
   );
@@ -37,14 +37,14 @@ function Section({
 
 function Row({ label, value, strong }: { label: ReactNode; value: ReactNode; strong?: boolean }) {
   return (
-    <li className={`flex justify-between gap-3 ${strong ? "border-t border-line pt-1 font-semibold" : ""}`}>
+    <li className={`flex justify-between gap-3 ${strong ? "border-t border-border pt-1 font-semibold" : ""}`}>
       <span className="min-w-0">{label}</span>
       <span className="shrink-0">{value}</span>
     </li>
   );
 }
 
-const Empty = ({ children }: { children: ReactNode }) => <p className="text-muted">{children}</p>;
+const Empty = ({ children }: { children: ReactNode }) => <p className="text-muted-foreground">{children}</p>;
 
 /** Reports (FR-RP-01) for the chosen period, each section downloadable as CSV. */
 export default async function ReportsPage({ searchParams }: PageProps<"/reports">) {
@@ -70,7 +70,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
           <Link
             key={p}
             href={`/reports?period=${p}`}
-            className={`rounded-full border px-3 py-1 ${p === key ? "border-brand bg-brand-soft font-medium text-brand-ink" : "border-line-strong text-ink-soft"}`}
+            className={`rounded-full border px-3 py-1 ${p === key ? "border-primary bg-primary-soft font-medium text-primary-ink" : "border-input text-foreground-soft"}`}
           >
             {PERIOD_LABEL[p]}
           </Link>
@@ -78,11 +78,11 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
       </nav>
       <form method="get" className="mb-4 grid grid-cols-2 gap-2 text-sm">
         <label className="min-w-0">
-          <span className="mb-1 block text-xs text-muted">From</span>
+          <span className="mb-1 block text-xs text-muted-foreground">From</span>
           <input type="date" name="from" defaultValue={from} required className={`${inputClass} min-w-0`} />
         </label>
         <label className="min-w-0">
-          <span className="mb-1 block text-xs text-muted">To</span>
+          <span className="mb-1 block text-xs text-muted-foreground">To</span>
           <input type="date" name="to" defaultValue={to} required className={`${inputClass} min-w-0`} />
         </label>
         <button className={`${secondaryButtonClass} col-span-2`}>Show these dates</button>
@@ -92,7 +92,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
 
       {r && (
         <>
-          <p className="mb-3 text-sm text-muted">{formatRange(r.from, r.to)} ({r.days} days)</p>
+          <p className="mb-3 text-sm text-muted-foreground">{formatRange(r.from, r.to)} ({r.days} days)</p>
 
           <Section title="Money recorded" note="Payments you recorded with a date in this period." csv={csv("revenue")}>
             <ul className="space-y-1">
@@ -101,12 +101,12 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
               {r.revenue.deposits_kept > 0 && <Row label="Kept from deposits" value={formatNad(r.revenue.deposits_kept)} />}
               <Row
                 label="Total"
-                value={<span className="rounded-md bg-gold px-2 py-0.5 text-foreground">{formatNad(r.revenue.total)}</span>}
+                value={<span className="rounded-md bg-accent px-2 py-0.5 text-accent-foreground">{formatNad(r.revenue.total)}</span>}
                 strong
               />
             </ul>
             {r.revenue.by_method.length > 0 && (
-              <p className="mt-2 text-xs text-muted">
+              <p className="mt-2 text-xs text-muted-foreground">
                 {r.revenue.by_method.map((m) => `${METHOD_LABEL[m.method]} ${formatNad(m.amount)}`).join(" · ")}
               </p>
             )}
@@ -117,7 +117,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
               <Row label="Went ahead" value={r.bookings.went_ahead} />
               <Row label="Value of those bookings" value={formatNad(r.bookings.value)} />
               {Object.entries(r.bookings.by_status).map(([status, n]) => (
-                <Row key={status} label={<span className="text-muted">{STATUS_LABEL[status as BookingStatus]}</span>} value={n} />
+                <Row key={status} label={<span className="text-muted-foreground">{STATUS_LABEL[status as BookingStatus]}</span>} value={n} />
               ))}
               <Row label="All bookings" value={r.bookings.count} strong />
             </ul>
@@ -140,8 +140,8 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
                         <span>{i.name}</span>
                         <span className="font-medium">{i.utilisation}%</span>
                       </p>
-                      <div className="mt-1 h-1.5 rounded-full bg-subtle">
-                        <div className="h-1.5 rounded-full bg-brand" style={{ width: `${Math.min(i.utilisation, 100)}%` }} />
+                      <div className="mt-1 h-1.5 rounded-full bg-muted">
+                        <div className="h-1.5 rounded-full bg-primary" style={{ width: `${Math.min(i.utilisation, 100)}%` }} />
                       </div>
                     </li>
                   ))}
@@ -195,7 +195,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
                   {r.top_customers.map((c) => (
                     <li key={c.phone} className="flex justify-between gap-3">
                       <span>
-                        {c.name} <span className="text-muted">({c.bookings} booking{c.bookings > 1 ? "s" : ""})</span>
+                        {c.name} <span className="text-muted-foreground">({c.bookings} booking{c.bookings > 1 ? "s" : ""})</span>
                       </span>
                       <span>{formatNad(c.value)}</span>
                     </li>
@@ -205,7 +205,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
             </Section>
             </>
           ) : (
-            <section className="mb-4 rounded-xl border border-gold-line bg-gold-soft p-4 text-sm text-gold-ink">
+            <section className="mb-4 rounded-xl border border-accent-border bg-accent-soft p-4 text-sm text-accent-ink">
               <p className="font-semibold">More reports with Pro and Business</p>
               <p className="mt-1">
                 See how much each item is used, who still owes you, the deposits you hold and your top customers, and

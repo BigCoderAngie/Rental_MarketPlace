@@ -35,23 +35,23 @@ export function Field({
     <label className="block">
       <span className="mb-1 block text-sm font-medium">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-xs text-muted">{hint}</span>}
+      {hint && <span className="mt-1 block text-xs text-muted-foreground">{hint}</span>}
     </label>
   );
 }
 
 export const inputClass =
-  "w-full rounded-lg border border-line-strong bg-surface px-3 py-2.5 text-base focus:border-brand focus:outline-none";
+  "w-full rounded-lg border border-input bg-card px-3 py-2.5 text-base focus:border-primary focus:outline-none";
 
 export const buttonClass =
-  "inline-flex items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-strong";
+  "inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-strong";
 
 export const secondaryButtonClass =
-  "inline-flex items-center justify-center rounded-lg border border-line-strong bg-surface px-4 py-2.5 text-sm font-semibold text-ink-soft hover:bg-subtle";
+  "inline-flex items-center justify-center rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground-soft hover:bg-muted";
 
-// Marigold fill with dark text (7.4:1); marigold is never a text colour.
+// Marigold fill with accent-foreground text (7.4:1); marigold is never a text colour.
 export const upgradeBadgeClass =
-  "inline-flex items-center rounded-full bg-gold px-2.5 py-0.5 text-xs font-semibold text-foreground hover:bg-gold/85";
+  "inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-accent-foreground hover:bg-accent/85";
 
 export function LinkButton({ href, children }: { href: string; children: ReactNode }) {
   return (

@@ -23,7 +23,7 @@ export default async function NewItemPage({ searchParams }: PageProps<"/inventor
     return (
       <>
         <PageHeader title="Add item" />
-        <section className="rounded-xl border border-gold-line bg-gold-soft p-4 text-sm text-gold-ink">
+        <section className="rounded-xl border border-accent-border bg-accent-soft p-4 text-sm text-accent-ink">
           <p className="font-semibold">Your {plan.name} plan allows {plan.item_limit} items, and you have {count}.</p>
           <p className="mt-1">Upgrade to Pro or Business to add more, or remove an item you no longer rent out.</p>
           <div className="mt-3">

@@ -35,14 +35,14 @@ export default async function PublicQuotePage({ params, searchParams }: PageProp
 
   return (
     <main className="mx-auto max-w-lg px-4 py-6">
-      <p className="text-sm text-muted">Quote from</p>
+      <p className="text-sm text-muted-foreground">Quote from</p>
       <h1 className="text-2xl font-semibold">{b.name}</h1>
-      {b.towns.length > 0 && <p className="text-sm text-muted">{b.towns.join(", ")}</p>}
+      {b.towns.length > 0 && <p className="text-sm text-muted-foreground">{b.towns.join(", ")}</p>}
 
-      <section className="mt-5 rounded-xl border border-line bg-surface p-4 text-sm">
+      <section className="mt-5 rounded-xl border border-border bg-card p-4 text-sm">
         <p className="flex justify-between gap-2">
           <span className="font-medium">For {quote.customer_name}</span>
-          <span className="text-muted">{quote.reference}</span>
+          <span className="text-muted-foreground">{quote.reference}</span>
         </p>
         <p className="mt-1">{formatRange(quote.start_date, quote.end_date)} ({quote.days} day{quote.days > 1 ? "s" : ""})</p>
 
@@ -70,28 +70,28 @@ export default async function PublicQuotePage({ params, searchParams }: PageProp
             <li className="flex justify-between"><span>Discount</span><span>−{formatNad(quote.discount)}</span></li>
           )}
         </ul>
-        <p className="mt-3 flex justify-between border-t border-line pt-2 text-base font-semibold">
+        <p className="mt-3 flex justify-between border-t border-border pt-2 text-base font-semibold">
           <span>Total</span>
           <span>{formatNad(quote.total)}</span>
         </p>
         {quote.deposit_amount > 0 && (
-          <p className="flex justify-between text-muted">
+          <p className="flex justify-between text-muted-foreground">
             <span>Refundable deposit</span>
             <span>{formatNad(quote.deposit_amount)}</span>
           </p>
         )}
-        {quote.notes && <p className="mt-3 text-ink-soft">{quote.notes}</p>}
+        {quote.notes && <p className="mt-3 text-foreground-soft">{quote.notes}</p>}
       </section>
 
       {(b.payment_terms || b.terms) && (
-        <section className="mt-4 space-y-2 text-sm text-ink-soft">
+        <section className="mt-4 space-y-2 text-sm text-foreground-soft">
           {b.payment_terms && (
             <p><span className="font-medium">Payment: </span>{b.payment_terms}</p>
           )}
           {b.terms && (
             <p className="whitespace-pre-line"><span className="font-medium">Terms: </span>{b.terms}</p>
           )}
-          <p className="text-xs text-muted">You pay {b.name} directly. This website does not take payments.</p>
+          <p className="text-xs text-muted-foreground">You pay {b.name} directly. This website does not take payments.</p>
         </section>
       )}
 
@@ -107,7 +107,7 @@ export default async function PublicQuotePage({ params, searchParams }: PageProp
               <input name="customer_phone" type="tel" required defaultValue={quote.customer_phone ?? ""} className={inputClass} />
             </Field>
             <button className={`${buttonClass} w-full`}>Accept quote</button>
-            <p className="text-xs text-muted">
+            <p className="text-xs text-muted-foreground">
               Valid until {new Date(quote.expires_at).toLocaleDateString("en-NA", { timeZone: "Africa/Windhoek", dateStyle: "medium" })}.
               {" "}{b.name} will confirm your booking.
             </p>
@@ -115,15 +115,15 @@ export default async function PublicQuotePage({ params, searchParams }: PageProp
         )}
 
         {quote.status === "ACCEPTED" && (
-          <p className="rounded-xl bg-brand-soft p-4 text-sm text-brand-ink">
+          <p className="rounded-xl bg-primary-soft p-4 text-sm text-primary-ink">
             You accepted this quote. {b.name} will confirm your booking.
           </p>
         )}
         {quote.status === "EXPIRED" && (
-          <p className="rounded-xl bg-subtle p-4 text-sm">This quote has expired. Ask {b.name} for a new one.</p>
+          <p className="rounded-xl bg-muted p-4 text-sm">This quote has expired. Ask {b.name} for a new one.</p>
         )}
         {quote.status === "CANCELLED" && (
-          <p className="rounded-xl bg-subtle p-4 text-sm">{b.name} has withdrawn this quote.</p>
+          <p className="rounded-xl bg-muted p-4 text-sm">{b.name} has withdrawn this quote.</p>
         )}
 
         {askLink && (

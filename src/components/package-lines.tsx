@@ -12,7 +12,7 @@ export function PackageLines({
     <li key={`pkg-${i}`} className="flex justify-between gap-2">
       <span>
         {p.quantity} × {p.name}
-        {p.contents && <span className="block text-xs text-muted">{p.contents}</span>}
+        {p.contents && <span className="block text-xs text-muted-foreground">{p.contents}</span>}
       </span>
       <span>{formatNad(p.quantity * p.daily_price * days)}</span>
     </li>

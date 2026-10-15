@@ -52,36 +52,36 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
   return (
     <main className="mx-auto max-w-3xl px-4 py-6">
       <p className="mb-1 text-sm">
-        <Link href="/calendar" className="text-muted underline">Back to the app</Link>
+        <Link href="/calendar" className="text-muted-foreground underline">Back to the app</Link>
       </p>
       <h1 className="mb-4 text-2xl font-semibold">Admin</h1>
       <ErrorNote message={typeof error === "string" ? error : undefined} />
       {typeof saved === "string" && SAVED[saved] && (
-        <p className="mb-4 rounded-lg bg-brand-soft p-3 text-sm text-brand-ink">{SAVED[saved]}</p>
+        <p className="mb-4 rounded-lg bg-primary-soft p-3 text-sm text-primary-ink">{SAVED[saved]}</p>
       )}
 
       <h2 className="mb-2 font-semibold">Payments to check ({pending?.length ?? 0})</h2>
       {!pending || pending.length === 0 ? (
-        <p className="mb-6 text-sm text-muted">Nothing waiting.</p>
+        <p className="mb-6 text-sm text-muted-foreground">Nothing waiting.</p>
       ) : (
         <ul className="mb-6 space-y-3">
           {pending.map((p) => (
-            <li key={p.id} className="rounded-xl border border-line bg-surface p-4 text-sm">
+            <li key={p.id} className="rounded-xl border border-border bg-card p-4 text-sm">
               <p className="flex justify-between gap-2 font-medium">
                 <span>{p.businesses?.name}</span>
                 <span>{formatNad(p.amount)}</span>
               </p>
-              <p className="text-muted">
+              <p className="text-muted-foreground">
                 {p.plans?.name} · {METHOD_LABEL[p.method]}
                 {p.reference && ` · ref ${p.reference}`} · sent {when(p.created_at)}
               </p>
               {proofUrls[p.proof_path] && (
                 <a href={proofUrls[p.proof_path]} target="_blank" rel="noopener noreferrer" className="mt-2 block">
                   {/* eslint-disable-next-line @next/next/no-img-element -- signed storage URL */}
-                  <img src={proofUrls[p.proof_path]} alt="Proof of payment" className="max-h-64 rounded-lg border border-line" />
+                  <img src={proofUrls[p.proof_path]} alt="Proof of payment" className="max-h-64 rounded-lg border border-border" />
                 </a>
               )}
-              <p className="mt-2 text-xs text-muted">Check the money arrived in the account before approving.</p>
+              <p className="mt-2 text-xs text-muted-foreground">Check the money arrived in the account before approving.</p>
               <div className="mt-2 grid gap-2 sm:grid-cols-2">
                 <form action={reviewPayment.bind(null, p.id, true)}>
                   <button className={`${buttonClass} w-full`}>Approve {p.plans?.name} for 12 months</button>
@@ -99,7 +99,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
       {reviewed && reviewed.length > 0 && (
         <>
           <h2 className="mb-2 font-semibold">Recently checked</h2>
-          <ul className="mb-6 divide-y divide-line rounded-xl border border-line bg-surface text-sm">
+          <ul className="mb-6 divide-y divide-border rounded-xl border border-border bg-card text-sm">
             {reviewed.map((p) => (
               <li key={p.id} className="px-4 py-2">
                 {p.businesses?.name} · {p.plans?.name} · {formatNad(p.amount)} ·{" "}
@@ -111,13 +111,13 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
       )}
 
       <h2 className="mb-1 font-semibold">Plans</h2>
-      <p className="mb-2 text-sm text-muted">
+      <p className="mb-2 text-sm text-muted-foreground">
         Placeholder prices until the business interviews. Leave a limit empty for unlimited. Changes apply to new
         payments; plans already paid for keep running.
       </p>
       <div className="mb-6 space-y-3">
         {(plans ?? []).map((p) => (
-          <form key={p.code} action={updatePlan.bind(null, p.code)} className="rounded-xl border border-line bg-surface p-4">
+          <form key={p.code} action={updatePlan.bind(null, p.code)} className="rounded-xl border border-border bg-card p-4">
             <p className="mb-2 font-medium">{p.name}</p>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               <Field label="Price a year (N$)">
@@ -148,7 +148,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
       {settings && (
         <>
           <h2 className="mb-2 font-semibold">Payment details and invoices</h2>
-          <form action={updatePlatformSettings} className="space-y-3 rounded-xl border border-line bg-surface p-4">
+          <form action={updatePlatformSettings} className="space-y-3 rounded-xl border border-border bg-card p-4">
             <Field label="Founding prices for businesses that join by" hint="They keep founding prices for their first year">
               <input name="launch_ends_on" type="date" required defaultValue={settings.launch_ends_on} className={inputClass} />
             </Field>

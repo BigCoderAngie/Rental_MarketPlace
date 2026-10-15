@@ -58,19 +58,19 @@ export function ItemLines({
   const days = daysInclusive(start, end);
   return (
     <>
-      <p className="text-sm text-muted">
+      <p className="text-sm text-muted-foreground">
         {days} day{days > 1 ? "s" : ""}. Numbers show what is free on every day.
       </p>
       {packages.length > 0 && (
-        <ul className="divide-y divide-line rounded-xl border border-brand-line bg-brand-soft/40">
+        <ul className="divide-y divide-border rounded-xl border border-primary-border bg-primary-soft/40">
           {packages.map((pkg) => {
             const available = packagesFree(pkg, free);
             return (
               <li key={pkg.id} className="flex items-center justify-between gap-3 px-4 py-3">
                 <span>
                   <span className="block font-medium">{pkg.name}</span>
-                  <span className="block text-xs text-muted">{packageContents(pkg)}</span>
-                  <span className={`text-sm ${available === 0 ? "text-danger" : "text-muted"}`}>
+                  <span className="block text-xs text-muted-foreground">{packageContents(pkg)}</span>
+                  <span className={`text-sm ${available === 0 ? "text-danger" : "text-muted-foreground"}`}>
                     {available} free · {formatNad(pkg.daily_price)} per day
                   </span>
                 </span>
@@ -89,14 +89,14 @@ export function ItemLines({
           })}
         </ul>
       )}
-      <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
+      <ul className="divide-y divide-border rounded-xl border border-border bg-card">
         {items.map((item) => {
           const available = free.get(item.id) ?? 0;
           return (
             <li key={item.id} className="flex items-center justify-between gap-3 px-4 py-3">
               <span>
                 <span className="block font-medium">{item.name}</span>
-                <span className={`text-sm ${available === 0 ? "text-danger" : "text-muted"}`}>
+                <span className={`text-sm ${available === 0 ? "text-danger" : "text-muted-foreground"}`}>
                   {available} free · {formatNad(item.daily_price)} per day
                 </span>
               </span>

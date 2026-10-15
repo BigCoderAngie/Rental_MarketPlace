@@ -38,7 +38,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
     return (
       <>
         <PageHeader title="Calendar" />
-        <p className="mb-4 text-sm text-muted">Add items to your inventory to see them on the calendar.</p>
+        <p className="mb-4 text-sm text-muted-foreground">Add items to your inventory to see them on the calendar.</p>
         <LinkButton href="/inventory/new">Add item</LinkButton>
       </>
     );
@@ -99,7 +99,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
         <thead>
           <tr>
             {WEEKDAYS.map((d) => (
-              <th key={d} className="text-xs font-medium text-muted">{d}</th>
+              <th key={d} className="text-xs font-medium text-muted-foreground">{d}</th>
             ))}
           </tr>
         </thead>
@@ -114,11 +114,11 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
                   free <= 0
                     ? "bg-danger-soft text-danger-ink"
                     : free <= item.low_stock_threshold
-                      ? "bg-gold-soft text-gold-ink"
-                      : "bg-surface";
+                      ? "bg-accent-soft text-accent-ink"
+                      : "bg-card";
                 return (
-                  <td key={d} className={`rounded-lg border border-line p-1 align-top ${tone} ${day === today ? "ring-2 ring-brand" : ""}`}>
-                    <span className="block text-left text-[10px] text-muted">{Number(day.slice(8))}</span>
+                  <td key={d} className={`rounded-lg border border-border p-1 align-top ${tone} ${day === today ? "ring-2 ring-primary" : ""}`}>
+                    <span className="block text-left text-[10px] text-muted-foreground">{Number(day.slice(8))}</span>
                     <span className="block text-sm font-semibold">{Math.max(free, 0)}</span>
                   </td>
                 );
@@ -127,29 +127,29 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
           ))}
         </tbody>
       </table>
-      <p className="mt-2 text-xs text-muted">
+      <p className="mt-2 text-xs text-muted-foreground">
         Units free each day out of {item.quantity_owned - item.units_out_of_service} in service.
         <Swatch className="bg-danger-soft" /> fully booked
         {item.low_stock_threshold > 0 && (
           <>
-            , <Swatch className="bg-gold-soft" /> {item.low_stock_threshold} or fewer left
+            , <Swatch className="bg-accent-soft" /> {item.low_stock_threshold} or fewer left
           </>
         )}
         .
         Pending requests do not use stock until accepted.
       </p>
 
-      <h2 className="mt-6 mb-2 text-sm font-semibold text-ink-soft">Bookings holding {item.name} this month</h2>
+      <h2 className="mt-6 mb-2 text-sm font-semibold text-foreground-soft">Bookings holding {item.name} this month</h2>
       {bookings.length === 0 ? (
-        <p className="text-sm text-muted">None.</p>
+        <p className="text-sm text-muted-foreground">None.</p>
       ) : (
-        <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
+        <ul className="divide-y divide-border rounded-xl border border-border bg-card">
           {bookings.map((b) => (
             <li key={b.id}>
               <Link href={`/bookings/${b.id}`} className="flex items-center justify-between gap-2 px-4 py-3 text-sm">
                 <span>
                   <span className="block font-medium">{b.quantity} × {b.customer}</span>
-                  <span className="text-muted">{formatRange(b.start_date, b.end_date)}</span>
+                  <span className="text-muted-foreground">{formatRange(b.start_date, b.end_date)}</span>
                 </span>
                 <StatusBadge status={b.status} />
               </Link>
@@ -162,5 +162,5 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
 }
 
 const Swatch = ({ className }: { className: string }) => (
-  <span className={`inline-block h-3 w-3 rounded-sm border border-line-strong align-[-2px] ${className}`} />
+  <span className={`inline-block h-3 w-3 rounded-sm border border-input align-[-2px] ${className}`} />
 );

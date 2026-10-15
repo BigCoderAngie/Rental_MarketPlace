@@ -55,9 +55,9 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
       </p>
 
       {bookings.length === 0 ? (
-        <p className="text-sm text-muted">No bookings yet.</p>
+        <p className="text-sm text-muted-foreground">No bookings yet.</p>
       ) : (
-        <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
+        <ul className="divide-y divide-border rounded-xl border border-border bg-card">
           {bookings.map((b) => (
             <li key={b.id}>
               <Link href={`/bookings/${b.id}`} className="block px-4 py-3">
@@ -70,11 +70,11 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
                     <StatusBadge status={b.status} />
                   </span>
                 </span>
-                <span className="block text-sm text-muted">
+                <span className="block text-sm text-muted-foreground">
                   {formatRange(b.start_date, b.end_date)} · {b.reference}
                   {balanceById.has(b.id) && <> · {moneyLine(balanceById.get(b.id)!, b.status)}</>}
                 </span>
-                <span className="block truncate text-sm text-muted">
+                <span className="block truncate text-sm text-muted-foreground">
                   {b.booking_items.map((bi) => `${bi.quantity} × ${bi.items?.name}`).join(", ")}
                 </span>
               </Link>

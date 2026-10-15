@@ -24,35 +24,35 @@ export default async function InvoicePage({ params }: PageProps<"/plan/invoices/
   if (!payment || !settings || !payment.starts_at || !payment.ends_at) notFound();
 
   return (
-    <article className="rounded-xl border border-line bg-surface p-5 text-sm print:border-0">
+    <article className="rounded-xl border border-border bg-card p-5 text-sm print:border-0">
       <header className="mb-5 flex justify-between gap-4">
         <div>
           <p className="font-semibold">{settings.seller_name}</p>
-          <p className="whitespace-pre-line text-muted">{settings.seller_address}</p>
-          {settings.seller_vat_number && <p className="text-muted">VAT number {settings.seller_vat_number}</p>}
+          <p className="whitespace-pre-line text-muted-foreground">{settings.seller_address}</p>
+          {settings.seller_vat_number && <p className="text-muted-foreground">VAT number {settings.seller_vat_number}</p>}
         </div>
         <div className="text-right">
           <p className="text-lg font-semibold">Invoice</p>
           <p>{payment.invoice_number}</p>
-          <p className="text-muted">{day(payment.reviewed_at ?? payment.starts_at)}</p>
+          <p className="text-muted-foreground">{day(payment.reviewed_at ?? payment.starts_at)}</p>
         </div>
       </header>
 
-      <p className="text-muted">Billed to</p>
+      <p className="text-muted-foreground">Billed to</p>
       <p className="mb-5 font-medium">{business.name}</p>
 
       <table className="w-full">
         <thead>
-          <tr className="border-b border-line text-left text-muted">
+          <tr className="border-b border-border text-left text-muted-foreground">
             <th className="py-1 font-normal">Description</th>
             <th className="py-1 text-right font-normal">Amount</th>
           </tr>
         </thead>
         <tbody>
-          <tr className="border-b border-line">
+          <tr className="border-b border-border">
             <td className="py-2">
               {payment.plans?.name} plan, 12 months
-              <span className="block text-xs text-muted">{day(payment.starts_at)} to {day(payment.ends_at)}</span>
+              <span className="block text-xs text-muted-foreground">{day(payment.starts_at)} to {day(payment.ends_at)}</span>
             </td>
             <td className="py-2 text-right">{formatNad(payment.amount)}</td>
           </tr>
@@ -65,7 +65,7 @@ export default async function InvoicePage({ params }: PageProps<"/plan/invoices/
         </tfoot>
       </table>
 
-      <p className="mt-4 text-muted">
+      <p className="mt-4 text-muted-foreground">
         Paid by {METHOD_LABEL[payment.method]}
         {payment.reference && `, reference ${payment.reference}`}.
       </p>

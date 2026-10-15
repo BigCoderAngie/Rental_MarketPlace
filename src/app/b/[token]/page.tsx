@@ -41,11 +41,11 @@ export default async function PublicBookingPage({ params, searchParams }: PagePr
 
   return (
     <main className="mx-auto max-w-lg px-4 py-6">
-      <p className="text-sm text-muted">Booking with</p>
+      <p className="text-sm text-muted-foreground">Booking with</p>
       <h1 className="text-2xl font-semibold">{b.name}</h1>
-      {b.towns.length > 0 && <p className="text-sm text-muted">{b.towns.join(", ")}</p>}
+      {b.towns.length > 0 && <p className="text-sm text-muted-foreground">{b.towns.join(", ")}</p>}
 
-      <section className="mt-5 rounded-xl border border-line bg-surface p-4 text-sm">
+      <section className="mt-5 rounded-xl border border-border bg-card p-4 text-sm">
         <p className="flex items-center justify-between gap-2">
           <span className="font-medium">For {booking.customer_name}</span>
           <StatusBadge status={booking.status} />
@@ -71,11 +71,11 @@ export default async function PublicBookingPage({ params, searchParams }: PagePr
             <li className="flex justify-between"><span>Discount</span><span>−{formatNad(booking.discount)}</span></li>
           )}
         </ul>
-        <p className="mt-3 flex justify-between border-t border-line pt-2 font-semibold">
+        <p className="mt-3 flex justify-between border-t border-border pt-2 font-semibold">
           <span>Total</span>
           <span>{formatNad(booking.balance.amount_due)}</span>
         </p>
-        <p className="flex justify-between text-muted">
+        <p className="flex justify-between text-muted-foreground">
           <span>Paid so far</span>
           <span>{formatNad(booking.balance.amount_paid)}</span>
         </p>
@@ -84,7 +84,7 @@ export default async function PublicBookingPage({ params, searchParams }: PagePr
           <span>{formatNad(outstanding)}</span>
         </p>
         {(booking.balance.deposit_held > 0 || booking.deposit_amount > 0) && (
-          <p className="mt-1 flex justify-between text-muted">
+          <p className="mt-1 flex justify-between text-muted-foreground">
             <span>Deposit held by {b.name}</span>
             <span>{formatNad(booking.balance.deposit_held)}</span>
           </p>
@@ -95,20 +95,20 @@ export default async function PublicBookingPage({ params, searchParams }: PagePr
 
       {booking.payments.length > 0 && (
         <section className="mt-4">
-          <h2 className="mb-2 text-sm font-semibold text-ink-soft">Payments recorded by {b.name}</h2>
-          <ul className="divide-y divide-line rounded-xl border border-line bg-surface text-sm">
+          <h2 className="mb-2 text-sm font-semibold text-foreground-soft">Payments recorded by {b.name}</h2>
+          <ul className="divide-y divide-border rounded-xl border border-border bg-card text-sm">
             {booking.payments.map((p) => (
               <li key={p.id} className="flex items-center justify-between gap-3 px-4 py-3">
                 <span>
                   <span className="block font-medium">
                     {KIND_LABEL[p.kind]}: {isOutgoing(p.kind) ? "−" : ""}{formatNad(p.amount)}
                   </span>
-                  <span className="text-muted">
+                  <span className="text-muted-foreground">
                     {formatDate(p.paid_on)}{p.method && ` · ${METHOD_LABEL[p.method]}`}{p.note && ` · ${p.note}`}
                   </span>
                 </span>
                 {p.customer_confirmed_at ? (
-                  <span className="shrink-0 text-xs font-semibold text-brand">Confirmed</span>
+                  <span className="shrink-0 text-xs font-semibold text-primary">Confirmed</span>
                 ) : (
                   <form action={confirmPayment.bind(null, token, p.id)} className="shrink-0">
                     <button className={secondaryButtonClass}>Confirm</button>
@@ -117,7 +117,7 @@ export default async function PublicBookingPage({ params, searchParams }: PagePr
               </li>
             ))}
           </ul>
-          <p className="mt-1 text-xs text-muted">
+          <p className="mt-1 text-xs text-muted-foreground">
             Tap Confirm if the amount matches what you paid or received. If something is wrong, message {b.name}.
           </p>
         </section>
@@ -126,9 +126,9 @@ export default async function PublicBookingPage({ params, searchParams }: PagePr
       <HandoverRecords token={token} businessName={b.name} records={handovers} />
 
       {b.payment_terms && (
-        <p className="mt-4 text-sm text-ink-soft"><span className="font-medium">Payment: </span>{b.payment_terms}</p>
+        <p className="mt-4 text-sm text-foreground-soft"><span className="font-medium">Payment: </span>{b.payment_terms}</p>
       )}
-      <p className="mt-2 text-xs text-muted">You pay {b.name} directly. This website does not take payments.</p>
+      <p className="mt-2 text-xs text-muted-foreground">You pay {b.name} directly. This website does not take payments.</p>
 
       {contact && (
         <a

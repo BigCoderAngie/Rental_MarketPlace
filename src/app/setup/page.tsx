@@ -7,7 +7,7 @@ export default async function SetupPage({ searchParams }: PageProps<"/setup">) {
   return (
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4">
       <h1 className="mb-1 text-2xl font-semibold">Set up your business</h1>
-      <p className="mb-6 text-sm text-muted">You can change these details later.</p>
+      <p className="mb-6 text-sm text-muted-foreground">You can change these details later.</p>
       <ErrorNote message={typeof error === "string" ? error : undefined} />
       <form action={createBusiness} className="space-y-4">
         <Field label="Business name">

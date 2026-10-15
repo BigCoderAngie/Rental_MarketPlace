@@ -39,19 +39,19 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
     <>
       <PageHeader title="Your plan" />
       {limit === "items" && (
-        <p className="mb-4 rounded-lg bg-gold-soft p-3 text-sm text-gold-ink">
+        <p className="mb-4 rounded-lg bg-accent-soft p-3 text-sm text-accent-ink">
           You have reached the {plan.item_limit} items your {plan.name} plan allows. Upgrade to add more.
         </p>
       )}
       {sent && (
-        <p className="mb-4 rounded-lg bg-brand-soft p-3 text-sm text-brand-ink">
+        <p className="mb-4 rounded-lg bg-primary-soft p-3 text-sm text-primary-ink">
           Thank you. We will check your payment and switch your plan on, usually within one working day.
         </p>
       )}
 
-      <section className="mb-4 rounded-xl border border-line bg-surface p-4 text-sm">
+      <section className="mb-4 rounded-xl border border-border bg-card p-4 text-sm">
         <p className="text-lg font-semibold">{plan.name}</p>
-        <p className="text-muted">{paidUntil ? `Paid until ${when(paidUntil)}` : "Free for as long as you like"}</p>
+        <p className="text-muted-foreground">{paidUntil ? `Paid until ${when(paidUntil)}` : "Free for as long as you like"}</p>
         <ul className="mt-3 space-y-1">
           <li className="flex justify-between">
             <span>Items</span>
@@ -79,7 +79,7 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
       )}
 
       {founding && (
-        <p className="mb-3 text-sm text-muted">
+        <p className="mb-3 text-sm text-muted-foreground">
           You joined at launch, so you pay founding prices until {when(`${founding}T12:00:00Z`)}.
         </p>
       )}
@@ -89,24 +89,24 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
           const price = priceFor(p, subscription, today);
           const current = p.code === plan.code;
           return (
-            <li key={p.code} className={`rounded-xl border bg-surface p-4 text-sm ${current ? "border-brand" : "border-line"}`}>
+            <li key={p.code} className={`rounded-xl border bg-card p-4 text-sm ${current ? "border-primary" : "border-border"}`}>
               <p className="flex items-baseline justify-between gap-2">
                 <span className="text-base font-semibold">
                   {p.name}
-                  {current && <span className="ml-2 rounded-full bg-brand-soft px-2 py-0.5 text-xs text-brand-ink">Current</span>}
+                  {current && <span className="ml-2 rounded-full bg-primary-soft px-2 py-0.5 text-xs text-primary-ink">Current</span>}
                 </span>
                 <span className="font-semibold">{priceText(price)}</span>
               </p>
               {price > 0 && price < Number(p.yearly_price) && (
-                <p className="mt-1 text-right text-xs text-muted">
+                <p className="mt-1 text-right text-xs text-muted-foreground">
                   <span className={upgradeBadgeClass}>Founding price</span> then {formatNad(p.yearly_price)} a year
                 </p>
               )}
-              <ul className="mt-2 space-y-0.5 text-ink-soft">
+              <ul className="mt-2 space-y-0.5 text-foreground-soft">
                 <li>{limitText(p.item_limit, "items")}</li>
                 <li>{limitText(p.user_limit, p.user_limit === 1 ? "user" : "users")}</li>
                 <li>{p.full_reports ? "Full reports and CSV downloads" : "Money and booking reports"}</li>
-                <li className="text-muted">
+                <li className="text-muted-foreground">
                   Marketplace booking fee {Math.round(Number(p.booking_fee_rate) * 100)}% when the marketplace opens
                 </li>
               </ul>
@@ -119,22 +119,22 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
           );
         })}
       </ul>
-      {!isOwner && <p className="mb-6 text-sm text-muted">Only the business owner can change the plan.</p>}
+      {!isOwner && <p className="mb-6 text-sm text-muted-foreground">Only the business owner can change the plan.</p>}
 
       {payments && payments.length > 0 && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold text-ink-soft">Payments</h2>
-          <ul className="divide-y divide-line rounded-xl border border-line bg-surface text-sm">
+          <h2 className="mb-2 text-sm font-semibold text-foreground-soft">Payments</h2>
+          <ul className="divide-y divide-border rounded-xl border border-border bg-card text-sm">
             {payments.map((p) => (
               <li key={p.id} className="flex items-center justify-between gap-3 px-4 py-3">
                 <span>
                   {plans.find((x) => x.code === p.plan_code)?.name} · {formatNad(p.amount)}
-                  <span className="block text-xs text-muted">
+                  <span className="block text-xs text-muted-foreground">
                     {when(p.created_at)} · {p.status === "PENDING" ? "Waiting for approval" : p.status === "APPROVED" ? "Approved" : "Not approved"}
                   </span>
                 </span>
                 {p.status === "APPROVED" && (
-                  <Link href={`/plan/invoices/${p.id}`} className="shrink-0 text-sm font-medium text-brand underline">
+                  <Link href={`/plan/invoices/${p.id}`} className="shrink-0 text-sm font-medium text-primary underline">
                     Invoice {p.invoice_number}
                   </Link>
                 )}

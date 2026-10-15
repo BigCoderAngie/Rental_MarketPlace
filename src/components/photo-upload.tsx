@@ -80,7 +80,7 @@ export function PhotoUpload({
   return (
     <div>
       <span className="mb-1 block text-sm font-medium">{label}</span>
-      <label className="flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-line-strong bg-surface px-4 py-3 text-sm font-medium text-ink-soft">
+      <label className="flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-input bg-card px-4 py-3 text-sm font-medium text-foreground-soft">
         {busy > 0
           ? `Uploading ${busy} photo${busy > 1 ? "s" : ""}…`
           : multiple

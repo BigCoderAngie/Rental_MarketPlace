@@ -62,18 +62,18 @@ export const STATUS_LABEL: Record<BookingStatus, string> = {
 };
 
 export const STATUS_TONE: Record<BookingStatus, string> = {
-  REQUESTED: "bg-gold-soft text-gold-ink",
+  REQUESTED: "bg-accent-soft text-accent-ink",
   ACCEPTED: "bg-info-soft text-info-ink",
-  FEE_PENDING: "bg-gold-soft text-gold-ink",
-  CONFIRMED: "bg-brand-soft text-brand-ink",
+  FEE_PENDING: "bg-accent-soft text-accent-ink",
+  CONFIRMED: "bg-primary-soft text-primary-ink",
   CHECKED_OUT: "bg-plum-soft text-plum-ink",
-  OVERDUE: "bg-danger-soft text-danger-ink",
+  OVERDUE: "bg-danger text-danger-foreground",
   RETURNED: "bg-sage-soft text-sage-ink",
   PROBLEM_OPEN: "bg-danger-soft text-danger-ink",
-  CLOSED: "bg-subtle-strong text-ink-soft",
-  DECLINED: "bg-subtle-strong text-ink-soft",
-  EXPIRED: "bg-subtle-strong text-ink-soft",
-  CANCELLED: "bg-subtle-strong text-ink-soft",
+  CLOSED: "bg-muted-strong text-foreground-soft",
+  DECLINED: "bg-muted-strong text-foreground-soft",
+  EXPIRED: "bg-muted-strong text-foreground-soft",
+  CANCELLED: "bg-muted-strong text-foreground-soft",
 };
 
 /**

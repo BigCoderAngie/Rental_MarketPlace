@@ -25,11 +25,11 @@ export default async function QuotesPage() {
       <PageHeader title="Quotes" action={<LinkButton href="/quotes/new">New quote</LinkButton>} />
 
       {quotes.length === 0 ? (
-        <p className="text-sm text-muted">
+        <p className="text-sm text-muted-foreground">
           No quotes yet. Build one, send it on WhatsApp, and the customer can accept it from the link.
         </p>
       ) : (
-        <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
+        <ul className="divide-y divide-border rounded-xl border border-border bg-card">
           {quotes.map((q) => (
             <li key={q.id}>
               <Link href={`/quotes/${q.id}`} className="block px-4 py-3">
@@ -37,7 +37,7 @@ export default async function QuotesPage() {
                   <span className="font-medium">{q.customer_name}</span>
                   <QuoteBadge status={effectiveQuoteStatus(q.status, q.expires_at)} />
                 </span>
-                <span className="block text-sm text-muted">
+                <span className="block text-sm text-muted-foreground">
                   {formatRange(q.start_date, q.end_date)} · {formatNad(quoteTotals({ ...q, lines: q.quote_items, packages: q.quote_packages }).total)} · {q.reference}
                 </span>
               </Link>

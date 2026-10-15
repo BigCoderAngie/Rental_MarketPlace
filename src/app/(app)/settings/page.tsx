@@ -13,7 +13,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/setting
       <PageHeader title="Business details" action={<Link href="/plan" className={secondaryButtonClass}>Your plan</Link>} />
       <ErrorNote message={typeof error === "string" ? error : undefined} />
       {saved === "1" && (
-        <p className="mb-4 rounded-lg bg-brand-soft px-3 py-2 text-sm text-brand-ink">Saved.</p>
+        <p className="mb-4 rounded-lg bg-primary-soft px-3 py-2 text-sm text-primary-ink">Saved.</p>
       )}
 
       <form action={updateBusiness} className="space-y-4">
