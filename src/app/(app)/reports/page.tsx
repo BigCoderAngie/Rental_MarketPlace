@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ErrorNote, PageHeader, inputClass, secondaryButtonClass } from "@/components/ui";
+import { ErrorNote, PageHeader, inputClass, secondaryButtonClass, upgradeBadgeClass } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { STATUS_LABEL, type BookingStatus } from "@/lib/bookings";
 import { formatRange } from "@/lib/dates";
@@ -99,7 +99,11 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
               <Row label="Rental received" value={formatNad(r.revenue.rental_received)} />
               {r.revenue.refunded > 0 && <Row label="Refunded" value={`−${formatNad(r.revenue.refunded)}`} />}
               {r.revenue.deposits_kept > 0 && <Row label="Kept from deposits" value={formatNad(r.revenue.deposits_kept)} />}
-              <Row label="Total" value={formatNad(r.revenue.total)} strong />
+              <Row
+                label="Total"
+                value={<span className="rounded-md bg-gold px-2 py-0.5 text-foreground">{formatNad(r.revenue.total)}</span>}
+                strong
+              />
             </ul>
             {r.revenue.by_method.length > 0 && (
               <p className="mt-2 text-xs text-muted">
@@ -154,10 +158,14 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
                     <Row
                       key={o.id}
                       label={<Link href={`/bookings/${o.id}`} className="underline">{o.customer} · {o.reference}</Link>}
-                      value={formatNad(o.amount)}
+                      value={<span className="text-danger">{formatNad(o.amount)}</span>}
                     />
                   ))}
-                  <Row label="Total" value={formatNad(r.outstanding.reduce((s, o) => s + Number(o.amount), 0))} strong />
+                  <Row
+                    label="Total"
+                    value={<span className="text-danger">{formatNad(r.outstanding.reduce((s, o) => s + Number(o.amount), 0))}</span>}
+                    strong
+                  />
                 </ul>
               )}
             </Section>
@@ -203,7 +211,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
                 See how much each item is used, who still owes you, the deposits you hold and your top customers, and
                 download every report as a CSV file for Excel.
               </p>
-              <Link href="/plan" className="mt-2 inline-block font-medium underline">See plans</Link>
+              <Link href="/plan" className={`mt-3 ${upgradeBadgeClass}`}>Upgrade to see more</Link>
             </section>
           )}
         </>

@@ -37,9 +37,10 @@
   --color-gold-line: #f1d494;
   --color-gold-ink: #6b4500; /* warning text */
 
-  /* Terracotta: overdue, problems, errors only */
-  --color-danger: #a63f24;
+  /* Terracotta: overdue, unpaid, problems and errors only */
+  --color-danger: #b7472a; /* 4.8:1 on cream, 5.2:1 on surface; use danger-ink on danger-soft */
   --color-danger-soft: #f7e3dc;
+  --color-danger-line: #e8bcae;
   --color-danger-ink: #6e2716; /* text on danger-soft */
 
   /* Extra status tones, toned to sit with the theme */

@@ -50,7 +50,7 @@ export default async function CustomersPage({ searchParams }: PageProps<"/custom
                   </span>
                 </span>
                 {Number(c.outstanding) > 0 && (
-                  <span className="shrink-0 text-right text-sm font-medium text-gold-ink">
+                  <span className="shrink-0 text-right text-sm font-medium text-danger">
                     {formatNad(c.outstanding)} owed
                   </span>
                 )}

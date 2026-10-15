@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { upgradeBadgeClass } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { loadPlan, planReminder } from "@/lib/plans";
 
@@ -38,7 +39,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
           href="/plan"
           className={`block px-4 py-2 text-sm ${reminder.tone === "warn" ? "bg-gold-soft text-gold-ink" : "bg-subtle text-ink-soft"}`}
         >
-          {reminder.text} <span className="font-semibold underline">See plans</span>
+          {reminder.text} <span className={upgradeBadgeClass}>See plans</span>
         </Link>
       )}
 

@@ -129,7 +129,13 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
       </table>
       <p className="mt-2 text-xs text-muted">
         Units free each day out of {item.quantity_owned - item.units_out_of_service} in service.
-        Red means fully booked{item.low_stock_threshold > 0 && `, amber means ${item.low_stock_threshold} or fewer left`}.
+        <Swatch className="bg-danger-soft" /> fully booked
+        {item.low_stock_threshold > 0 && (
+          <>
+            , <Swatch className="bg-gold-soft" /> {item.low_stock_threshold} or fewer left
+          </>
+        )}
+        .
         Pending requests do not use stock until accepted.
       </p>
 
@@ -154,3 +160,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
     </>
   );
 }
+
+const Swatch = ({ className }: { className: string }) => (
+  <span className={`inline-block h-3 w-3 rounded-sm border border-line-strong align-[-2px] ${className}`} />
+);

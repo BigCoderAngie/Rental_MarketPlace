@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LinkButton, PageHeader } from "@/components/ui";
+import { LinkButton, PageHeader, upgradeBadgeClass } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { formatNad } from "@/lib/money";
 import { itemPhotoUrl } from "@/lib/item-photos";
@@ -34,7 +34,7 @@ export default async function InventoryPage() {
         <p className={`mb-3 text-sm ${atLimit ? "text-gold-ink" : "text-muted"}`}>
           {items.length} of {plan.item_limit} items on {plan.name}.{" "}
           {items.length >= plan.item_limit - 2 && (
-            <Link href="/plan" className="font-medium underline">Upgrade for more</Link>
+            <Link href="/plan" className={upgradeBadgeClass}>Upgrade for more</Link>
           )}
         </p>
       )}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ErrorNote, PageHeader, buttonClass, secondaryButtonClass } from "@/components/ui";
+import { ErrorNote, PageHeader, buttonClass, secondaryButtonClass, upgradeBadgeClass } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { namibiaToday } from "@/lib/dates";
 import { formatNad } from "@/lib/money";
@@ -98,7 +98,9 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
                 <span className="font-semibold">{priceText(price)}</span>
               </p>
               {price > 0 && price < Number(p.yearly_price) && (
-                <p className="text-right text-xs text-muted">Founding price, then {formatNad(p.yearly_price)} a year</p>
+                <p className="mt-1 text-right text-xs text-muted">
+                  <span className={upgradeBadgeClass}>Founding price</span> then {formatNad(p.yearly_price)} a year
+                </p>
               )}
               <ul className="mt-2 space-y-0.5 text-ink-soft">
                 <li>{limitText(p.item_limit, "items")}</li>

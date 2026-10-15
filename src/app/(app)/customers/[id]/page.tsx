@@ -67,7 +67,7 @@ export default async function CustomerPage({ params, searchParams }: PageProps<"
           </div>
           <div>
             <dt className="text-xs text-muted">Still owed</dt>
-            <dd className={`font-semibold ${Number(customer.outstanding) > 0 ? "text-gold-ink" : ""}`}>{formatNad(customer.outstanding)}</dd>
+            <dd className={`font-semibold ${Number(customer.outstanding) > 0 ? "text-danger" : ""}`}>{formatNad(customer.outstanding)}</dd>
           </div>
           <div>
             <dt className="text-xs text-muted">Deposit held</dt>
@@ -94,7 +94,9 @@ export default async function CustomerPage({ params, searchParams }: PageProps<"
                   <span className="block text-muted">
                     {b.reference}
                     {bal && ` · ${formatNad(bal.amount_due)}`}
-                    {bal && wentAhead(b.status) && Number(bal.outstanding) > 0 && ` · ${formatNad(bal.outstanding)} owed`}
+                    {bal && wentAhead(b.status) && Number(bal.outstanding) > 0 && (
+                      <> · <span className="text-danger">{formatNad(bal.outstanding)} owed</span></>
+                    )}
                   </span>
                 </Link>
               </li>

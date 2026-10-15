@@ -47,8 +47,8 @@ export function MoneySection({
           <p className="text-muted">Paid</p>
           <p className="font-semibold">{formatNad(balance.amount_paid)}</p>
         </div>
-        <div className={`rounded-xl border p-3 ${Number(balance.outstanding) > 0 ? "border-gold-line bg-gold-soft" : "border-brand-line bg-brand-soft"}`}>
-          <p className="text-muted">Outstanding</p>
+        <div className={`rounded-xl border p-3 ${Number(balance.outstanding) > 0 ? "border-danger-line bg-danger-soft text-danger-ink" : "border-brand-line bg-brand-soft text-brand-ink"}`}>
+          <p>Outstanding</p>
           <p className="font-semibold">{formatNad(Math.max(Number(balance.outstanding), 0))}</p>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { LinkButton, PageHeader } from "@/components/ui";
 import { StatusBadge } from "@/components/status-badge";
 import { requireBusiness } from "@/lib/business";
 import { formatRange, namibiaToday } from "@/lib/dates";
-import { isOverdue, type BookingStatus } from "@/lib/bookings";
+import { isOverdue, wentAhead, type BookingStatus } from "@/lib/bookings";
 import { formatNad } from "@/lib/money";
 import { paymentState, type Balance } from "@/lib/payments";
 
@@ -72,7 +72,7 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
                 </span>
                 <span className="block text-sm text-muted">
                   {formatRange(b.start_date, b.end_date)} · {b.reference}
-                  {balanceById.has(b.id) && ` · ${moneyLine(balanceById.get(b.id)!)}`}
+                  {balanceById.has(b.id) && <> · {moneyLine(balanceById.get(b.id)!, b.status)}</>}
                 </span>
                 <span className="block truncate text-sm text-muted">
                   {b.booking_items.map((bi) => `${bi.quantity} × ${bi.items?.name}`).join(", ")}
@@ -86,7 +86,11 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
   );
 }
 
-function moneyLine(b: Pick<Balance, "amount_due" | "amount_paid" | "outstanding">) {
+// Only money owed on bookings that went ahead is shown as unpaid (terracotta).
+function moneyLine(b: Pick<Balance, "amount_due" | "amount_paid" | "outstanding">, status: BookingStatus) {
   const state = paymentState(b);
-  return state === "Paid" ? "Paid" : `${formatNad(Math.max(Number(b.outstanding), 0))} outstanding`;
+  if (state === "Paid") return "Paid";
+  const outstanding = Math.max(Number(b.outstanding), 0);
+  const text = `${formatNad(outstanding)} outstanding`;
+  return outstanding > 0 && wentAhead(status) ? <span className="text-danger">{text}</span> : text;
 }
