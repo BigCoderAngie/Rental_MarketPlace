@@ -12,6 +12,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // Lets env(safe-area-inset-bottom) report the iPhone home bar, so the tab bar can sit above it.
+  viewportFit: "cover",
   themeColor: "#3f6b4c",
 };
 
