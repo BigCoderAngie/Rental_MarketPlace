@@ -23,6 +23,7 @@ Stack: Next.js 16 (App Router, read node_modules/next/dist/docs before using unf
 8. Show me a short summary and a suggested commit message. Don't commit until I say so.
 
 ### Rules
-- One feature per branch. Small commits.
+- Front-end work (look, layout, wording in `src/app/**` and `src/components/**`) stays on the `frontend-updates` branch until it is finished; its pull request stays a draft until then. Other work (database, `src/lib` logic, new features) gets its own branch from `main`.
+- Small commits: one change per commit, so the long front-end branch stays easy to review.
 - Don't add new npm packages without asking.
 - Never put secrets in code; use `.env.local` (see `.env.example`).
