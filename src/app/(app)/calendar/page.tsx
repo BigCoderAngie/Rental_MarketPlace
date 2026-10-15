@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { LinkButton, PageHeader, inputClass, secondaryButtonClass } from "@/components/ui";
 import { StatusBadge } from "@/components/status-badge";
+import { TodaySection } from "@/components/today-section";
 import { requireBusiness } from "@/lib/business";
 import { HOLDS_STOCK, type BookingStatus } from "@/lib/bookings";
 import { addDays, formatMonth, formatRange, monthGrid, monthRange, namibiaToday, parseMonth, shiftMonth } from "@/lib/dates";
+import { loadToday } from "@/lib/today";
 import type { AvailabilityRow, Item } from "@/lib/types";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -26,18 +28,20 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
   const { first, last } = monthRange(month);
 
   const { supabase, business } = await requireBusiness();
-  const { data: items } = await supabase
-    .from("items")
-    .select("*")
-    .eq("business_id", business.id)
-    .eq("archived", false)
-    .order("name")
-    .returns<Item[]>();
+  const [{ data: items }, todaySummary] = await Promise.all([
+    supabase.from("items").select("*").eq("business_id", business.id).eq("archived", false).order("name").returns<Item[]>(),
+    // The calendar still loads if the Today summary can't.
+    loadToday(supabase, business.id).catch((err) => {
+      console.error("Could not load the Today summary:", err);
+      return null;
+    }),
+  ]);
 
   if (!items?.length) {
     return (
       <>
         <PageHeader title="Calendar" />
+        <TodaySection summary={todaySummary} />
         <p className="mb-4 text-sm text-muted-foreground">Add items to your inventory to see them on the calendar.</p>
         <LinkButton href="/inventory/new">Add item</LinkButton>
       </>
@@ -78,6 +82,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
   return (
     <>
       <PageHeader title="Calendar" action={<LinkButton href="/bookings/new">New booking</LinkButton>} />
+      <TodaySection summary={todaySummary} />
 
       <form method="get" className="mb-4 flex gap-2">
         <input type="hidden" name="month" value={month} />
