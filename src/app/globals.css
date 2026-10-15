@@ -1,17 +1,59 @@
 @import "tailwindcss";
 
-:root {
-  --background: #f6f7f5;
-  --foreground: #18181b;
-}
+/*
+ * Botanical Garden theme. Use these names (bg-brand, text-muted,
+ * border-line, ...) instead of Tailwind's built-in colours (zinc, emerald,
+ * amber, red, ...) so the whole app changes from this one place.
+ *
+ * Contrast rules: every text colour here is at least 4.5:1 on the
+ * background it is paired with. Marigold (gold) is only 1.8:1 on cream,
+ * so never use text-gold: use it as a fill with dark text on top, and use
+ * text-gold-ink for warning text.
+ */
+@theme {
+  /* Page and text */
+  --color-background: #f5f3ed; /* cream */
+  --color-surface: #fffdf9; /* cards, inputs */
+  --color-foreground: #1f2a22; /* main text */
+  --color-ink-soft: #3b4339; /* secondary headings, strong labels */
+  --color-muted: #5f665a; /* hints, captions, meta text */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Neutrals */
+  --color-line: #e3ded1; /* borders, dividers */
+  --color-line-strong: #c9c2b0; /* input borders, dashed upload box */
+  --color-subtle: #ece8dd; /* hover, image placeholders, bars */
+  --color-subtle-strong: #e3ded1; /* neutral status pills */
+
+  /* Fern green: buttons, links, success, money in */
+  --color-brand: #3f6b4c; /* darker than the stock #4a7c59 for 5.5:1 contrast */
+  --color-brand-strong: #33573e; /* button hover */
+  --color-brand-soft: #e3eee5; /* success notes, confirmed pills */
+  --color-brand-line: #b9d0bd;
+  --color-brand-ink: #24402d; /* text on brand-soft */
+
+  /* Marigold: highlights, warnings, low stock, upgrade badges */
+  --color-gold: #f9a620; /* fill only, never text */
+  --color-gold-soft: #fdf1d6;
+  --color-gold-line: #f1d494;
+  --color-gold-ink: #6b4500; /* warning text */
+
+  /* Terracotta: overdue, problems, errors only */
+  --color-danger: #a63f24;
+  --color-danger-soft: #f7e3dc;
+  --color-danger-ink: #6e2716; /* text on danger-soft */
+
+  /* Extra status tones, toned to sit with the theme */
+  --color-info-soft: #dfeaee; /* accepted, plan notices */
+  --color-info-ink: #1e4351;
+  --color-plum-soft: #ebe4f0; /* checked out */
+  --color-plum-ink: #47305a;
+  --color-sage-soft: #e7eadb; /* returned */
+  --color-sage-ink: #3a4430;
+
+  --font-sans: var(--font-geist), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
 }

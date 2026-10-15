@@ -16,7 +16,7 @@ export function PageHeader({ title, action }: { title: string; action?: ReactNod
 export function ErrorNote({ message }: { message?: string }) {
   if (!message) return null;
   return (
-    <p role="alert" className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">
+    <p role="alert" className="mb-4 rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">
       {message}
     </p>
   );
@@ -35,19 +35,19 @@ export function Field({
     <label className="block">
       <span className="mb-1 block text-sm font-medium">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-xs text-zinc-500">{hint}</span>}
+      {hint && <span className="mt-1 block text-xs text-muted">{hint}</span>}
     </label>
   );
 }
 
 export const inputClass =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-base focus:border-emerald-600 focus:outline-none";
+  "w-full rounded-lg border border-line-strong bg-surface px-3 py-2.5 text-base focus:border-brand focus:outline-none";
 
 export const buttonClass =
-  "inline-flex items-center justify-center rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800";
+  "inline-flex items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-strong";
 
 export const secondaryButtonClass =
-  "inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-800 hover:bg-zinc-50";
+  "inline-flex items-center justify-center rounded-lg border border-line-strong bg-surface px-4 py-2.5 text-sm font-semibold text-ink-soft hover:bg-subtle";
 
 export function LinkButton({ href, children }: { href: string; children: ReactNode }) {
   return (

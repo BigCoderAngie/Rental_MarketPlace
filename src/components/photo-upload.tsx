@@ -80,7 +80,7 @@ export function PhotoUpload({
   return (
     <div>
       <span className="mb-1 block text-sm font-medium">{label}</span>
-      <label className="flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-zinc-400 bg-white px-4 py-3 text-sm font-medium text-zinc-700">
+      <label className="flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-line-strong bg-surface px-4 py-3 text-sm font-medium text-ink-soft">
         {busy > 0
           ? `Uploading ${busy} photo${busy > 1 ? "s" : ""}…`
           : multiple
@@ -100,7 +100,7 @@ export function PhotoUpload({
           }}
         />
       </label>
-      {error && <p className="mt-1 text-sm text-red-700">{error}</p>}
+      {error && <p className="mt-1 text-sm text-danger">{error}</p>}
       {photos.length > 0 && (
         <div className="mt-2 grid grid-cols-4 gap-2">
           {photos.map((p) => (

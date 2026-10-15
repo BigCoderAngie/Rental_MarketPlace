@@ -55,9 +55,9 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
       </p>
 
       {bookings.length === 0 ? (
-        <p className="text-sm text-zinc-600">No bookings yet.</p>
+        <p className="text-sm text-muted">No bookings yet.</p>
       ) : (
-        <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white">
+        <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
           {bookings.map((b) => (
             <li key={b.id}>
               <Link href={`/bookings/${b.id}`} className="block px-4 py-3">
@@ -65,16 +65,16 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
                   <span className="font-medium">{b.customers?.full_name}</span>
                   <span className="flex shrink-0 items-center gap-1">
                     {b.status === "CHECKED_OUT" && isOverdue(b.status, b.end_date, today) && (
-                      <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-900">Late</span>
+                      <span className="rounded-full bg-danger-soft px-2 py-0.5 text-xs font-semibold text-danger-ink">Late</span>
                     )}
                     <StatusBadge status={b.status} />
                   </span>
                 </span>
-                <span className="block text-sm text-zinc-600">
+                <span className="block text-sm text-muted">
                   {formatRange(b.start_date, b.end_date)} · {b.reference}
                   {balanceById.has(b.id) && ` · ${moneyLine(balanceById.get(b.id)!)}`}
                 </span>
-                <span className="block truncate text-sm text-zinc-500">
+                <span className="block truncate text-sm text-muted">
                   {b.booking_items.map((bi) => `${bi.quantity} × ${bi.items?.name}`).join(", ")}
                 </span>
               </Link>

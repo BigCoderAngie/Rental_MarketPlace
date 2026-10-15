@@ -30,7 +30,7 @@ export default async function EditItemPage({ params, searchParams }: PageProps<"
       />
       <form action={archiveItem.bind(null, item.id)} className="mt-6">
         <button className={`${secondaryButtonClass} w-full`}>Remove from inventory</button>
-        <p className="mt-1 text-xs text-zinc-500">Past bookings keep their record of this item.</p>
+        <p className="mt-1 text-xs text-muted">Past bookings keep their record of this item.</p>
       </form>
     </>
   );

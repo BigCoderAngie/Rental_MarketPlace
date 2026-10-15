@@ -10,7 +10,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   return (
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4">
       <h1 className="mb-1 text-2xl font-semibold">Rental Marketplace</h1>
-      <p className="mb-6 text-sm text-zinc-600">Sign in to manage your hire business.</p>
+      <p className="mb-6 text-sm text-muted">Sign in to manage your hire business.</p>
       <ErrorNote message={error} />
 
       {sent ? (
@@ -29,7 +29,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
             />
           </Field>
           <button className={`${buttonClass} w-full`}>Sign in</button>
-          <a href="/login" className="block text-center text-sm text-zinc-600 underline">
+          <a href="/login" className="block text-center text-sm text-muted underline">
             Use a different email
           </a>
         </form>

@@ -31,7 +31,7 @@ export default async function InventoryPage() {
     <>
       <PageHeader title="Inventory" action={<LinkButton href="/inventory/new">Add item</LinkButton>} />
       {plan?.item_limit != null && (
-        <p className={`mb-3 text-sm ${atLimit ? "text-amber-800" : "text-zinc-600"}`}>
+        <p className={`mb-3 text-sm ${atLimit ? "text-gold-ink" : "text-muted"}`}>
           {items.length} of {plan.item_limit} items on {plan.name}.{" "}
           {items.length >= plan.item_limit - 2 && (
             <Link href="/plan" className="font-medium underline">Upgrade for more</Link>
@@ -40,9 +40,9 @@ export default async function InventoryPage() {
       )}
 
       {items.length === 0 ? (
-        <p className="text-sm text-zinc-600">No items yet. Add your first item to start taking bookings.</p>
+        <p className="text-sm text-muted">No items yet. Add your first item to start taking bookings.</p>
       ) : (
-        <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white">
+        <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
           {items.map((item) => (
             <li key={item.id}>
               <Link href={`/inventory/${item.id}`} className="flex items-center justify-between gap-3 px-4 py-3">
@@ -50,11 +50,11 @@ export default async function InventoryPage() {
                   // eslint-disable-next-line @next/next/no-img-element -- Supabase Storage URL
                   <img src={itemPhotoUrl(supabase, item.photo_path)!} alt="" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
                 ) : (
-                  <span className="h-12 w-12 shrink-0 rounded-lg bg-zinc-100" aria-hidden />
+                  <span className="h-12 w-12 shrink-0 rounded-lg bg-subtle" aria-hidden />
                 )}
                 <span className="min-w-0 flex-1">
                   <span className="block font-medium">{item.name}</span>
-                  <span className="text-sm text-zinc-600">
+                  <span className="text-sm text-muted">
                     {formatNad(item.daily_price)} per day
                     {item.turnaround_days > 0 && ` · ${item.turnaround_days} day turnaround`}
                   </span>
@@ -62,7 +62,7 @@ export default async function InventoryPage() {
                 <span className="text-right text-sm">
                   <span className="block font-semibold">{item.quantity_owned - item.units_out_of_service} in service</span>
                   {item.units_out_of_service > 0 && (
-                    <span className="text-amber-700">{item.units_out_of_service} out of service</span>
+                    <span className="text-gold-ink">{item.units_out_of_service} out of service</span>
                   )}
                 </span>
               </Link>
@@ -75,22 +75,22 @@ export default async function InventoryPage() {
         <section className="mt-8">
           <div className="mb-2 flex items-center justify-between gap-3">
             <h2 className="font-semibold">Packages</h2>
-            <Link href="/inventory/packages/new" className="text-sm font-medium text-emerald-800 underline">
+            <Link href="/inventory/packages/new" className="text-sm font-medium text-brand underline">
               Add package
             </Link>
           </div>
           {(packages ?? []).length === 0 ? (
-            <p className="text-sm text-zinc-600">
+            <p className="text-sm text-muted">
               Group items you rent together, like a tent with 100 chairs, and give them one price per day.
             </p>
           ) : (
-            <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white">
+            <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
               {packages!.map((pkg) => (
                 <li key={pkg.id}>
                   <Link href={`/inventory/packages/${pkg.id}`} className="flex items-center justify-between gap-3 px-4 py-3">
                     <span className="min-w-0 flex-1">
                       <span className="block font-medium">{pkg.name}</span>
-                      <span className="text-sm text-zinc-600">{packageContents(pkg)}</span>
+                      <span className="text-sm text-muted">{packageContents(pkg)}</span>
                     </span>
                     <span className="text-right text-sm font-semibold">{formatNad(pkg.daily_price)} per day</span>
                   </Link>

@@ -57,8 +57,8 @@ export const QUOTE_STATUS_LABEL: Record<QuoteStatus, string> = {
 };
 
 export const QUOTE_STATUS_TONE: Record<QuoteStatus, string> = {
-  OPEN: "bg-amber-100 text-amber-900",
-  ACCEPTED: "bg-emerald-100 text-emerald-900",
-  CANCELLED: "bg-zinc-200 text-zinc-700",
-  EXPIRED: "bg-zinc-200 text-zinc-700",
+  OPEN: "bg-gold-soft text-gold-ink",
+  ACCEPTED: "bg-brand-soft text-brand-ink",
+  CANCELLED: "bg-subtle-strong text-ink-soft",
+  EXPIRED: "bg-subtle-strong text-ink-soft",
 };

@@ -31,10 +31,10 @@ export default async function EditPackagePage({ params, searchParams }: PageProp
       <PageHeader title={pkg.name} />
       <ErrorNote message={typeof error === "string" ? error : undefined} />
       <PackageForm action={updatePackage.bind(null, pkg.id)} items={items ?? []} pkg={pkg} />
-      <p className="mt-2 text-xs text-zinc-500">A new price applies to new bookings and quotes. Existing ones keep their price.</p>
+      <p className="mt-2 text-xs text-muted">A new price applies to new bookings and quotes. Existing ones keep their price.</p>
       <form action={archivePackage.bind(null, pkg.id)} className="mt-6">
         <button className={`${secondaryButtonClass} w-full`}>Remove package</button>
-        <p className="mt-1 text-xs text-zinc-500">Bookings that already include it are not changed.</p>
+        <p className="mt-1 text-xs text-muted">Bookings that already include it are not changed.</p>
       </form>
     </>
   );

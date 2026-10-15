@@ -38,7 +38,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
     return (
       <>
         <PageHeader title="Calendar" />
-        <p className="mb-4 text-sm text-zinc-600">Add items to your inventory to see them on the calendar.</p>
+        <p className="mb-4 text-sm text-muted">Add items to your inventory to see them on the calendar.</p>
         <LinkButton href="/inventory/new">Add item</LinkButton>
       </>
     );
@@ -99,7 +99,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
         <thead>
           <tr>
             {WEEKDAYS.map((d) => (
-              <th key={d} className="text-xs font-medium text-zinc-500">{d}</th>
+              <th key={d} className="text-xs font-medium text-muted">{d}</th>
             ))}
           </tr>
         </thead>
@@ -112,13 +112,13 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
                 const free = row?.available ?? 0;
                 const tone =
                   free <= 0
-                    ? "bg-red-100 text-red-900"
+                    ? "bg-danger-soft text-danger-ink"
                     : free <= item.low_stock_threshold
-                      ? "bg-amber-100 text-amber-900"
-                      : "bg-white";
+                      ? "bg-gold-soft text-gold-ink"
+                      : "bg-surface";
                 return (
-                  <td key={d} className={`rounded-lg border border-zinc-200 p-1 align-top ${tone} ${day === today ? "ring-2 ring-emerald-600" : ""}`}>
-                    <span className="block text-left text-[10px] text-zinc-500">{Number(day.slice(8))}</span>
+                  <td key={d} className={`rounded-lg border border-line p-1 align-top ${tone} ${day === today ? "ring-2 ring-brand" : ""}`}>
+                    <span className="block text-left text-[10px] text-muted">{Number(day.slice(8))}</span>
                     <span className="block text-sm font-semibold">{Math.max(free, 0)}</span>
                   </td>
                 );
@@ -127,23 +127,23 @@ export default async function CalendarPage({ searchParams }: PageProps<"/calenda
           ))}
         </tbody>
       </table>
-      <p className="mt-2 text-xs text-zinc-500">
+      <p className="mt-2 text-xs text-muted">
         Units free each day out of {item.quantity_owned - item.units_out_of_service} in service.
         Red means fully booked{item.low_stock_threshold > 0 && `, amber means ${item.low_stock_threshold} or fewer left`}.
         Pending requests do not use stock until accepted.
       </p>
 
-      <h2 className="mt-6 mb-2 text-sm font-semibold text-zinc-700">Bookings holding {item.name} this month</h2>
+      <h2 className="mt-6 mb-2 text-sm font-semibold text-ink-soft">Bookings holding {item.name} this month</h2>
       {bookings.length === 0 ? (
-        <p className="text-sm text-zinc-600">None.</p>
+        <p className="text-sm text-muted">None.</p>
       ) : (
-        <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white">
+        <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
           {bookings.map((b) => (
             <li key={b.id}>
               <Link href={`/bookings/${b.id}`} className="flex items-center justify-between gap-2 px-4 py-3 text-sm">
                 <span>
                   <span className="block font-medium">{b.quantity} × {b.customer}</span>
-                  <span className="text-zinc-600">{formatRange(b.start_date, b.end_date)}</span>
+                  <span className="text-muted">{formatRange(b.start_date, b.end_date)}</span>
                 </span>
                 <StatusBadge status={b.status} />
               </Link>

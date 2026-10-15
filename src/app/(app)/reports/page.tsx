@@ -20,16 +20,16 @@ function Section({
   children: ReactNode;
 }) {
   return (
-    <section className="mb-4 rounded-xl border border-zinc-200 bg-white p-4 text-sm">
+    <section className="mb-4 rounded-xl border border-line bg-surface p-4 text-sm">
       <div className="mb-2 flex items-baseline justify-between gap-3">
         <h2 className="font-semibold">{title}</h2>
         {csv && (
-          <a href={csv} className="shrink-0 text-xs font-medium text-emerald-800 underline">
+          <a href={csv} className="shrink-0 text-xs font-medium text-brand underline">
             Download CSV
           </a>
         )}
       </div>
-      {note && <p className="mb-2 text-xs text-zinc-500">{note}</p>}
+      {note && <p className="mb-2 text-xs text-muted">{note}</p>}
       {children}
     </section>
   );
@@ -37,14 +37,14 @@ function Section({
 
 function Row({ label, value, strong }: { label: ReactNode; value: ReactNode; strong?: boolean }) {
   return (
-    <li className={`flex justify-between gap-3 ${strong ? "border-t border-zinc-200 pt-1 font-semibold" : ""}`}>
+    <li className={`flex justify-between gap-3 ${strong ? "border-t border-line pt-1 font-semibold" : ""}`}>
       <span className="min-w-0">{label}</span>
       <span className="shrink-0">{value}</span>
     </li>
   );
 }
 
-const Empty = ({ children }: { children: ReactNode }) => <p className="text-zinc-500">{children}</p>;
+const Empty = ({ children }: { children: ReactNode }) => <p className="text-muted">{children}</p>;
 
 /** Reports (FR-RP-01) for the chosen period, each section downloadable as CSV. */
 export default async function ReportsPage({ searchParams }: PageProps<"/reports">) {
@@ -70,7 +70,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
           <Link
             key={p}
             href={`/reports?period=${p}`}
-            className={`rounded-full border px-3 py-1 ${p === key ? "border-emerald-700 bg-emerald-50 font-medium text-emerald-900" : "border-zinc-300 text-zinc-700"}`}
+            className={`rounded-full border px-3 py-1 ${p === key ? "border-brand bg-brand-soft font-medium text-brand-ink" : "border-line-strong text-ink-soft"}`}
           >
             {PERIOD_LABEL[p]}
           </Link>
@@ -78,11 +78,11 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
       </nav>
       <form method="get" className="mb-4 grid grid-cols-2 gap-2 text-sm">
         <label className="min-w-0">
-          <span className="mb-1 block text-xs text-zinc-600">From</span>
+          <span className="mb-1 block text-xs text-muted">From</span>
           <input type="date" name="from" defaultValue={from} required className={`${inputClass} min-w-0`} />
         </label>
         <label className="min-w-0">
-          <span className="mb-1 block text-xs text-zinc-600">To</span>
+          <span className="mb-1 block text-xs text-muted">To</span>
           <input type="date" name="to" defaultValue={to} required className={`${inputClass} min-w-0`} />
         </label>
         <button className={`${secondaryButtonClass} col-span-2`}>Show these dates</button>
@@ -92,7 +92,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
 
       {r && (
         <>
-          <p className="mb-3 text-sm text-zinc-600">{formatRange(r.from, r.to)} ({r.days} days)</p>
+          <p className="mb-3 text-sm text-muted">{formatRange(r.from, r.to)} ({r.days} days)</p>
 
           <Section title="Money recorded" note="Payments you recorded with a date in this period." csv={csv("revenue")}>
             <ul className="space-y-1">
@@ -102,7 +102,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
               <Row label="Total" value={formatNad(r.revenue.total)} strong />
             </ul>
             {r.revenue.by_method.length > 0 && (
-              <p className="mt-2 text-xs text-zinc-600">
+              <p className="mt-2 text-xs text-muted">
                 {r.revenue.by_method.map((m) => `${METHOD_LABEL[m.method]} ${formatNad(m.amount)}`).join(" · ")}
               </p>
             )}
@@ -113,7 +113,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
               <Row label="Went ahead" value={r.bookings.went_ahead} />
               <Row label="Value of those bookings" value={formatNad(r.bookings.value)} />
               {Object.entries(r.bookings.by_status).map(([status, n]) => (
-                <Row key={status} label={<span className="text-zinc-600">{STATUS_LABEL[status as BookingStatus]}</span>} value={n} />
+                <Row key={status} label={<span className="text-muted">{STATUS_LABEL[status as BookingStatus]}</span>} value={n} />
               ))}
               <Row label="All bookings" value={r.bookings.count} strong />
             </ul>
@@ -136,8 +136,8 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
                         <span>{i.name}</span>
                         <span className="font-medium">{i.utilisation}%</span>
                       </p>
-                      <div className="mt-1 h-1.5 rounded-full bg-zinc-100">
-                        <div className="h-1.5 rounded-full bg-emerald-600" style={{ width: `${Math.min(i.utilisation, 100)}%` }} />
+                      <div className="mt-1 h-1.5 rounded-full bg-subtle">
+                        <div className="h-1.5 rounded-full bg-brand" style={{ width: `${Math.min(i.utilisation, 100)}%` }} />
                       </div>
                     </li>
                   ))}
@@ -187,7 +187,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
                   {r.top_customers.map((c) => (
                     <li key={c.phone} className="flex justify-between gap-3">
                       <span>
-                        {c.name} <span className="text-zinc-500">({c.bookings} booking{c.bookings > 1 ? "s" : ""})</span>
+                        {c.name} <span className="text-muted">({c.bookings} booking{c.bookings > 1 ? "s" : ""})</span>
                       </span>
                       <span>{formatNad(c.value)}</span>
                     </li>
@@ -197,7 +197,7 @@ export default async function ReportsPage({ searchParams }: PageProps<"/reports"
             </Section>
             </>
           ) : (
-            <section className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+            <section className="mb-4 rounded-xl border border-gold-line bg-gold-soft p-4 text-sm text-gold-ink">
               <p className="font-semibold">More reports with Pro and Business</p>
               <p className="mt-1">
                 See how much each item is used, who still owes you, the deposits you hold and your top customers, and

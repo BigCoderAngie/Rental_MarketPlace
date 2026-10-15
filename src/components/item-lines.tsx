@@ -58,19 +58,19 @@ export function ItemLines({
   const days = daysInclusive(start, end);
   return (
     <>
-      <p className="text-sm text-zinc-600">
+      <p className="text-sm text-muted">
         {days} day{days > 1 ? "s" : ""}. Numbers show what is free on every day.
       </p>
       {packages.length > 0 && (
-        <ul className="divide-y divide-zinc-200 rounded-xl border border-emerald-200 bg-emerald-50/40">
+        <ul className="divide-y divide-line rounded-xl border border-brand-line bg-brand-soft/40">
           {packages.map((pkg) => {
             const available = packagesFree(pkg, free);
             return (
               <li key={pkg.id} className="flex items-center justify-between gap-3 px-4 py-3">
                 <span>
                   <span className="block font-medium">{pkg.name}</span>
-                  <span className="block text-xs text-zinc-600">{packageContents(pkg)}</span>
-                  <span className={`text-sm ${available === 0 ? "text-red-700" : "text-zinc-600"}`}>
+                  <span className="block text-xs text-muted">{packageContents(pkg)}</span>
+                  <span className={`text-sm ${available === 0 ? "text-danger" : "text-muted"}`}>
                     {available} free · {formatNad(pkg.daily_price)} per day
                   </span>
                 </span>
@@ -89,14 +89,14 @@ export function ItemLines({
           })}
         </ul>
       )}
-      <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white">
+      <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
         {items.map((item) => {
           const available = free.get(item.id) ?? 0;
           return (
             <li key={item.id} className="flex items-center justify-between gap-3 px-4 py-3">
               <span>
                 <span className="block font-medium">{item.name}</span>
-                <span className={`text-sm ${available === 0 ? "text-red-700" : "text-zinc-600"}`}>
+                <span className={`text-sm ${available === 0 ? "text-danger" : "text-muted"}`}>
                   {available} free · {formatNad(item.daily_price)} per day
                 </span>
               </span>

@@ -35,22 +35,22 @@ export default async function CustomersPage({ searchParams }: PageProps<"/custom
       </form>
 
       {customers.length === 0 ? (
-        <p className="text-sm text-zinc-600">
+        <p className="text-sm text-muted">
           {filter ? "No customer matches that search." : "Customers appear here after their first booking."}
         </p>
       ) : (
-        <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white">
+        <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
           {customers.map((c) => (
             <li key={c.id}>
               <Link href={`/customers/${c.id}`} className="flex items-center justify-between gap-3 px-4 py-3">
                 <span className="min-w-0">
                   <span className="block truncate font-medium">{c.full_name}</span>
-                  <span className="text-sm text-zinc-600">
+                  <span className="text-sm text-muted">
                     {c.phone} · {c.bookings} booking{c.bookings === 1 ? "" : "s"}
                   </span>
                 </span>
                 {Number(c.outstanding) > 0 && (
-                  <span className="shrink-0 text-right text-sm font-medium text-amber-800">
+                  <span className="shrink-0 text-right text-sm font-medium text-gold-ink">
                     {formatNad(c.outstanding)} owed
                   </span>
                 )}

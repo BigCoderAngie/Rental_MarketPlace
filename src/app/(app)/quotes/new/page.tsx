@@ -51,7 +51,7 @@ export default async function NewQuotePage({ searchParams }: PageProps<"/quotes/
           <Field label="Note for the customer">
             <textarea name="notes" rows={2} className={inputClass} />
           </Field>
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-muted">
             The quote is valid for {business.quote_validity_days} days. Items are checked again when the customer accepts.
           </p>
           <button className={`${buttonClass} w-full`}>Create quote</button>

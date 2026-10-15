@@ -39,19 +39,19 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
     <>
       <PageHeader title="Your plan" />
       {limit === "items" && (
-        <p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+        <p className="mb-4 rounded-lg bg-gold-soft p-3 text-sm text-gold-ink">
           You have reached the {plan.item_limit} items your {plan.name} plan allows. Upgrade to add more.
         </p>
       )}
       {sent && (
-        <p className="mb-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-900">
+        <p className="mb-4 rounded-lg bg-brand-soft p-3 text-sm text-brand-ink">
           Thank you. We will check your payment and switch your plan on, usually within one working day.
         </p>
       )}
 
-      <section className="mb-4 rounded-xl border border-zinc-200 bg-white p-4 text-sm">
+      <section className="mb-4 rounded-xl border border-line bg-surface p-4 text-sm">
         <p className="text-lg font-semibold">{plan.name}</p>
-        <p className="text-zinc-600">{paidUntil ? `Paid until ${when(paidUntil)}` : "Free for as long as you like"}</p>
+        <p className="text-muted">{paidUntil ? `Paid until ${when(paidUntil)}` : "Free for as long as you like"}</p>
         <ul className="mt-3 space-y-1">
           <li className="flex justify-between">
             <span>Items</span>
@@ -69,7 +69,7 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
       </section>
 
       {pending && (
-        <p className="mb-4 rounded-lg bg-sky-50 p-3 text-sm text-sky-900">
+        <p className="mb-4 rounded-lg bg-info-soft p-3 text-sm text-info-ink">
           Your payment of {formatNad(pending.amount)} for {plans.find((p) => p.code === pending.plan_code)?.name} is
           waiting for approval (sent {when(pending.created_at)}).
         </p>
@@ -79,7 +79,7 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
       )}
 
       {founding && (
-        <p className="mb-3 text-sm text-zinc-600">
+        <p className="mb-3 text-sm text-muted">
           You joined at launch, so you pay founding prices until {when(`${founding}T12:00:00Z`)}.
         </p>
       )}
@@ -89,22 +89,22 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
           const price = priceFor(p, subscription, today);
           const current = p.code === plan.code;
           return (
-            <li key={p.code} className={`rounded-xl border bg-white p-4 text-sm ${current ? "border-emerald-600" : "border-zinc-200"}`}>
+            <li key={p.code} className={`rounded-xl border bg-surface p-4 text-sm ${current ? "border-brand" : "border-line"}`}>
               <p className="flex items-baseline justify-between gap-2">
                 <span className="text-base font-semibold">
                   {p.name}
-                  {current && <span className="ml-2 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-900">Current</span>}
+                  {current && <span className="ml-2 rounded-full bg-brand-soft px-2 py-0.5 text-xs text-brand-ink">Current</span>}
                 </span>
                 <span className="font-semibold">{priceText(price)}</span>
               </p>
               {price > 0 && price < Number(p.yearly_price) && (
-                <p className="text-right text-xs text-zinc-500">Founding price, then {formatNad(p.yearly_price)} a year</p>
+                <p className="text-right text-xs text-muted">Founding price, then {formatNad(p.yearly_price)} a year</p>
               )}
-              <ul className="mt-2 space-y-0.5 text-zinc-700">
+              <ul className="mt-2 space-y-0.5 text-ink-soft">
                 <li>{limitText(p.item_limit, "items")}</li>
                 <li>{limitText(p.user_limit, p.user_limit === 1 ? "user" : "users")}</li>
                 <li>{p.full_reports ? "Full reports and CSV downloads" : "Money and booking reports"}</li>
-                <li className="text-zinc-500">
+                <li className="text-muted">
                   Marketplace booking fee {Math.round(Number(p.booking_fee_rate) * 100)}% when the marketplace opens
                 </li>
               </ul>
@@ -117,22 +117,22 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
           );
         })}
       </ul>
-      {!isOwner && <p className="mb-6 text-sm text-zinc-600">Only the business owner can change the plan.</p>}
+      {!isOwner && <p className="mb-6 text-sm text-muted">Only the business owner can change the plan.</p>}
 
       {payments && payments.length > 0 && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold text-zinc-700">Payments</h2>
-          <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white text-sm">
+          <h2 className="mb-2 text-sm font-semibold text-ink-soft">Payments</h2>
+          <ul className="divide-y divide-line rounded-xl border border-line bg-surface text-sm">
             {payments.map((p) => (
               <li key={p.id} className="flex items-center justify-between gap-3 px-4 py-3">
                 <span>
                   {plans.find((x) => x.code === p.plan_code)?.name} · {formatNad(p.amount)}
-                  <span className="block text-xs text-zinc-500">
+                  <span className="block text-xs text-muted">
                     {when(p.created_at)} · {p.status === "PENDING" ? "Waiting for approval" : p.status === "APPROVED" ? "Approved" : "Not approved"}
                   </span>
                 </span>
                 {p.status === "APPROVED" && (
-                  <Link href={`/plan/invoices/${p.id}`} className="shrink-0 text-sm font-medium text-emerald-800 underline">
+                  <Link href={`/plan/invoices/${p.id}`} className="shrink-0 text-sm font-medium text-brand underline">
                     Invoice {p.invoice_number}
                   </Link>
                 )}

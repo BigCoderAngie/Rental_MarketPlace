@@ -62,18 +62,18 @@ export const STATUS_LABEL: Record<BookingStatus, string> = {
 };
 
 export const STATUS_TONE: Record<BookingStatus, string> = {
-  REQUESTED: "bg-amber-100 text-amber-900",
-  ACCEPTED: "bg-sky-100 text-sky-900",
-  FEE_PENDING: "bg-amber-100 text-amber-900",
-  CONFIRMED: "bg-emerald-100 text-emerald-900",
-  CHECKED_OUT: "bg-indigo-100 text-indigo-900",
-  OVERDUE: "bg-red-100 text-red-900",
-  RETURNED: "bg-teal-100 text-teal-900",
-  PROBLEM_OPEN: "bg-red-100 text-red-900",
-  CLOSED: "bg-zinc-200 text-zinc-700",
-  DECLINED: "bg-zinc-200 text-zinc-700",
-  EXPIRED: "bg-zinc-200 text-zinc-700",
-  CANCELLED: "bg-zinc-200 text-zinc-700",
+  REQUESTED: "bg-gold-soft text-gold-ink",
+  ACCEPTED: "bg-info-soft text-info-ink",
+  FEE_PENDING: "bg-gold-soft text-gold-ink",
+  CONFIRMED: "bg-brand-soft text-brand-ink",
+  CHECKED_OUT: "bg-plum-soft text-plum-ink",
+  OVERDUE: "bg-danger-soft text-danger-ink",
+  RETURNED: "bg-sage-soft text-sage-ink",
+  PROBLEM_OPEN: "bg-danger-soft text-danger-ink",
+  CLOSED: "bg-subtle-strong text-ink-soft",
+  DECLINED: "bg-subtle-strong text-ink-soft",
+  EXPIRED: "bg-subtle-strong text-ink-soft",
+  CANCELLED: "bg-subtle-strong text-ink-soft",
 };
 
 /**

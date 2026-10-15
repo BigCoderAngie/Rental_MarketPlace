@@ -76,24 +76,24 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
       <PageHeader title={booking.reference} action={<StatusBadge status={booking.status} />} />
       <ErrorNote message={typeof error === "string" ? error : undefined} />
 
-      <section className="mb-4 rounded-xl border border-zinc-200 bg-white p-4">
+      <section className="mb-4 rounded-xl border border-line bg-surface p-4">
         <Link href={`/customers/${booking.customer_id}`} className="block font-medium underline">{booking.customers?.full_name}</Link>
-        <p className="text-sm text-zinc-600">{booking.customers?.phone}</p>
+        <p className="text-sm text-muted">{booking.customers?.phone}</p>
         <p className="mt-2 text-sm">{formatRange(booking.start_date, booking.end_date)} ({days} day{days > 1 ? "s" : ""})</p>
         {booking.status === "REQUESTED" && booking.request_expires_at && (
-          <p className="mt-2 text-sm font-medium text-amber-800">
+          <p className="mt-2 text-sm font-medium text-gold-ink">
             Accept or decline by {new Date(booking.request_expires_at).toLocaleString("en-NA", { timeZone: "Africa/Windhoek", dateStyle: "medium", timeStyle: "short" })}, or the request expires.
           </p>
         )}
-        {booking.notes && <p className="mt-2 text-sm text-zinc-600">{booking.notes}</p>}
+        {booking.notes && <p className="mt-2 text-sm text-muted">{booking.notes}</p>}
         {EDITABLE_STATUSES.includes(booking.status) && (
-          <Link href={`/bookings/${booking.id}/edit`} className="mt-3 inline-block text-sm font-medium text-emerald-800 underline">
+          <Link href={`/bookings/${booking.id}/edit`} className="mt-3 inline-block text-sm font-medium text-brand underline">
             Change dates or items
           </Link>
         )}
       </section>
 
-      <section className="mb-4 rounded-xl border border-zinc-200 bg-white p-4 text-sm">
+      <section className="mb-4 rounded-xl border border-line bg-surface p-4 text-sm">
         <ul className="space-y-1">
           <PackageLines
             days={days}
@@ -120,7 +120,7 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
             <li className="flex justify-between"><span>Discount</span><span>−{formatNad(booking.discount)}</span></li>
           )}
         </ul>
-        <p className="mt-3 flex justify-between border-t border-zinc-200 pt-2 font-semibold">
+        <p className="mt-3 flex justify-between border-t border-line pt-2 font-semibold">
           <span>Total</span>
           <span>{formatNad(total)}</span>
         </p>
@@ -151,7 +151,7 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
         <section className="mb-4 space-y-3">
           {actions.map((to) =>
             NEEDS_NOTE.includes(to) ? (
-              <form key={to} action={moveBooking.bind(null, booking.id, to)} className="space-y-2 rounded-xl border border-zinc-200 bg-white p-3">
+              <form key={to} action={moveBooking.bind(null, booking.id, to)} className="space-y-2 rounded-xl border border-line bg-surface p-3">
                 <Field label={to === "PROBLEM_OPEN" ? "What went wrong?" : "Reason"}>
                   <input name="note" required className={inputClass} />
                 </Field>
@@ -167,8 +167,8 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
       )}
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold text-zinc-700">History</h2>
-        <ol className="space-y-1 text-sm text-zinc-600">
+        <h2 className="mb-2 text-sm font-semibold text-ink-soft">History</h2>
+        <ol className="space-y-1 text-sm text-muted">
           {booking.booking_events.map((e) => (
             <li key={e.id}>
               {new Date(e.created_at).toLocaleString("en-NA", { timeZone: "Africa/Windhoek", dateStyle: "medium", timeStyle: "short" })}
