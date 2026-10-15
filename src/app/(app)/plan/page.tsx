@@ -4,6 +4,7 @@ import { requireBusiness } from "@/lib/business";
 import { namibiaToday } from "@/lib/dates";
 import { formatNad } from "@/lib/money";
 import { bookingFeeText, loadPlan, planFeatures, priceFor, priceText, type PlanPayment } from "@/lib/plans";
+import { Badge } from "@/components/status-badge";
 
 function when(iso: string) {
   return new Date(iso).toLocaleDateString("en-NA", { timeZone: "Africa/Windhoek", dateStyle: "medium" });
@@ -93,7 +94,7 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
               <p className="flex items-baseline justify-between gap-2">
                 <span className="text-base font-semibold">
                   {p.name}
-                  {current && <span className="ml-2 rounded-full bg-primary-soft px-2 py-0.5 text-xs text-primary-ink">Current</span>}
+                  {current && <Badge tone="primary" className="ml-2">Current</Badge>}
                 </span>
                 <span className="font-semibold">{priceText(price)}</span>
               </p>

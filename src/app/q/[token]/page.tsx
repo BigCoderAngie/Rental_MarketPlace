@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BusinessHeader, LineCards, TotalsBox } from "@/components/customer-page";
-import { QuoteBadge } from "@/components/quote-badge";
+import { QuoteBadge } from "@/components/status-badge";
 import { ErrorNote, Field, buttonClass, inputClass, secondaryButtonClass } from "@/components/ui";
 import { formatDays, formatRange } from "@/lib/dates";
 import { itemPhotoUrl } from "@/lib/item-photos";

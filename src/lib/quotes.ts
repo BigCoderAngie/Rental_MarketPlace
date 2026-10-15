@@ -1,5 +1,6 @@
 import { daysInclusive, formatRange, type IsoDate } from "./dates";
 import { formatNad } from "./money";
+import type { BadgeTone } from "./badge-tones";
 
 export type QuoteStatus = "OPEN" | "ACCEPTED" | "CANCELLED" | "EXPIRED";
 
@@ -56,9 +57,9 @@ export const QUOTE_STATUS_LABEL: Record<QuoteStatus, string> = {
   EXPIRED: "Expired",
 };
 
-export const QUOTE_STATUS_TONE: Record<QuoteStatus, string> = {
-  OPEN: "bg-accent-soft text-accent-ink",
-  ACCEPTED: "bg-primary-soft text-primary-ink",
-  CANCELLED: "bg-muted-strong text-foreground-soft",
-  EXPIRED: "bg-muted-strong text-foreground-soft",
+export const QUOTE_STATUS_TONE: Record<QuoteStatus, BadgeTone> = {
+  OPEN: "accent",
+  ACCEPTED: "primary",
+  CANCELLED: "muted",
+  EXPIRED: "muted",
 };

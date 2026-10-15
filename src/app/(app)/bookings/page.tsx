@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { LinkButton, PageHeader } from "@/components/ui";
-import { StatusBadge } from "@/components/status-badge";
+import { EmptyState, LinkButton, PageHeader } from "@/components/ui";
+import { Badge, StatusBadge } from "@/components/status-badge";
 import { requireBusiness } from "@/lib/business";
 import { formatDate, formatRange, namibiaToday } from "@/lib/dates";
 import { isOverdue, wentAhead, type BookingStatus } from "@/lib/bookings";
@@ -52,6 +52,17 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
       .in("booking_id", ids)
       .returns<(Pick<Balance, "amount_due" | "amount_paid" | "outstanding"> & { booking_id: string })[]>(),
   );
+  // Invite a first booking only when the business has none at all, not when the open list happens to be empty.
+  // A filtered list or "show all" already answers that, so only the open list needs the count.
+  let hasAnyBooking = bookings.length > 0 || Boolean(filter);
+  if (!hasAnyBooking && !showAll) {
+    const { count, error: countError } = await supabase
+      .from("bookings")
+      .select("id", { count: "exact", head: true })
+      .eq("business_id", business.id);
+    if (countError) throw countError;
+    hasAnyBooking = (count ?? 0) > 0;
+  }
   const today = namibiaToday();
   // On "Going out today", late pickups come first so they get dealt with.
   if (filter === "out-today") bookings.sort((a, b) => Number(isLatePickup(b, today)) - Number(isLatePickup(a, today)));
@@ -77,8 +88,14 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
         </p>
       )}
 
-      {bookings.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{filter ? "No bookings here right now." : "No bookings yet."}</p>
+      {!hasAnyBooking ? (
+        <EmptyState
+          message="Bookings for phone, walk-in and WhatsApp customers go here."
+          actionHref="/bookings/new"
+          actionLabel="Add your first booking"
+        />
+      ) : bookings.length === 0 ? (
+        <p className="text-sm text-muted-foreground">{filter ? "No bookings here right now." : "No open bookings."}</p>
       ) : (
         <ul className="divide-y divide-border rounded-xl border border-border bg-card">
           {bookings.map((b) => (
@@ -88,12 +105,10 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
                   <span className="font-medium">{b.customers?.full_name}</span>
                   <span className="flex flex-wrap items-center justify-end gap-1">
                     {b.status === "CHECKED_OUT" && isOverdue(b.status, b.end_date, today) && (
-                      <span className="rounded-full bg-danger-soft px-2 py-0.5 text-xs font-semibold text-danger-ink">Late</span>
+                      <Badge tone="danger">Late</Badge>
                     )}
                     {filter === "out-today" && isLatePickup(b, today) && (
-                      <span className="rounded-full bg-danger px-2 py-0.5 text-xs font-semibold text-danger-foreground">
-                        Late pickup since {formatDate(b.start_date)}
-                      </span>
+                      <Badge tone="danger">Late pickup since {formatDate(b.start_date)}</Badge>
                     )}
                     <StatusBadge status={b.status} />
                   </span>

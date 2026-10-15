@@ -3,6 +3,7 @@ import { Field, buttonClass, inputClass } from "@/components/ui";
 import type { BookingStatus } from "@/lib/bookings";
 import { PHOTO_BUCKET, describeReturn, handoverPhotoFolder, type Handover } from "@/lib/handovers";
 import { recordCheckout, recordReturn } from "../actions";
+import { Badge } from "@/components/status-badge";
 
 const countClass = `${inputClass} w-20 text-center`;
 
@@ -34,7 +35,7 @@ function Record({ h, photoUrls }: { h: Handover; photoUrls: Record<string, strin
       <p className="flex justify-between gap-2 font-medium">
         <span>
           {h.kind === "CHECKOUT" ? "Checked out" : "Returned"}
-          {h.late && <span className="ml-2 rounded bg-danger-soft px-1.5 py-0.5 text-xs text-danger-ink">Late</span>}
+          {h.late && <Badge tone="danger" className="ml-2">Late</Badge>}
         </span>
         <span className="text-muted-foreground">{when(h.recorded_at)}</span>
       </p>

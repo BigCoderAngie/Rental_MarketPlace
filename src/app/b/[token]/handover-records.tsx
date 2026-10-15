@@ -1,6 +1,7 @@
 import { inputClass, secondaryButtonClass } from "@/components/ui";
 import { describeReturn, type PublicHandover } from "@/lib/handovers";
 import { respondToHandover } from "./actions";
+import { Badge } from "@/components/status-badge";
 
 function when(iso: string) {
   return new Date(iso).toLocaleString("en-NA", {
@@ -32,7 +33,7 @@ export function HandoverRecords({
             <p className="flex justify-between gap-2 font-medium">
               <span>
                 {h.kind === "CHECKOUT" ? "You collected" : "You returned"}
-                {h.late && <span className="ml-2 rounded bg-danger-soft px-1.5 py-0.5 text-xs text-danger-ink">Late</span>}
+                {h.late && <Badge tone="danger" className="ml-2">Late</Badge>}
               </span>
               <span className="text-muted-foreground">{when(h.recorded_at)}</span>
             </p>

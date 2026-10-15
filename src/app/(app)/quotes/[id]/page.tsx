@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CopyButton } from "@/components/copy-button";
 import { PackageLines } from "@/components/package-lines";
-import { QuoteBadge } from "@/components/quote-badge";
+import { QuoteBadge } from "@/components/status-badge";
 import { ErrorNote, PageHeader, buttonClass, secondaryButtonClass } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { formatRange } from "@/lib/dates";

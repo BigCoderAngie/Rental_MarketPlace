@@ -29,7 +29,6 @@
   /* Extras the app needs */
   --foreground-soft: #3b4339; /* secondary headings, strong labels */
   --input: #c9c2b0; /* input borders, dashed upload box */
-  --muted-strong: #e1dccf; /* neutral status pills */
   --primary-strong: #33573e; /* primary button hover */
   --primary-soft: #e3eee5; /* success notes, confirmed pills */
   --primary-border: #b9d0bd;
@@ -40,12 +39,8 @@
   --danger-soft: #f7e3dc;
   --danger-border: #e8bcae;
   --danger-ink: #6e2716; /* text on danger-soft (danger itself is only 4.3:1 there) */
-  --info-soft: #dfeaee; /* accepted, plan notices */
+  --info-soft: #dfeaee; /* plan notices */
   --info-ink: #1e4351;
-  --plum-soft: #ebe4f0; /* checked out */
-  --plum-ink: #47305a;
-  --sage-soft: #e7eadb; /* returned */
-  --sage-ink: #3a4430;
 
   /* Phone bottom tab bar height (at least 44px tap targets); the app layout pads the page by this much. */
   --tab-bar-height: 3.5rem;
@@ -67,7 +62,6 @@
 
   --color-foreground-soft: var(--foreground-soft);
   --color-input: var(--input);
-  --color-muted-strong: var(--muted-strong);
   --color-primary-strong: var(--primary-strong);
   --color-primary-soft: var(--primary-soft);
   --color-primary-border: var(--primary-border);
@@ -80,10 +74,6 @@
   --color-danger-ink: var(--danger-ink);
   --color-info-soft: var(--info-soft);
   --color-info-ink: var(--info-ink);
-  --color-plum-soft: var(--plum-soft);
-  --color-plum-ink: var(--plum-ink);
-  --color-sage-soft: var(--sage-soft);
-  --color-sage-ink: var(--sage-ink);
 
   --font-sans: var(--font-geist), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }

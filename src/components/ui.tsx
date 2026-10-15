@@ -66,3 +66,15 @@ export function LinkButton({ href, children }: { href: string; children: ReactNo
     </Link>
   );
 }
+
+/** A list with nothing in it yet: one sentence about what goes here, and a button to add the first one. */
+export function EmptyState({ message, actionHref, actionLabel }: { message: string; actionHref: string; actionLabel: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <p className="text-foreground-soft">{message}</p>
+      <div className="mt-4">
+        <LinkButton href={actionHref}>{actionLabel}</LinkButton>
+      </div>
+    </div>
+  );
+}

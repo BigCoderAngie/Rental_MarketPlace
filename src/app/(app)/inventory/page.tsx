@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LinkButton, PageHeader, upgradeBadgeClass } from "@/components/ui";
+import { EmptyState, LinkButton, PageHeader, upgradeBadgeClass } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { formatNad } from "@/lib/money";
 import { itemPhotoUrl } from "@/lib/item-photos";
@@ -40,7 +40,11 @@ export default async function InventoryPage() {
       )}
 
       {items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No items yet. Add your first item to start taking bookings.</p>
+        <EmptyState
+          message="Your items go here: tents, chairs, tables and anything else you hire out."
+          actionHref="/inventory/new"
+          actionLabel="Add your first item"
+        />
       ) : (
         <ul className="divide-y divide-border rounded-xl border border-border bg-card">
           {items.map((item) => (

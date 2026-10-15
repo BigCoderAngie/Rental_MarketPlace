@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PageHeader, inputClass, secondaryButtonClass } from "@/components/ui";
+import { EmptyState, PageHeader, inputClass, secondaryButtonClass } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { customerSearchFilter, type CustomerSummary } from "@/lib/customers";
 import { formatNad } from "@/lib/money";
@@ -35,9 +35,15 @@ export default async function CustomersPage({ searchParams }: PageProps<"/custom
       </form>
 
       {customers.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          {filter ? "No customer matches that search." : "Customers appear here after their first booking."}
-        </p>
+        filter ? (
+          <p className="text-sm text-muted-foreground">No customer matches that search.</p>
+        ) : (
+          <EmptyState
+            message="Everyone who books with you appears here, with what they still owe. Customers are added with their first booking."
+            actionHref="/bookings/new"
+            actionLabel="Add your first booking"
+          />
+        )
       ) : (
         <ul className="divide-y divide-border rounded-xl border border-border bg-card">
           {customers.map((c) => (

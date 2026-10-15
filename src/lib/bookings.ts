@@ -1,6 +1,8 @@
 // Booking states from SRS section 4.2. The database enforces these rules
 // (see supabase/migrations); this copy only decides which buttons to show.
 
+import type { BadgeTone } from "./badge-tones";
+
 export const BOOKING_STATUSES = [
   "REQUESTED",
   "ACCEPTED",
@@ -61,19 +63,19 @@ export const STATUS_LABEL: Record<BookingStatus, string> = {
   CANCELLED: "Cancelled",
 };
 
-export const STATUS_TONE: Record<BookingStatus, string> = {
-  REQUESTED: "bg-accent-soft text-accent-ink",
-  ACCEPTED: "bg-info-soft text-info-ink",
-  FEE_PENDING: "bg-accent-soft text-accent-ink",
-  CONFIRMED: "bg-primary-soft text-primary-ink",
-  CHECKED_OUT: "bg-plum-soft text-plum-ink",
-  OVERDUE: "bg-danger text-danger-foreground",
-  RETURNED: "bg-sage-soft text-sage-ink",
-  PROBLEM_OPEN: "bg-danger-soft text-danger-ink",
-  CLOSED: "bg-muted-strong text-foreground-soft",
-  DECLINED: "bg-muted-strong text-foreground-soft",
-  EXPIRED: "bg-muted-strong text-foreground-soft",
-  CANCELLED: "bg-muted-strong text-foreground-soft",
+export const STATUS_TONE: Record<BookingStatus, BadgeTone> = {
+  REQUESTED: "accent",
+  ACCEPTED: "accent",
+  FEE_PENDING: "accent",
+  CONFIRMED: "primary",
+  CHECKED_OUT: "primary-outline",
+  RETURNED: "primary-outline",
+  OVERDUE: "danger",
+  PROBLEM_OPEN: "danger",
+  CLOSED: "muted",
+  DECLINED: "muted",
+  EXPIRED: "muted",
+  CANCELLED: "muted",
 };
 
 /**
