@@ -23,7 +23,7 @@ export default async function MarketingLayout({ children }: LayoutProps<"/">) {
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-1 px-4 py-3">
           <Link href="/" className={`mr-auto text-base font-semibold rounded ${focusRingClass}`}>
-            Rental Marketplace
+            RentLoop
           </Link>
           <nav aria-label="On this page" className="order-last flex w-full gap-5 text-sm sm:order-none sm:w-auto">
             {JUMP_LINKS.map((l) => (
@@ -45,7 +45,7 @@ export default async function MarketingLayout({ children }: LayoutProps<"/">) {
           <p>
             {SUPPORT_WHATSAPP ? (
               <a
-                href={whatsAppLink("Hi, I have a question about Rental Marketplace.", SUPPORT_WHATSAPP)}
+                href={whatsAppLink("Hi, I have a question about RentLoop.", SUPPORT_WHATSAPP)}
                 className={`font-medium text-primary underline rounded ${focusRingClass}`}
               >
                 WhatsApp us on {SUPPORT_WHATSAPP}
@@ -62,7 +62,7 @@ export default async function MarketingLayout({ children }: LayoutProps<"/">) {
               Privacy
             </Link>
           </nav>
-          <p>© {new Date().getFullYear()} Rental Marketplace</p>
+          <p>© {new Date().getFullYear()} RentLoop</p>
         </div>
       </footer>
     </div>

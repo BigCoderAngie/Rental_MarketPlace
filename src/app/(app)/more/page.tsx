@@ -4,7 +4,7 @@ import { PageHeader, focusRingInsetClass } from "@/components/ui";
 import { isPlatformAdmin } from "@/lib/admin";
 import { moreLinks } from "@/lib/nav";
 
-export const metadata: Metadata = { title: "More | Rental Marketplace" };
+export const metadata: Metadata = { title: "More | RentLoop" };
 
 const rowClass = `flex min-h-12 w-full items-center justify-between gap-3 px-4 py-3 text-left font-medium hover:bg-muted ${focusRingInsetClass}`;
 

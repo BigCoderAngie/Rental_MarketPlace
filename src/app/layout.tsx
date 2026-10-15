@@ -5,7 +5,7 @@ import "./globals.css";
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
 export const metadata: Metadata = {
-  title: "Rental Marketplace",
+  title: "RentLoop",
   description: "Inventory, bookings and calendar for Namibian hire businesses",
 };
 

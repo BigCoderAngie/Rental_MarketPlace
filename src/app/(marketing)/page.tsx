@@ -12,14 +12,14 @@ const DESCRIPTION =
   "Stop double bookings and send quotes on WhatsApp. Stock, bookings, deposits and returns for tent, chair and event hire businesses in Namibia. Free plan, prices in N$.";
 
 export const metadata: Metadata = {
-  title: "Booking software for Namibian hire businesses | Rental Marketplace",
+  title: "Booking software for Namibian hire businesses | RentLoop",
   description: DESCRIPTION,
   openGraph: {
     title: "Stop double bookings. Send quotes on WhatsApp.",
     description: DESCRIPTION,
     type: "website",
     locale: "en_NA",
-    siteName: "Rental Marketplace",
+    siteName: "RentLoop",
   },
 };
 
@@ -130,7 +130,7 @@ export default async function HomePage() {
           <div className="hidden grid-cols-[10rem_1fr_1fr] gap-6 border-b border-border px-5 py-3 text-sm font-semibold text-muted-foreground sm:grid">
             <span />
             <span>WhatsApp and a notebook</span>
-            <span className="text-foreground">Rental Marketplace</span>
+            <span className="text-foreground">RentLoop</span>
           </div>
           <dl className="divide-y divide-border">
             {COMPARISON.map((row) => (

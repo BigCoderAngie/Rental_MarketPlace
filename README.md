@@ -1,4 +1,4 @@
-# Rental Marketplace
+# RentLoop
 
 Booking software for hire businesses in Namibia.
 
