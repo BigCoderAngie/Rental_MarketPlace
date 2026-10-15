@@ -3,8 +3,10 @@ import { NextResponse, type NextRequest } from "next/server";
 import { supabaseEnv } from "@/lib/supabase/env";
 
 // Signed-out visitors may open these; /q/ and /b/ are the customer's quote
-// and booking links.
+// and booking links. PUBLIC_PAGES match exactly: "/" is the homepage, and as
+// a prefix it would match every page.
 const PUBLIC_PATHS = ["/login", "/auth", "/q/", "/b/"];
+const PUBLIC_PAGES = ["/", "/terms", "/privacy"];
 
 // Refreshes the Supabase session on every request and sends signed-out
 // visitors to the login page.
@@ -34,7 +36,17 @@ export async function proxy(request: NextRequest) {
   const signedIn = Boolean(data?.claims);
   const path = request.nextUrl.pathname;
 
-  if (!signedIn && !PUBLIC_PATHS.some((p) => path.startsWith(p))) {
+  // The homepage is for visitors; signed-in users start on their calendar.
+  if (signedIn && path === "/") {
+    const calendar = request.nextUrl.clone();
+    calendar.pathname = "/calendar";
+    const redirect = NextResponse.redirect(calendar);
+    // Keep any session cookies refreshed above.
+    response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
+    return redirect;
+  }
+
+  if (!signedIn && !PUBLIC_PAGES.includes(path) && !PUBLIC_PATHS.some((p) => path.startsWith(p))) {
     const login = request.nextUrl.clone();
     login.pathname = "/login";
     login.search = "";

@@ -3,7 +3,7 @@ import { ErrorNote, PageHeader, buttonClass, secondaryButtonClass, upgradeBadgeC
 import { requireBusiness } from "@/lib/business";
 import { namibiaToday } from "@/lib/dates";
 import { formatNad } from "@/lib/money";
-import { limitText, loadPlan, priceFor, priceText, type PlanPayment } from "@/lib/plans";
+import { bookingFeeText, loadPlan, planFeatures, priceFor, priceText, type PlanPayment } from "@/lib/plans";
 
 function when(iso: string) {
   return new Date(iso).toLocaleDateString("en-NA", { timeZone: "Africa/Windhoek", dateStyle: "medium" });
@@ -103,12 +103,10 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
                 </p>
               )}
               <ul className="mt-2 space-y-0.5 text-foreground-soft">
-                <li>{limitText(p.item_limit, "items")}</li>
-                <li>{limitText(p.user_limit, p.user_limit === 1 ? "user" : "users")}</li>
-                <li>{p.full_reports ? "Full reports and CSV downloads" : "Money and booking reports"}</li>
-                <li className="text-muted-foreground">
-                  Marketplace booking fee {Math.round(Number(p.booking_fee_rate) * 100)}% when the marketplace opens
-                </li>
+                {planFeatures(p).map((f) => (
+                  <li key={f}>{f}</li>
+                ))}
+                <li className="text-muted-foreground">{bookingFeeText(p)}</li>
               </ul>
               {isOwner && p.code !== "free" && !pending && (
                 <Link href={`/plan/pay?plan=${p.code}`} className={`${current ? secondaryButtonClass : buttonClass} mt-3 w-full`}>

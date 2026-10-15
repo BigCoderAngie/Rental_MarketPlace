@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { planReminder, priceFor, type Plan } from "./plans";
+import { bookingFeeText, planFeatures, planReminder, priceFor, type Plan } from "./plans";
 
 const pro: Plan = {
   code: "pro",
@@ -41,5 +41,25 @@ describe("plan reminders", () => {
   it("says the plan ended for a month afterwards", () => {
     expect(planReminder(ends("2026-12-20T10:00:00Z"), "Pro", now)).toMatchObject({ tone: "ended" });
     expect(planReminder(ends("2026-11-01T10:00:00Z"), "Pro", now)).toBeNull();
+  });
+});
+
+describe("plan features", () => {
+  it("lists limits and reports", () => {
+    expect(planFeatures({ item_limit: 15, user_limit: 1, full_reports: false })).toEqual([
+      "Up to 15 items",
+      "Up to 1 user",
+      "Money and booking reports",
+    ]);
+    expect(planFeatures({ item_limit: null, user_limit: null, full_reports: true })).toEqual([
+      "Unlimited items",
+      "Unlimited users",
+      "Full reports and CSV downloads",
+    ]);
+  });
+
+  it("shows the booking fee as a whole percentage", () => {
+    expect(bookingFeeText({ booking_fee_rate: 0.05 })).toBe("Marketplace booking fee 5% when the marketplace opens");
+    expect(bookingFeeText({ booking_fee_rate: 0 })).toBe("Marketplace booking fee 0% when the marketplace opens");
   });
 });

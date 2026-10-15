@@ -49,6 +49,9 @@ export const buttonClass =
 export const secondaryButtonClass =
   "inline-flex items-center justify-center rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground-soft hover:bg-muted";
 
+// Visible keyboard focus for links and buttons.
+export const focusRingClass = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+
 // Marigold fill with accent-foreground text (7.4:1); marigold is never a text colour.
 export const upgradeBadgeClass =
   "inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-accent-foreground hover:bg-accent/85";
