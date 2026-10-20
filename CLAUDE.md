@@ -25,8 +25,20 @@ Stack: Next.js 16 (App Router, read node_modules/next/dist/docs before using unf
 ### Database changes from the other partner
 At the start of a session and after every `git pull`, check whether new files arrived in `supabase/migrations/` (for example `git diff --name-only ORIG_HEAD HEAD -- supabase/migrations` after a pull, or compare with `npx supabase migration list`). If any are not applied yet, tell me straight away, in plain words: which migrations are new, what each one does (from the comment at the top of the file), and the exact command to run (README → "After every pull: update your database"). Ask me before you run `npx supabase db push`, because it changes the live database.
 
+### How to explain things to me
+- Short, plain sentences. One idea per sentence. Active voice.
+- Everyday words. No "lever", "knob", "surface" (as a verb), "counterfactual", "orthogonal", "leverage".
+- When you explain a change, say what the person using the app will see differently, then why.
+- Give file paths and lines when you mention code.
+- If I ask "why", give the cause first in one or two sentences.
+
 ### Rules
 - Front-end work (look, layout, wording in `src/app/**` and `src/components/**`) stays on the `frontend-updates` branch until it is finished; its pull request stays a draft until then. Other work (database, `src/lib` logic, new features) gets its own branch from `main`.
 - Small commits: one change per commit, so the long front-end branch stays easy to review.
 - Don't add new npm packages without asking.
 - Never put secrets in code; use `.env.local` (see `.env.example`).
+
+### The SRS is the rulebook
+- docs/SRS.md is the requirements (a copy of the online SRS). Follow it unless docs/MASTER-PLAN.md records a decision that changes it.
+- Before planning a task, name the SRS requirement IDs it covers (for example FR-BK-03) and check the task doesn't break one, especially: the platform never takes or holds rental money (2.4), customers pay no platform fee (1.3), no screen calls payments "protected", "secured" or "guaranteed" (NFR-12), and phases (P1, P2, P3).
+- If a request or a design conflicts with the SRS, stop and tell me which requirement, in one sentence, before building.
