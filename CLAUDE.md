@@ -33,8 +33,8 @@ At the start of a session and after every `git pull`, check whether new files ar
 - If I ask "why", give the cause first in one or two sentences.
 
 ### Rules
-- Front-end work (look, layout, wording in `src/app/**` and `src/components/**`) stays on the `frontend-updates` branch until it is finished; its pull request stays a draft until then. Other work (database, `src/lib` logic, new features) gets its own branch from `main`.
-- Small commits: one change per commit, so the long front-end branch stays easy to review.
+- Every task gets its own branch from `main`, named after the task (see docs/TASKS.md once it exists), and one pull request.
+- Small commits: one change per commit, so each pull request stays easy to review.
 - Don't add new npm packages without asking.
 - Never put secrets in code; use `.env.local` (see `.env.example`).
 
