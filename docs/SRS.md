@@ -1,3 +1,5 @@
+> **Being rewritten (20 Oct 2026):** the MVP is now a two-sided marketplace with individual and business owners. The changes to make are listed in `docs/MASTER-PLAN.md` under "Changes to the SRS" (items 4 to 8). Until the online SRS is updated, MASTER-PLAN.md wins where they disagree.
+>
 > Copy of the SRS (Claude Doc, rev 219, exported 19 Oct 2026). The original is the source of truth: https://claude.ai/code/artifact/53bc03dd-b135-487b-ada0-49254fd9d247 . Diagrams are only in the online version.
 
 # Software Requirements Specification: Namibia Rental Platform

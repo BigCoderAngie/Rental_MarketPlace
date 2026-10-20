@@ -2,15 +2,49 @@
 
 Agreed in the interview on 20 October 2026. `docs/SRS.md` is the rulebook; this plan records the decisions that change or narrow it. `docs/DESIGN.md` sets the look. Check every new task against this file and say when something drifts from it.
 
+## Change of direction (20 October 2026)
+
+**The MVP is a two-sided marketplace from day one.** Renters and owners are both in it. Owners can be **individuals or businesses**. This replaces "software first, marketplace second, individuals third" (SRS 1, 2.1).
+
+Why: owners won't sign up where there are no renters, and renters won't come where there is nothing to rent. Both sides have to arrive together.
+
+What stays the same:
+- RentLoop never takes or holds rental money. Renters pay the owner directly; the app only records it (SRS 2.4, NFR-12).
+- Renters never pay a platform fee (SRS 1.3).
+- The staff tools already built (stock, calendar, quotes, bookings, checkout and return, payment records, reports, plans) stay. They become the owner's side of the marketplace.
+
+The sections below were written before this change. Where they say "Phase 2" for search, listings, booking requests, customer accounts or verification, read "MVP". Each will be re-checked as its tasks are planned.
+
 ## Goal
 
-Finish the RentLoop MVP (SRS section 9) in the new design from `docs/DESIGN.md`. Then build the Phase 2 marketplace.
+Build RentLoop as a simple two-sided marketplace in the design from `docs/DESIGN.md`: renters find and request items without friction, and anyone (a person or a business) can list things for rent in minutes.
 
 ## Who it's for
 
-- Hire businesses in Windhoek and Erongo: the owner and their staff, in the staff app.
-- Their customers, on the quote and booking links, with no account (FR-AC-04).
+- **Renters:** anyone who needs to hire something. They browse and search without an account, and sign up with an email code only when they send a request.
+- **Owners:** individuals who list their own things, and hire businesses with staff. Both sign up with an email code; a business owner can invite staff.
 - The platform admin.
+
+## The MVP, in order (replaces the order further down)
+
+1. **Look:** the shared parts and staff pages already in progress (waves 1 to 3 of `docs/TASKS.md`).
+2. **Marketplace home:** the mockup's home page for both audiences: search by item, town and date, category tiles, popular items, "How it works" for renters and owners, and "List your item" for owners.
+3. **Owner sign-up as a person or a business.** A person lists in a few taps (no staff, no business profile needed). A business gets everything built so far.
+4. **Public listings:** every listed item has a public page (photos, price per day, deposit, owner name and town, rating) that works without signing in.
+5. **Search and browse:** by item or category, town and dates, showing only items with enough free stock (FR-SR-01). Categories widen beyond events and tools to what individuals rent.
+6. **Booking requests from listings:** the renter picks dates and quantity and signs up with an email code; the owner accepts or declines in the app they already have. Contact details stay private until the owner accepts (FR-PV-01 to 03).
+7. **Renter account:** "My bookings", with the existing booking link pages as each booking's detail.
+8. **Trust for strangers:** verified owners, reviews shown publicly, and Report a Problem.
+9. The remaining earlier MVP features (staff invites, notifications, audit log, admin tools, reminders, offline forms) are re-ordered around these.
+
+## Open decisions (needed before the marketplace tasks are planned)
+
+1. **Verifying individual owners:** what proof (phone and ID check by the admin, or none at launch) before their items show in search?
+2. **Booking fee:** keep 0% at launch (SRS 3.1 launch period) and decide the rates later?
+3. **Plans for individuals:** do individuals get the Free plan only, or the same tiers as businesses?
+4. **Categories for individuals:** which to add at launch (for example tools, electronics, camping, vehicles, venues)? Vehicles and homes bring insurance and legal questions.
+5. **Launch towns:** Windhoek and Erongo first?
+6. **Renter sign-up:** email code only, or email plus phone (the phone helps owners reach them after accepting)?
 
 ## In scope: the MVP, in this order
 
@@ -130,7 +164,7 @@ Finish the RentLoop MVP (SRS section 9) in the new design from `docs/DESIGN.md`.
 - The demo runs on Vercel's free plan with the current Supabase project and `NEXT_PUBLIC_SITE_URL` set.
 - Vercel's free plan doesn't allow commercial use. Before the first paying business, move to Vercel Pro (or another host) and a separate production Supabase project. Demo and development stay on the current project.
 
-## Phase 2, in this order
+## Earlier Phase 2 order (now folded into the MVP above)
 
 The launch waits for the SRS gate: 30 to 50 businesses keeping their inventory and calendars in the app.
 
@@ -151,7 +185,15 @@ Copy these into the online SRS before sales begin.
 2. **FR-NT-01:** push and email instead of SMS or WhatsApp for the MVP.
 3. **NFR-09:** translations after the MVP.
 
-## Decide before Phase 2 (SRS section 8)
+**New changes from 20 October 2026 (not yet in the online SRS):**
+
+4. **Sections 1, 2.1 and 9:** the MVP is a two-sided marketplace. Public search, listing pages, booking requests, customer accounts, contact privacy, verification and public reviews move from P2 into the MVP.
+5. **Sections 2.1 and 2.2:** individual owners move from P3 into the MVP. "Business" becomes "Owner (individual or business)" wherever the SRS means the person who lists items.
+6. **Section 2.1:** the gate "30 to 50 businesses before the marketplace" is removed.
+7. **FR-IN-06:** categories widen for individual owners (list to be agreed).
+8. **Section 9 (MVP scope):** rewritten to match the MVP order above.
+
+## Decide before the marketplace tasks (SRS section 8)
 
 Booking fee values, refunds when a business cancels, refunds on customer cancellations and no-shows, the payment gateway, the lawyer's check on the fee model, launch towns, delivery.
 
