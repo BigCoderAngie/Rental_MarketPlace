@@ -5,7 +5,8 @@ import { cardLinkClass, focusRingClass } from "@/components/ui";
 /**
  * A category with its icon in a pale green circle (docs/DESIGN.md "Category
  * tile"). Icons exist for the SRS categories (FR-IN-06); any other category
- * gets the grid.
+ * gets the grid. (hasOwnProperty, not Object.hasOwn: older Safari and in-app
+ * browsers lack the latter.)
  */
 export function CategoryTile({ slug, label, href }: { slug: string; label: string; href: string }) {
   return (
@@ -14,7 +15,7 @@ export function CategoryTile({ slug, label, href }: { slug: string; label: strin
       className={`${cardLinkClass} flex min-h-28 flex-col items-center justify-start gap-2 p-3 pt-4 text-center ${focusRingClass}`}
     >
       <span aria-hidden className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-soft text-primary">
-        <Icon>{Object.hasOwn(ICONS, slug) ? ICONS[slug] : ICONS.other}</Icon>
+        <Icon>{Object.prototype.hasOwnProperty.call(ICONS, slug) ? ICONS[slug] : ICONS.other}</Icon>
       </span>
       <span className="text-sm font-semibold text-foreground">{label}</span>
     </Link>
