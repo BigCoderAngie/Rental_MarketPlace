@@ -24,6 +24,9 @@ end $$;
 insert into public.businesses (id, name) values
   ('10000000-0000-0000-0000-000000000001', 'Test Hire'),
   ('10000000-0000-0000-0000-000000000002', 'Other Hire');
+-- Test Hire is on Pro (3 users), so it can have a staff member.
+update public.subscriptions set plan_code = 'pro', expires_at = now() + interval '1 year'
+where business_id = '10000000-0000-0000-0000-000000000001';
 insert into public.business_members (business_id, user_id, role) values
   ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-00000000000a', 'owner'),
   ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-00000000000b', 'staff'),
