@@ -1,14 +1,10 @@
-> **Being rewritten (20 Oct 2026):** the MVP is now a two-sided marketplace with individual and business owners. The changes to make are listed in `docs/MASTER-PLAN.md` under "Changes to the SRS" (items 4 to 8). Until the online SRS is updated, MASTER-PLAN.md wins where they disagree.
->
-> Copy of the SRS (Claude Doc, rev 219, exported 19 Oct 2026). The original is the source of truth: https://claude.ai/code/artifact/53bc03dd-b135-487b-ada0-49254fd9d247 . Diagrams are only in the online version.
+> Copy of the SRS (Claude Doc, rev 234, exported 20 Oct 2026). The original is the source of truth: https://claude.ai/code/artifact/53bc03dd-b135-487b-ada0-49254fd9d247 . Diagrams are only in the online version. Where docs/MASTER-PLAN.md records a later decision, MASTER-PLAN.md wins.
 
 # Software Requirements Specification: Namibia Rental Platform
 
-2026-10-05 · @ccvx
-
 ## 1. Introduction
 
-This SRS defines version 1.0 of the platform: booking software for Namibian hire businesses that grows into a public rental marketplace. It replaces the marketplace-first plan in the master handoff with the rerouted direction agreed on 24 September 2026: software first, marketplace second, individuals third.
+This SRS defines version 1.0 of the platform: a two-sided rental marketplace for Namibia, with booking software for the individuals and hire businesses who rent things out. Since 20 October 2026 the MVP is a two-sided marketplace from day one: renters and owners arrive together, and owners can be individuals or hire businesses. This replaces the order agreed on 24 September 2026 (software first, marketplace second, individuals third).
 
 ### 1.1 Purpose
 
@@ -16,15 +12,15 @@ The document tells developers, testers and partners what the system must do in e
 
 ### 1.2 Scope
 
-- **In scope (Phase 1 and 2):** inventory, availability calendar, quotes, bookings, checkout and return records, payment records, customer history, reports, public search, marketplace booking requests, booking fees, subscription tiers (Free, Pro, Business), featured listings and admin tools.
-- **Later (Phase 3):** individual owners, delivery, insurance, website booking widgets, the mobile app and regional expansion.
+- **In scope (MVP and Phase 2):** individual and business owners, renter accounts, inventory, availability calendar, quotes, bookings, checkout and return records, payment records, customer history, reports, public search, marketplace booking requests, booking fees, subscription tiers (Free, Pro, Business), featured listings and admin tools.
+- **Later (Phase 3):** delivery, insurance, website booking widgets, the mobile app and regional expansion.
 - **Never in scope for v1:** holding, splitting or paying out rental money or deposits. Customers pay businesses directly; the platform only records it.
 
 ### 1.3 Definitions
 
 | Term | Meaning |
 | --- | --- |
-| Business | A hire company (or later an individual owner) that lists and rents out items |
+| Business | An owner who lists and rents out items: an individual or a hire company. Wherever this SRS says "business" for the one who lists items, it means any owner |
 | Customer | A person or organisation that books items; renters pay no platform fee |
 | Item | A rentable product with a quantity in stock, e.g. 300 chairs or 1 PA system |
 | Booking | One rental of one or more items for a date range; the single source of truth for that rental |
@@ -47,7 +43,7 @@ Requirements use "must" for mandatory and "should" for desirable. Each has an ID
 
 ## 2. Overall description
 
-The product starts as the system Namibian hire businesses run on, turns their live inventory into a public marketplace, then opens to everyone.
+The product is a two-sided rental marketplace from the MVP: renters search and request items, and individuals and hire businesses list them and run their bookings in the same app.
 
 ### 2.1 Product perspective and phases
 
@@ -55,9 +51,9 @@ One platform API serves the website now and the mobile app later, so accounts, i
 
 | Phase | What ships | Who uses it | Gate to the next phase |
 | --- | --- | --- | --- |
-| P1: Business software | Inventory, calendar, WhatsApp quotes, bookings, checkout and return records, payment records, customers, reports | Hire businesses and their staff | 30 to 50 businesses keeping inventory and calendars in the app |
-| P2: Marketplace | Public search by item, town and date; booking requests; booking fee by tier; reviews; featured listings | Customers, plus P1 businesses | Regular marketplace bookings accepted and paid for |
-| P3: Open platform | Individual owners, delivery, insurance partners, website widgets, mobile app | Everyone | Not set |
+| MVP: Two-sided marketplace | Owner tools (inventory, calendar, WhatsApp quotes, bookings, checkout and return records, payment records, customers, reports); public listings; search by item, town and date; booking requests; renter accounts; contact privacy; verification; public reviews | Renters, individual owners, hire businesses and their staff | Regular marketplace bookings accepted and completed |
+| P2: Marketplace revenue | Booking fee by tier after the launch period; featured listings; event search with guest counts | Everyone | Not set |
+| P3: Open platform | Delivery, insurance partners, website widgets, mobile app | Everyone | Not set |
 
 ### 2.2 User classes
 
@@ -65,9 +61,9 @@ One platform API serves the website now and the mobile app later, so accounts, i
 | --- | --- | --- |
 | Business owner (admin) | Set up the business, items, prices, staff, plan and billing | P1 |
 | Business staff | Create quotes and bookings, run checkout and return, record payments; limited by role | P1 |
-| Customer | Find items, request bookings, accept quotes, confirm checkout and return, review | P1 via quote link, P2 via search |
+| Customer | Find items, request bookings, accept quotes, confirm checkout and return, review | MVP: quote and booking links, search and a renter account |
 | Platform admin | Verify businesses, moderate listings, set fees and plans, handle reports, view revenue | P1 |
-| Individual owner | List personal items and accept bookings | P3 |
+| Individual owner | List personal items in a few taps and accept bookings, without staff or a business profile | MVP |
 
 ### 2.3 Operating environment
 
@@ -104,7 +100,7 @@ The platform earns from three things and never touches rental money: a yearly su
 - Calculated on the rental amount only; deposits and delivery are excluded.
 - Starting values, all admin-configurable: minimum N$20, maximum N$500 per booking; the rate depends on the business's tier (10% Free, 5% Pro, 0% Business, see 3.2). There is no repeat-booking discount.
 - Paying the fee (or accepting, on a 0% tier) confirms the booking and unlocks the customer's contact details for the business.
-- Fee states: NOT_DUE, PENDING, PAID, EARNED (at checkout), REFUNDED. Only EARNED fees count as revenue.
+- Fee states: NOT\_DUE, PENDING, PAID, EARNED (at checkout), REFUNDED. Only EARNED fees count as revenue.
 - Full refund if the rental does not happen: the customer cancels, nobody shows up, or the platform cancels.
 - Trusted businesses (about 5 completed marketplace bookings, no unpaid fees) may be billed after checkout on a monthly statement; an unpaid statement pauses their marketplace listings.
 - Launch period: the fee is set to 0% for the first three months of P2, with the end date announced up front; the accept step stays the same.
@@ -141,7 +137,6 @@ Every booking, direct or marketplace, runs the same six steps: Request, Accept, 
 
 ### 4.1 Flowchart
 
-
 [diagram in the online SRS]
 
 Items leave the available stock at Accept, and a cancellation before Checkout releases them and refunds any booking fee.
@@ -158,12 +153,12 @@ Arrows across the lanes show each hand-off; the dashed fee step happens only on 
 | --- | --- | --- |
 | REQUESTED | Customer sends a request or accepts a quote | ACCEPTED, DECLINED, EXPIRED |
 | ACCEPTED | Business accepts; items blocked on the calendar | CONFIRMED (direct bookings and 0% tier bookings go here at once), CANCELLED |
-| FEE_PENDING | Marketplace booking accepted; fee awaiting payment | CONFIRMED, EXPIRED (fee unpaid in 24 hours, items released) |
-| CONFIRMED | Direct booking accepted, marketplace fee paid, or accepted on a 0% tier; contacts unlock | CHECKED_OUT, CANCELLED |
-| CHECKED_OUT | Both sides confirm checkout counts and photos; marketplace fee becomes EARNED | RETURNED, OVERDUE |
+| FEE\_PENDING | Marketplace booking accepted; fee awaiting payment | CONFIRMED, EXPIRED (fee unpaid in 24 hours, items released) |
+| CONFIRMED | Direct booking accepted, marketplace fee paid, or accepted on a 0% tier; contacts unlock | CHECKED\_OUT, CANCELLED |
+| CHECKED\_OUT | Both sides confirm checkout counts and photos; marketplace fee becomes EARNED | RETURNED, OVERDUE |
 | OVERDUE | Return date passed without a return record | RETURNED |
-| RETURNED | Both sides confirm the return record | CLOSED, PROBLEM_OPEN |
-| PROBLEM_OPEN | A problem is reported at or after return | CLOSED |
+| RETURNED | Both sides confirm the return record | CLOSED, PROBLEM\_OPEN |
+| PROBLEM\_OPEN | A problem is reported at or after return | CLOSED |
 | CLOSED | No open problem; reviews open for 14 days | None |
 | DECLINED, EXPIRED, CANCELLED | End states before checkout; any paid fee refunded | None |
 
@@ -171,17 +166,17 @@ Payment is recorded alongside the states, not as a state: a booking can be CONFI
 
 ## 5. Functional requirements
 
-There are 74 requirements across 14 modules; P1 items make the business software, P2 items add the marketplace.
+There are 74 requirements across 14 modules; P1 items make the business software, P2 items add the marketplace. Since 20 October 2026 these P2 items are part of the MVP (section 9): search (FR-SR-01, FR-SR-03 to 05), the public flag (FR-IN-05), booking requests (FR-BK-03), contact privacy (FR-PV-01 to 03), verification (FR-AC-03), public reviews (FR-RV-03) and marketplace problem reports (FR-PR-03). Booking fee, statement and featured-listing items stay P2.
 
 ### 5.1 Accounts and business setup (AC)
 
 | ID | Requirement | Phase |
 | --- | --- | --- |
-| FR-AC-01 | Users must register with a phone number verified by one-time code; email is optional | P1 |
+| FR-AC-01 | Users must register with a phone number verified by one-time code; email is optional. MVP: sign-in by email one-time code with the phone number collected; phone sign-in follows after the MVP | P1 |
 | FR-AC-02 | A business owner must create a business profile: name, logo, towns served, operating hours, contact details, BIPA number (optional) | P1 |
 | FR-AC-03 | Platform admin must verify a business before its listings appear in public search; verified businesses show a badge | P2 |
 | FR-AC-04 | Customers must be able to accept a quote or confirm checkout from a link without creating a full account | P1 |
-| FR-AC-05 | Account states must follow: NEW, PHONE_VERIFIED, ACTIVE, UNDER_REVIEW, SUSPENDED, CLOSED | P1 |
+| FR-AC-05 | Account states must follow: NEW, PHONE\_VERIFIED, ACTIVE, UNDER\_REVIEW, SUSPENDED, CLOSED | P1 |
 
 ### 5.2 Inventory (IN)
 
@@ -192,7 +187,7 @@ There are 74 requirements across 14 modules; P1 items make the business software
 | FR-IN-03 | Businesses must be able to group items into packages (for example "Wedding 100": tent, 100 chairs, 10 tables) with a package price | P1 |
 | FR-IN-04 | Staff must be able to mark units as under repair or retired, which removes them from available stock | P1 |
 | FR-IN-05 | Each item must have a public flag; only public items from verified businesses appear in marketplace search | P2 |
-| FR-IN-06 | Categories must follow handoff section 13, starting with Events, Tools, and Construction and Machinery | P1 |
+| FR-IN-06 | Categories must follow handoff section 13, starting with Events, Tools, and Construction and Machinery. MVP: widened for individual owners; the list is still to be agreed | P1 |
 
 ### 5.3 Calendar and availability (CA)
 
@@ -265,7 +260,7 @@ There are 74 requirements across 14 modules; P1 items make the business software
 | FR-PR-01 | Either side must be able to report damage, missing items, a no-show or a dispute on a booking, with description and photos | P1 |
 | FR-PR-02 | Reports must link the checkout and return records as evidence | P1 |
 | FR-PR-03 | Platform admin must be able to view, message both sides, record an outcome and close a marketplace report | P2 |
-| FR-PR-04 | Problem states: OPEN, AWAITING_RESPONSE, UNDER_REVIEW, RESOLVED, CLOSED | P1 |
+| FR-PR-04 | Problem states: OPEN, AWAITING\_RESPONSE, UNDER\_REVIEW, RESOLVED, CLOSED | P1 |
 
 ### 5.10 Search and marketplace (SR)
 
@@ -298,7 +293,7 @@ There are 74 requirements across 14 modules; P1 items make the business software
 
 | ID | Requirement | Phase |
 | --- | --- | --- |
-| FR-NT-01 | The system must notify by SMS or WhatsApp and in the app for: new request, accepted, declined, expired, fee due, checkout tomorrow, return due, overdue, problem reported, review request | P1 |
+| FR-NT-01 | The system must notify by SMS or WhatsApp and in the app for: new request, accepted, declined, expired, fee due, checkout tomorrow, return due, overdue, problem reported, review request. MVP: in the app for every event, plus free web push and email for urgent ones (new request, checkout tomorrow, overdue); SMS or WhatsApp after the MVP | P1 |
 | FR-RP-01 | Businesses must see revenue recorded, bookings, utilisation per item, outstanding payments, deposits held, and top customers, exportable to CSV | P1 |
 | FR-RP-02 | Businesses must see fees paid and marketplace bookings received | P2 |
 | FR-AD-01 | Admin must manage businesses, verification, listings, categories, plans, fee settings, featured slots, proof-of-payment approvals and suspensions | P1 |
@@ -331,7 +326,7 @@ The system must stay fast on cheap phones and slow networks, and protect custome
 | NFR-06 | Privacy | Contact fields are released only by the backend after the right booking state; ID documents stored encrypted and visible only to verifying admins |
 | NFR-07 | Retention | Booking, checkout, return and audit records kept at least 5 years for tax and dispute evidence; personal data deleted or anonymised on account closure where the law allows |
 | NFR-08 | Usability | A new staff member can create a quote in under 2 minutes without training; all actions reachable with one thumb on a phone |
-| NFR-09 | Language | English at launch; text stored for later Afrikaans and Oshiwambo translation |
+| NFR-09 | Language | English at launch; Afrikaans and Oshiwambo translation after the MVP |
 | NFR-10 | Offline tolerance | Checkout and return forms keep entered data if the connection drops and submit when it returns |
 | NFR-11 | Scalability | One API serves web and the later mobile app; architecture supports 1,000 businesses without redesign |
 | NFR-12 | Wording | No screen or message calls deposits or payments "protected", "secured" or "guaranteed" |
@@ -346,24 +341,24 @@ The booking is the single source of truth; every other record hangs off a busine
 | --- | --- | --- |
 | users | id, phone, name, verification level, status | P1 |
 | businesses | id, name, towns, verified, tier, tier expiry, founding price, billing status | P1 |
-| business_members | user, business, role | P1 |
+| business\_members | user, business, role | P1 |
 | customers | id, business, name, phone, notes, linked user (optional) | P1 |
 | categories, towns, regions | name, parent | P1 |
 | items | business, category, name, quantity owned, daily price, deposit, replacement value, public flag | P1 |
-| item_units_out | item, quantity, reason (repair, retired), from, to | P1 |
-| packages, package_items | package, item, quantity, price | P1 |
-| quotes, quote_lines | business, customer, dates, lines, total, expiry, status | P1 |
-| bookings, booking_items | business, customer, source, dates, status, totals, deposit; item, quantity, price | P1 |
-| booking_events | booking, from state, to state, user, time | P1 |
-| payment_records | booking, kind (rental, deposit in, deposit out, deduction), amount, method, date, recorded by | P1 |
-| checkout_records, return_records | booking, per-item counts, photos, confirmations, timestamps | P1 |
+| item\_units\_out | item, quantity, reason (repair, retired), from, to | P1 |
+| packages, package\_items | package, item, quantity, price | P1 |
+| quotes, quote\_lines | business, customer, dates, lines, total, expiry, status | P1 |
+| bookings, booking\_items | business, customer, source, dates, status, totals, deposit; item, quantity, price | P1 |
+| booking\_events | booking, from state, to state, user, time | P1 |
+| payment\_records | booking, kind (rental, deposit in, deposit out, deduction), amount, method, date, recorded by | P1 |
+| checkout\_records, return\_records | booking, per-item counts, photos, confirmations, timestamps | P1 |
 | problems | booking, type, description, photos, status, outcome | P1 |
 | reviews | booking, author, subject, rating, text | P1 |
-| platform_charges | business, type (fee, subscription, featured), amount, status, gateway ref, proof upload | P1 |
-| fee_settings, plans | rate per tier, minimum, cap, Business fair-use limit, launch end date; tier limits and yearly prices | P1 |
-| featured_slots | business, item, category, town, start, end | P2 |
+| platform\_charges | business, type (fee, subscription, featured), amount, status, gateway ref, proof upload | P1 |
+| fee\_settings, plans | rate per tier, minimum, cap, Business fair-use limit, launch end date; tier limits and yearly prices | P1 |
+| featured\_slots | business, item, category, town, start, end | P2 |
 | messages | booking or request, sender, text, masked flag | P2 |
-| notifications, audit_logs | recipient or actor, event, time, details | P1 |
+| notifications, audit\_logs | recipient or actor, event, time, details | P1 |
 
 ### 7.2 External interfaces
 
@@ -380,15 +375,15 @@ The booking is the single source of truth; every other record hangs off a busine
 
 These need an answer before the matching requirement is built; defaults in brackets are what the SRS assumes now.
 
-- Booking fee values: rate per tier, minimum and cap (10% Free, 5% Pro, 0% Business; N$20 minimum, N$500 cap)
-- Tier prices and limits (proposed: Free, Pro N$199 a year, Business N$499 a year; confirm in 20 to 30 business interviews)
-- Fee refund when the business itself cancels after paying (full refund; cancellations count on the business profile)
-- Customer cancellations and no-shows: full fee refund to the business always (yes, for launch)
-- Payment gateway choice and its fees for card and online payments
-- Lawyer's confirmation that collecting only platform fees stays outside payment-service licensing
-- Accountant's advice on VAT for fees and subscriptions
-- Launch towns for P2 (Windhoek and Erongo first)
-- Delivery handled by businesses only at P2 (yes; platform delivery is P3)
+- [ ] Booking fee values: rate per tier, minimum and cap (10% Free, 5% Pro, 0% Business; N$20 minimum, N$500 cap)
+- [ ] Tier prices and limits (proposed: Free, Pro N$199 a year, Business N$499 a year; confirm in 20 to 30 business interviews)
+- [ ] Fee refund when the business itself cancels after paying (full refund; cancellations count on the business profile)
+- [ ] Customer cancellations and no-shows: full fee refund to the business always (yes, for launch)
+- [ ] Payment gateway choice and its fees for card and online payments
+- [ ] Lawyer's confirmation that collecting only platform fees stays outside payment-service licensing
+- [ ] Accountant's advice on VAT for fees and subscriptions
+- [ ] Launch towns for P2 (Windhoek and Erongo first)
+- [ ] Delivery handled by businesses only at P2 (yes; platform delivery is P3)
 
 ### 8.1 Partner suggestions
 
@@ -409,22 +404,23 @@ Please add your view next to each question; type straight into the empty cells, 
 
 ## 9. MVP scope
 
-The MVP is the P1 business software plus the three tiers, sold at founding prices to businesses in Windhoek and Erongo. It needs no payment gateway and no marketplace: tiers are paid by bank deposit or eWallet and approved by an admin.
+The MVP is a simple two-sided marketplace: renters find and request items without friction, and anyone, a person or a business, can list things for rent in minutes. RentLoop never takes rental money: renters pay owners directly and pay no platform fee.
 
 | Area | In the MVP | After the MVP |
 | --- | --- | --- |
-| Accounts and staff | Sign-up, business profile, staff roles | Verification badge, with the marketplace (P2) |
+| Accounts | Email-code sign-up for renters and owners; an owner signs up as an individual (no staff or business profile) or a business (profile and staff roles) | Phone sign-in |
+| Listings and search | Public item pages without sign-in, the public flag, owner profile pages, search by item or category, town and dates, categories for individuals (list to be agreed) | Event search with guest counts (FR-SR-02), distance in km |
+| Booking requests | Request from a listing with an email-code sign-up; the owner accepts or declines; contact details stay private until accepted; "My bookings" for renters; WhatsApp quotes and direct bookings for owners | None |
 | Inventory and calendar | Items, stock counts, availability calendar, clash warnings | None |
-| Quotes and bookings | WhatsApp quote links, direct bookings | Marketplace booking requests (P2) |
 | Checkout and return | Counts and photos, confirmed by both sides | None |
 | Payment records | Cash, EFT, eWallet and card records; customer receipts | None |
-| Plans | Free, Pro and Business, yearly; proof-of-payment upload, admin approval, tax invoice, renewal reminders, item and user limits | Card and online payment through the gateway |
+| Trust | Verified owners, public reviews and ratings, Report a Problem | None |
+| Plans | Free, Pro and Business, yearly; proof-of-payment upload, admin approval, tax invoice, renewal reminders, item and user limits. Plans for individuals still to be agreed | Card and online payment through the gateway |
 | Reports | Basic reports on every tier; full reports and CSV export on Pro and Business | None |
-| Booking fees | None, because there is no marketplace yet | Fee by tier, refunds, monthly statements (P2) |
-| Marketplace | None | Search, requests, reviews, featured listings (P2) |
-| Admin | Approve proofs of payment, set tier prices and limits, suspend accounts | Fee settings, featured slots (P2) |
+| Booking fees | 0% during the launch period (3.1); rates still to be agreed | Fee by tier, refunds, monthly statements (P2) |
+| Featured listings | None | Featured listings (3.3, P2) |
+| Admin | Approve proofs of payment, set tier prices and limits, verify owners, suspend accounts | Fee settings, featured slots (P2) |
 
-- **Why Business sells before the marketplace exists:** founding Business customers lock in 0% booking fees for when P2 opens, plus unlimited items and users now.
-- **Launch period:** the 0% fee for the first three months of P2 (3.1) still applies to every tier; Business stays at 0% after it ends.
-- **MVP is done when** 30 to 50 businesses keep their inventory and calendars in the app, the P1 gate in 2.1.
-- **Before P2 opens:** choose the payment gateway and get the lawyer's confirmation on platform fees (section 8).
+- **MVP order:** the new look, the marketplace home, owner sign-up as an individual or a business, public listings, search, booking requests, the renter account, then trust. Staff invites, notifications, the audit log, admin tools, reminders and offline forms are fitted around these.
+- **No business gate:** the earlier gate of 30 to 50 businesses before the marketplace is removed (20 October 2026).
+- **Before any booking fee above 0%:** choose the payment gateway and get the lawyer's confirmation on platform fees (section 8).
