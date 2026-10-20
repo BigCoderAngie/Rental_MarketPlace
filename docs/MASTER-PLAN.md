@@ -37,14 +37,14 @@ Build RentLoop as a simple two-sided marketplace in the design from `docs/DESIGN
 8. **Trust for strangers:** verified owners, reviews shown publicly, and Report a Problem.
 9. The remaining earlier MVP features (staff invites, notifications, audit log, admin tools, reminders, offline forms) are re-ordered around these.
 
-## Open decisions (needed before the marketplace tasks are planned)
+## Marketplace decisions (answered 20 October 2026)
 
-1. **Verifying individual owners:** what proof (phone and ID check by the admin, or none at launch) before their items show in search?
-2. **Booking fee:** keep 0% at launch (SRS 3.1 launch period) and decide the rates later?
-3. **Plans for individuals:** do individuals get the Free plan only, or the same tiers as businesses?
-4. **Categories for individuals:** which to add at launch (for example tools, electronics, camping, vehicles, venues)? Vehicles and homes bring insurance and legal questions.
-5. **Launch towns:** Windhoek and Erongo first?
-6. **Renter sign-up:** email code only, or email plus phone (the phone helps owners reach them after accepting)?
+1. **Verifying individual owners:** the admin checks a phone number and an ID before an individual's items show in search. Only the admin sees the ID; it is stored encrypted and never shown to renters (FR-PV-04, NFR-06). Renters see a "Verified" badge.
+2. **Booking fee:** 0% during the launch period (SRS 3.1). Rates are decided before it ends.
+3. **Plans for individuals:** Free plan only at first, with its item limit. Paid tiers for individuals come later, once we see how they use it.
+4. **Categories at launch:** Events, Tools, Construction and Machinery, Electronics, Camping and Outdoor, Other. No vehicles or homes at launch, because of insurance and legal questions. The admin can add more later.
+5. **Launch towns:** Windhoek and Erongo first.
+6. **Renter sign-up:** email code plus a required phone number. The phone stays hidden from the owner until the booking is confirmed (FR-PV-01).
 
 ## In scope: the MVP, in this order
 
@@ -134,7 +134,7 @@ Build RentLoop as a simple two-sided marketplace in the design from `docs/DESIGN
 - The business gets the bell, a push and an email. Cancellations count on both sides for the Phase 2 profiles.
 
 ### Categories (FR-IN-06)
-- Keep the SRS list: Events, Tools, Construction and Machinery, Other. The admin can add more. The homepage shows them as tiles.
+- Launch list: Events, Tools, Construction and Machinery, Electronics, Camping and Outdoor, Other. The admin can add more. The homepage shows them as tiles. No vehicles or homes at launch.
 
 ### Business profile and account states (FR-AC-02, FR-AC-05)
 - Settings adds a logo, opening hours (one line), the BIPA number (optional) and "How customers pay you".
@@ -190,7 +190,7 @@ Copy these into the online SRS before sales begin.
 4. **Sections 1, 2.1 and 9:** the MVP is a two-sided marketplace. Public search, listing pages, booking requests, customer accounts, contact privacy, verification and public reviews move from P2 into the MVP.
 5. **Sections 2.1 and 2.2:** individual owners move from P3 into the MVP. "Business" becomes "Owner (individual or business)" wherever the SRS means the person who lists items.
 6. **Section 2.1:** the gate "30 to 50 businesses before the marketplace" is removed.
-7. **FR-IN-06:** categories widen for individual owners (list to be agreed).
+7. **FR-IN-06:** categories at launch are Events, Tools, Construction and Machinery, Electronics, Camping and Outdoor, Other; no vehicles or homes.
 8. **Section 9 (MVP scope):** rewritten to match the MVP order above.
 
 ## Decide before the marketplace tasks (SRS section 8)

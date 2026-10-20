@@ -2,7 +2,7 @@
 
 The MVP from `docs/MASTER-PLAN.md`, split into waves. Each task is one branch from `main` with the same name, and one pull request. Start a task with "Do the next unticked task in docs/TASKS.md", and tick it off in the same PR.
 
-> **Replanned on 20 October 2026.** The MVP is now a two-sided marketplace with individual and business owners (see `docs/MASTER-PLAN.md`, "Change of direction"). Waves 1 to 3 stay as they are. Wave 3's `restyle-homepage` becomes the marketplace home (wave M1). The new marketplace waves M1 to M5 below come **before** the old waves 4 to 10, which will be re-ordered and re-split once the open decisions in MASTER-PLAN.md are answered. Contracts for the M waves are written before each wave starts.
+> **Replanned on 20 October 2026.** The MVP is now a two-sided marketplace with individual and business owners (see `docs/MASTER-PLAN.md`, "Change of direction"). Waves 1 to 3 stay as they are. Wave 3's `restyle-homepage` becomes the marketplace home (wave M1). The new marketplace waves M1 to M5 below come **before** the old waves 4 to 10, which will be re-ordered and re-split around them. Contracts for the M waves are written before each wave starts.
 
 ## Rules
 
