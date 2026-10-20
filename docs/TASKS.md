@@ -36,7 +36,7 @@ export type Profile = { user_id: string; phone: string | null; account_state: Ac
   - Files: `src/components/ui.tsx`, `src/components/stat-card.tsx`, `src/components/step-indicator.tsx`, `src/components/view-all-link.tsx`, `src/components/category-tile.tsx`
   - Migration: no · Skill: frontend-design · SRS: NFR-08
   - Done: each part renders on a test page in the PR screenshots at 390 px and desktop; every text pair at least 4.5:1; tap targets at least 44 px.
-- [ ] **`app-shell-sidebar`**: Adds the deep green desktop sidebar from the Owner Dashboard mockup to the staff app. Phones keep the bottom tab bar.
+- [x] **`app-shell-sidebar`**: Adds the deep green desktop sidebar from the Owner Dashboard mockup to the staff app. Phones keep the bottom tab bar.
   - Files: `src/app/(app)/layout.tsx`, `src/components/sidebar.tsx`, `src/components/app-nav.tsx`
   - Migration: no · Skill: frontend-design · SRS: NFR-08
   - Done: sidebar from 1024 px with the active item in `primary`; tab bar unchanged under 640 px; keyboard focus visible.
