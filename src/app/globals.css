@@ -1,45 +1,52 @@
 @import "tailwindcss";
 
 /*
- * Botanical Garden theme. Use these names (bg-primary, text-muted-foreground,
- * border-border, bg-card, bg-accent, text-danger, ...) instead of Tailwind's
- * built-in colours (zinc, emerald, amber, red, ...) so the whole app changes
- * from this one place.
+ * RentLoop theme, from the mockups in docs/design (see docs/DESIGN.md). Use
+ * these names (bg-primary, text-muted-foreground, border-border, bg-card,
+ * bg-deep, text-danger, ...) instead of Tailwind's built-in colours (zinc,
+ * emerald, amber, red, ...) so the whole app changes from this one place.
  *
  * Contrast rules: every text colour here is at least 4.5:1 on the
- * background it is paired with. Marigold (accent) is only 1.8:1 on cream,
+ * background it is paired with. Star yellow (accent) is only 1.9:1 on white,
  * so never use text-accent: use it as a fill with text-accent-foreground on
- * top, and use text-accent-ink for warning text.
+ * top, and use text-accent-ink for warning text. Bright green (highlight) is
+ * only for headline words on deep green or a dark photo (2.0:1 on white).
  */
 :root {
   /* Core palette */
-  --background: #f5f3ed; /* cream */
-  --foreground: #1f2a22;
-  --primary: #3f6b4c; /* fern green, darker than the stock #4a7c59 for 5.5:1 on cream */
+  --background: #ffffff; /* white page */
+  --foreground: #0f1d17; /* 17.4:1 on white */
+  --primary: #00743f; /* button green, measured #007440; white text 5.9:1 */
   --primary-foreground: #ffffff;
-  --accent: #f9a620; /* marigold: fill only, never text */
-  --accent-foreground: #1f2a22; /* 7.4:1 on accent */
-  --danger: #b7472a; /* terracotta: 4.8:1 on cream, 5.3:1 on card */
+  --accent: #f3b017; /* star yellow: fill only, never text */
+  --accent-foreground: #0f1d17; /* 9.1:1 on accent */
+  --danger: #b7472a; /* terracotta: 5.3:1 on white */
   --danger-foreground: #ffffff;
-  --muted: #e8e4d8; /* quiet backgrounds: hover, placeholders, bars */
-  --muted-foreground: #5b6158; /* hints, captions, meta text */
-  --border: #d9d4c5;
+  --muted: #f2f4f5; /* quiet backgrounds: hover, placeholders, bars */
+  --muted-foreground: #5b6670; /* hints, captions, meta text: 5.9:1 on white, 5.3:1 on muted */
+  --border: #e3e8eb; /* light grey card borders, measured #eaeef0 */
   --card: #ffffff;
 
+  /* Deep green: header bands, footer strip, dashboard sidebar */
+  --deep: #06402f; /* measured #084838 (footer) and #003828 (sidebar) */
+  --deep-foreground: #ffffff; /* 11.8:1 on deep */
+  --deep-muted: #b9d3c5; /* quiet text on deep: 7.4:1 */
+  --highlight: #3dd15f; /* bright green headline words, only on deep: 5.9:1 */
+
   /* Extras the app needs */
-  --foreground-soft: #3b4339; /* secondary headings, strong labels */
-  --input: #c9c2b0; /* input borders, dashed upload box */
-  --primary-strong: #33573e; /* primary button hover */
-  --primary-soft: #e3eee5; /* success notes, confirmed pills */
-  --primary-border: #b9d0bd;
-  --primary-ink: #24402d; /* text on primary-soft */
-  --accent-soft: #fdf1d6; /* warnings, low stock, requested pills */
-  --accent-border: #f1d494;
-  --accent-ink: #6b4500; /* warning text */
-  --danger-soft: #f7e3dc;
-  --danger-border: #e8bcae;
-  --danger-ink: #6e2716; /* text on danger-soft (danger itself is only 4.3:1 there) */
-  --info-soft: #dfeaee; /* plan notices */
+  --foreground-soft: #34403a; /* secondary headings, strong labels */
+  --input: #cdd5da; /* input borders, dashed upload box */
+  --primary-strong: #005c32; /* primary button hover: white text 8.2:1 */
+  --primary-soft: #e6f4ec; /* pale green panels, icon circles, confirmed notes */
+  --primary-border: #b8dcc6;
+  --primary-ink: #0b4d2c; /* text on primary-soft: 8.8:1 */
+  --accent-soft: #fdf3dc; /* waiting and warning pills and notes */
+  --accent-border: #f3d68a;
+  --accent-ink: #7a4d00; /* warning text: 6.6:1 on accent-soft */
+  --danger-soft: #fbe9e4;
+  --danger-border: #f0c4b8;
+  --danger-ink: #6e2716; /* text on danger-soft: 9.1:1 */
+  --info-soft: #e3eef6; /* plan notices */
   --info-ink: #1e4351;
 
   /* Phone bottom tab bar height (at least 44px tap targets); the app layout pads the page by this much. */
@@ -59,6 +66,10 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-card: var(--card);
+  --color-deep: var(--deep);
+  --color-deep-foreground: var(--deep-foreground);
+  --color-deep-muted: var(--deep-muted);
+  --color-highlight: var(--highlight);
 
   --color-foreground-soft: var(--foreground-soft);
   --color-input: var(--input);
