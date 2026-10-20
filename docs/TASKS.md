@@ -40,7 +40,7 @@ export type Profile = { user_id: string; phone: string | null; account_state: Ac
   - Files: `src/app/(app)/layout.tsx`, `src/components/sidebar.tsx`, `src/components/app-nav.tsx`
   - Migration: no · Skill: frontend-design · SRS: NFR-08
   - Done: sidebar from 1024 px with the active item in `primary`; tab bar unchanged under 640 px; keyboard focus visible.
-- [ ] **`public-top-bar-footer`**: Moves the public top bar and footer into `TopBar` and `SiteFooter` in the mockup design. The footer's trust items follow DESIGN.md section 4 (no "secure payments").
+- [x] **`public-top-bar-footer`**: Moves the public top bar and footer into `TopBar` and `SiteFooter` in the mockup design. The footer's trust items follow DESIGN.md section 4 (no "secure payments").
   - Files: `src/app/(marketing)/layout.tsx`, `src/components/top-bar.tsx`, `src/components/site-footer.tsx`
   - Migration: no · Skill: frontend-design · SRS: NFR-12
   - Done: homepage, terms and privacy use both parts; footer stacks on phones; no NFR-12 words.
