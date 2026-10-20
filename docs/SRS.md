@@ -1,4 +1,4 @@
-> Copy of the SRS (Claude Doc, rev 219, exported 19 Oct 2026). The original is the source of truth: https://claude.ai/code/artifact/53bc03dd-b135-487b-ada0-49254fd9d247 . Diagrams are only in the online version.
+> Copy of the SRS (Claude Doc, rev 219, exported 19 Oct 2026), plus the three changes agreed in docs/MASTER-PLAN.md (FR-AC-01, FR-NT-01, NFR-09), copied into the online SRS on 20 Oct 2026. The original is the source of truth: https://claude.ai/code/artifact/53bc03dd-b135-487b-ada0-49254fd9d247 . Diagrams are only in the online version.
 
 # Software Requirements Specification: Namibia Rental Platform
 
@@ -175,7 +175,7 @@ There are 74 requirements across 14 modules; P1 items make the business software
 
 | ID | Requirement | Phase |
 | --- | --- | --- |
-| FR-AC-01 | Users must register with a phone number verified by one-time code; email is optional | P1 |
+| FR-AC-01 | Users must register with an email address verified by one-time code and give a phone number; phone login by one-time code follows after the MVP | P1 |
 | FR-AC-02 | A business owner must create a business profile: name, logo, towns served, operating hours, contact details, BIPA number (optional) | P1 |
 | FR-AC-03 | Platform admin must verify a business before its listings appear in public search; verified businesses show a badge | P2 |
 | FR-AC-04 | Customers must be able to accept a quote or confirm checkout from a link without creating a full account | P1 |
@@ -296,7 +296,7 @@ There are 74 requirements across 14 modules; P1 items make the business software
 
 | ID | Requirement | Phase |
 | --- | --- | --- |
-| FR-NT-01 | The system must notify by SMS or WhatsApp and in the app for: new request, accepted, declined, expired, fee due, checkout tomorrow, return due, overdue, problem reported, review request | P1 |
+| FR-NT-01 | The system must notify in the app for: new request, accepted, declined, expired, fee due, checkout tomorrow, return due, overdue, problem reported, review request; urgent ones also by free web push and email; SMS or WhatsApp follow after the MVP | P1 |
 | FR-RP-01 | Businesses must see revenue recorded, bookings, utilisation per item, outstanding payments, deposits held, and top customers, exportable to CSV | P1 |
 | FR-RP-02 | Businesses must see fees paid and marketplace bookings received | P2 |
 | FR-AD-01 | Admin must manage businesses, verification, listings, categories, plans, fee settings, featured slots, proof-of-payment approvals and suspensions | P1 |
@@ -329,7 +329,7 @@ The system must stay fast on cheap phones and slow networks, and protect custome
 | NFR-06 | Privacy | Contact fields are released only by the backend after the right booking state; ID documents stored encrypted and visible only to verifying admins |
 | NFR-07 | Retention | Booking, checkout, return and audit records kept at least 5 years for tax and dispute evidence; personal data deleted or anonymised on account closure where the law allows |
 | NFR-08 | Usability | A new staff member can create a quote in under 2 minutes without training; all actions reachable with one thumb on a phone |
-| NFR-09 | Language | English at launch; text stored for later Afrikaans and Oshiwambo translation |
+| NFR-09 | Language | English at launch; Afrikaans and Oshiwambo translations after the MVP |
 | NFR-10 | Offline tolerance | Checkout and return forms keep entered data if the connection drops and submit when it returns |
 | NFR-11 | Scalability | One API serves web and the later mobile app; architecture supports 1,000 businesses without redesign |
 | NFR-12 | Wording | No screen or message calls deposits or payments "protected", "secured" or "guaranteed" |
