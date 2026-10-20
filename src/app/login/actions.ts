@@ -34,5 +34,5 @@ export async function verifyCode(formData: FormData) {
   if (error) {
     redirect(`/login?${new URLSearchParams({ email, sent: "1", error: error.message })}`);
   }
-  redirect("/");
+  redirect("/calendar");
 }

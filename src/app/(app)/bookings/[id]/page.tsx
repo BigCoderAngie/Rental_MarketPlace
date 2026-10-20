@@ -4,7 +4,7 @@ import { ErrorNote, Field, PageHeader, buttonClass, inputClass, secondaryButtonC
 import { PackageLines } from "@/components/package-lines";
 import { StatusBadge } from "@/components/status-badge";
 import { requireBusiness } from "@/lib/business";
-import { EDITABLE_STATUSES, STATUS_LABEL, staffActions, type BookingStatus } from "@/lib/bookings";
+import { EDITABLE_STATUSES, STATUS_LABEL, staffActions, type BookingStatus, wentAhead } from "@/lib/bookings";
 import { daysInclusive, formatRange } from "@/lib/dates";
 import { formatNad } from "@/lib/money";
 import { packageContents, type Package, type PackageItem } from "@/lib/packages";
@@ -135,6 +135,7 @@ export default async function BookingPage({ params, searchParams }: PageProps<"/
           link={link}
           shareMessage={shareMessage}
           customerPhone={booking.customers?.phone}
+          wentAhead={wentAhead(booking.status)}
         />
       )}
 

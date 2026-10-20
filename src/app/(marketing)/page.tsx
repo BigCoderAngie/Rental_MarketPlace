@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { buttonClass, focusRingClass, secondaryButtonClass, upgradeBadgeClass } from "@/components/ui";
 import { FAQ } from "@/lib/faq";
 import { formatNad } from "@/lib/money";
-import { namibiaToday } from "@/lib/dates";
+import { formatDateWithYear } from "@/lib/dates";
 import { bookingFeeText, loadLaunchEndsOn, loadPlans, planFeatures } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/server";
 
@@ -63,16 +63,13 @@ const COMPARISON = [
   },
 ];
 
-function longDate(iso: string) {
-  return new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-NA", { day: "numeric", month: "short", year: "numeric" });
-}
-
 /** The public homepage. proxy.ts sends signed-in users to their calendar instead. */
 export default async function HomePage() {
   const supabase = await createClient();
   const [plans, launchEndsOn] = await Promise.all([loadPlans(supabase), loadLaunchEndsOn(supabase)]);
   // Only offer founding prices while the launch is on (mirrors plan_price() in the database).
-  const launchOn = launchEndsOn != null && namibiaToday() <= launchEndsOn;
+  // The database decides founding prices on the UTC date a business is created, so compare the same date.
+  const launchOn = launchEndsOn != null && new Date().toISOString().slice(0, 10) <= launchEndsOn;
 
   return (
     <>
@@ -171,7 +168,7 @@ export default async function HomePage() {
                   {founding && (
                     <p className="mt-2 text-sm text-muted-foreground">
                       <span className={upgradeBadgeClass}>Founding price {formatNad(p.founding_price)}</span> for your
-                      first year if you join by {longDate(launchEndsOn!)}
+                      first year if you join by {formatDateWithYear(launchEndsOn!)}
                     </p>
                   )}
                   <ul className="mt-4 space-y-1 text-sm text-foreground-soft">

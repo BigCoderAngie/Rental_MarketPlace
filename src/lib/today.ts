@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { isOverdue, wentAhead, type BookingStatus } from "./bookings";
+import { HOLDS_STOCK, isOverdue, wentAhead, type BookingStatus } from "./bookings";
 import { readAll, readByIds } from "./batches";
 import { namibiaToday, type IsoDate } from "./dates";
 
@@ -22,7 +22,7 @@ export function isTodayFilter(value: unknown): value is TodayFilter {
 }
 
 /** Holding stock but not handed over yet. Due out today, or missed and still waiting to be collected. */
-const NOT_OUT_YET: readonly BookingStatus[] = ["ACCEPTED", "FEE_PENDING", "CONFIRMED"];
+const NOT_OUT_YET: readonly BookingStatus[] = HOLDS_STOCK.filter((s) => s !== "CHECKED_OUT" && s !== "OVERDUE");
 
 /** The statuses the first three cards can match (money owed is looked up separately). */
 const ACTIVE: readonly BookingStatus[] = [...NOT_OUT_YET, "CHECKED_OUT", "OVERDUE"];

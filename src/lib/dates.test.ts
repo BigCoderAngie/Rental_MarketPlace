@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  formatDateWithYear,
   formatDays,
   addDays,
   daysInclusive,
@@ -55,5 +56,12 @@ describe("formatDays", () => {
     expect(formatDays(1)).toBe("1 day");
     expect(formatDays(2)).toBe("2 days");
     expect(formatDays(0)).toBe("0 days");
+  });
+});
+
+describe("formatDateWithYear", () => {
+  it("shows day, short month and year", () => {
+    expect(formatDateWithYear("2027-03-31")).toBe("31 Mar 2027");
+    expect(formatDateWithYear("2026-01-01")).toBe("1 Jan 2026");
   });
 });

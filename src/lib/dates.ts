@@ -91,3 +91,8 @@ export function formatRange(start: IsoDate, end: IsoDate): string {
 export function formatDays(days: number): string {
   return `${days} day${days === 1 ? "" : "s"}`;
 }
+
+/** "31 Mar 2027": a date with its year, for deadlines further out. */
+export function formatDateWithYear(date: IsoDate): string {
+  return toUtc(date).toLocaleDateString("en-NA", { timeZone: "UTC", day: "numeric", month: "short", year: "numeric" });
+}

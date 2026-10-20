@@ -24,6 +24,7 @@ export function MoneySection({
   link,
   shareMessage,
   customerPhone,
+  wentAhead,
 }: {
   bookingId: string;
   balance: Balance;
@@ -32,6 +33,8 @@ export function MoneySection({
   link: string;
   shareMessage: string;
   customerPhone: string | undefined;
+  /** Only money owed on a booking that went ahead is shown as unpaid. */
+  wentAhead: boolean;
 }) {
   const live = payments.filter((p) => !p.voided_at);
   const voided = payments.filter((p) => p.voided_at);
@@ -47,7 +50,7 @@ export function MoneySection({
           <p className="text-muted-foreground">Paid</p>
           <p className="font-semibold">{formatNad(balance.amount_paid)}</p>
         </div>
-        <div className={`rounded-xl border p-3 ${Number(balance.outstanding) > 0 ? "border-danger-border bg-danger-soft text-danger-ink" : "border-primary-border bg-primary-soft text-primary-ink"}`}>
+        <div className={`rounded-xl border p-3 ${wentAhead && Number(balance.outstanding) > 0 ? "border-danger-border bg-danger-soft text-danger-ink" : "border-primary-border bg-primary-soft text-primary-ink"}`}>
           <p>Outstanding</p>
           <p className="font-semibold">{formatNad(Math.max(Number(balance.outstanding), 0))}</p>
         </div>

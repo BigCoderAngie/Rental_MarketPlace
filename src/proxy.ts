@@ -41,8 +41,12 @@ export async function proxy(request: NextRequest) {
     const calendar = request.nextUrl.clone();
     calendar.pathname = "/calendar";
     const redirect = NextResponse.redirect(calendar);
-    // Keep any session cookies refreshed above.
+    // Keep any session cookies refreshed above, and the headers that stop them being cached.
     response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
+    for (const header of ["cache-control", "expires", "pragma"]) {
+      const value = response.headers.get(header);
+      if (value) redirect.headers.set(header, value);
+    }
     return redirect;
   }
 

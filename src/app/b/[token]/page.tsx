@@ -75,9 +75,7 @@ export default async function PublicBookingPage({ params, searchParams }: PagePr
           <TotalsBox rows={totals}>
             {showDeposit && (
               <p className="mt-3 text-xs text-muted-foreground">
-                {b.name} has received {formatNad(booking.balance.deposit_held)}
-                {booking.deposit_amount > 0 && ` of your ${formatNad(booking.deposit_amount)}`} deposit. You get it back
-                when everything is returned in good condition.
+                Deposit {b.name} is holding for you right now: {formatNad(booking.balance.deposit_held)}.
               </p>
             )}
           </TotalsBox>

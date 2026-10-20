@@ -32,7 +32,7 @@ export function TodaySection({ summary }: { summary: TodaySummary | null }) {
             <li key={filter}>
               <Link
                 href={`/bookings?filter=${filter}`}
-                className={`flex h-full min-h-24 flex-col rounded-xl border border-border bg-card p-3 hover:bg-muted ${focusRingClass}`}
+                className={`flex h-full min-h-24 flex-col rounded-xl border border-border bg-card p-3 hover:bg-background ${focusRingClass}`}
               >
                 <span
                   className={`text-3xl font-semibold leading-none ${

@@ -27,7 +27,8 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
   // ?filter=… comes from the Today cards on the calendar: show exactly the bookings that card counted.
   const filter = isTodayFilter(filterParam) ? filterParam : null;
   const { supabase, business } = await requireBusiness();
-  const filterIds = filter ? (await loadToday(supabase, business.id)).ids[filter] : null;
+  const summary = filter ? await loadToday(supabase, business.id) : null;
+  const filterIds = filter && summary ? summary.ids[filter] : null;
 
   const columns = "id, reference, status, start_date, end_date, customers(full_name), booking_items(quantity, items(name))";
   const bookings = filterIds
@@ -63,7 +64,7 @@ export default async function BookingsPage({ searchParams }: PageProps<"/booking
     if (countError) throw countError;
     hasAnyBooking = (count ?? 0) > 0;
   }
-  const today = namibiaToday();
+  const today = summary?.today ?? namibiaToday();
   // On "Going out today", late pickups come first so they get dealt with.
   if (filter === "out-today") bookings.sort((a, b) => Number(isLatePickup(b, today)) - Number(isLatePickup(a, today)));
   const balanceById = new Map(balances.map((b) => [b.booking_id, b]));
