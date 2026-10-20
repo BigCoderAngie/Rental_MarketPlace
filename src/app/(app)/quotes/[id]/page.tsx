@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CopyButton } from "@/components/copy-button";
 import { PackageLines } from "@/components/package-lines";
-import { QuoteBadge } from "@/components/quote-badge";
+import { QuoteBadge } from "@/components/status-badge";
 import { ErrorNote, PageHeader, buttonClass, secondaryButtonClass } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { formatRange } from "@/lib/dates";
@@ -50,9 +50,9 @@ export default async function QuotePage({ params, searchParams }: PageProps<"/qu
       <PageHeader title={quote.reference} action={<QuoteBadge status={status} />} />
       <ErrorNote message={typeof error === "string" ? error : undefined} />
 
-      <section className="mb-4 rounded-xl border border-zinc-200 bg-white p-4 text-sm">
+      <section className="mb-4 rounded-xl border border-border bg-card p-4 text-sm">
         <p className="font-medium">{quote.customer_name}</p>
-        {quote.customer_phone && <p className="text-zinc-600">{quote.customer_phone}</p>}
+        {quote.customer_phone && <p className="text-muted-foreground">{quote.customer_phone}</p>}
         <p className="mt-2">{formatRange(quote.start_date, quote.end_date)} ({days} day{days > 1 ? "s" : ""})</p>
 
         <ul className="mt-3 space-y-1">
@@ -81,16 +81,16 @@ export default async function QuotePage({ params, searchParams }: PageProps<"/qu
             <li className="flex justify-between"><span>Discount</span><span>−{formatNad(quote.discount)}</span></li>
           )}
         </ul>
-        <p className="mt-3 flex justify-between border-t border-zinc-200 pt-2 font-semibold">
+        <p className="mt-3 flex justify-between border-t border-border pt-2 font-semibold">
           <span>Total</span>
           <span>{formatNad(total)}</span>
         </p>
-        <p className="flex justify-between text-zinc-600">
+        <p className="flex justify-between text-muted-foreground">
           <span>Deposit</span>
           <span>{formatNad(quote.deposit_amount)}</span>
         </p>
         {status === "OPEN" && (
-          <p className="mt-2 text-xs text-zinc-500">
+          <p className="mt-2 text-xs text-muted-foreground">
             Valid until {new Date(quote.expires_at).toLocaleDateString("en-NA", { timeZone: "Africa/Windhoek", dateStyle: "medium" })}.
           </p>
         )}
@@ -108,13 +108,13 @@ export default async function QuotePage({ params, searchParams }: PageProps<"/qu
             </a>
           </div>
           <form action={cancelQuote.bind(null, quote.id)}>
-            <button className="w-full py-2 text-sm text-zinc-600 underline">Withdraw quote</button>
+            <button className="w-full py-2 text-sm text-muted-foreground underline">Withdraw quote</button>
           </form>
         </section>
       )}
 
       {status === "ACCEPTED" && quote.booking_id && (
-        <p className="rounded-xl bg-emerald-50 p-4 text-sm text-emerald-900">
+        <p className="rounded-xl bg-primary-soft p-4 text-sm text-primary-ink">
           The customer accepted this quote, so it became booking{" "}
           <Link href={`/bookings/${quote.booking_id}`} className="font-semibold underline">
             {quote.bookings?.reference}

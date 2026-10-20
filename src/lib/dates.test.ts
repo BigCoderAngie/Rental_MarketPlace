@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  formatDateWithYear,
+  formatDays,
   addDays,
   daysInclusive,
   isIsoDate,
@@ -46,5 +48,20 @@ describe("dates", () => {
     expect(weeks[0]).toEqual([null, null, null, "2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04"]);
     expect(weeks.flat().filter(Boolean)).toHaveLength(31);
     expect(weeks.every((w) => w.length === 7)).toBe(true);
+  });
+});
+
+describe("formatDays", () => {
+  it("uses the singular only for one day", () => {
+    expect(formatDays(1)).toBe("1 day");
+    expect(formatDays(2)).toBe("2 days");
+    expect(formatDays(0)).toBe("0 days");
+  });
+});
+
+describe("formatDateWithYear", () => {
+  it("shows day, short month and year", () => {
+    expect(formatDateWithYear("2027-03-31")).toBe("31 Mar 2027");
+    expect(formatDateWithYear("2026-01-01")).toBe("1 Jan 2026");
   });
 });

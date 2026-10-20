@@ -16,7 +16,7 @@ export function PageHeader({ title, action }: { title: string; action?: ReactNod
 export function ErrorNote({ message }: { message?: string }) {
   if (!message) return null;
   return (
-    <p role="alert" className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">
+    <p role="alert" className="mb-4 rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger-ink">
       {message}
     </p>
   );
@@ -35,24 +35,46 @@ export function Field({
     <label className="block">
       <span className="mb-1 block text-sm font-medium">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-xs text-zinc-500">{hint}</span>}
+      {hint && <span className="mt-1 block text-xs text-muted-foreground">{hint}</span>}
     </label>
   );
 }
 
 export const inputClass =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-base focus:border-emerald-600 focus:outline-none";
+  "w-full rounded-lg border border-input bg-card px-3 py-2.5 text-base focus:border-primary focus:outline-none";
 
 export const buttonClass =
-  "inline-flex items-center justify-center rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800";
+  "inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-strong";
 
 export const secondaryButtonClass =
-  "inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-800 hover:bg-zinc-50";
+  "inline-flex items-center justify-center rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground-soft hover:bg-muted";
+
+// Visible keyboard focus for links and buttons.
+export const focusRingClass = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+
+// Same, drawn just inside the edge, for items in scrolling or rounded clipped lists where an outer ring would be cut off.
+export const focusRingInsetClass = "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary";
+
+// Marigold fill with accent-foreground text (7.4:1); marigold is never a text colour.
+export const upgradeBadgeClass =
+  "inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-accent-foreground hover:bg-accent/85";
 
 export function LinkButton({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link href={href} className={buttonClass}>
       {children}
     </Link>
+  );
+}
+
+/** A list with nothing in it yet: one sentence about what goes here, and a button to add the first one. */
+export function EmptyState({ message, actionHref, actionLabel }: { message: string; actionHref: string; actionLabel: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <p className="text-foreground-soft">{message}</p>
+      <div className="mt-4">
+        <LinkButton href={actionHref}>{actionLabel}</LinkButton>
+      </div>
+    </div>
   );
 }

@@ -24,6 +24,7 @@ export function MoneySection({
   link,
   shareMessage,
   customerPhone,
+  wentAhead,
 }: {
   bookingId: string;
   balance: Balance;
@@ -32,6 +33,8 @@ export function MoneySection({
   link: string;
   shareMessage: string;
   customerPhone: string | undefined;
+  /** Only money owed on a booking that went ahead is shown as unpaid. */
+  wentAhead: boolean;
 }) {
   const live = payments.filter((p) => !p.voided_at);
   const voided = payments.filter((p) => p.voided_at);
@@ -39,42 +42,42 @@ export function MoneySection({
   return (
     <section id="money" className="mb-4 space-y-3">
       <div className="grid grid-cols-3 gap-2 text-center text-sm">
-        <div className="rounded-xl border border-zinc-200 bg-white p-3">
-          <p className="text-zinc-500">Due</p>
+        <div className="rounded-xl border border-border bg-card p-3">
+          <p className="text-muted-foreground">Due</p>
           <p className="font-semibold">{formatNad(balance.amount_due)}</p>
         </div>
-        <div className="rounded-xl border border-zinc-200 bg-white p-3">
-          <p className="text-zinc-500">Paid</p>
+        <div className="rounded-xl border border-border bg-card p-3">
+          <p className="text-muted-foreground">Paid</p>
           <p className="font-semibold">{formatNad(balance.amount_paid)}</p>
         </div>
-        <div className={`rounded-xl border p-3 ${Number(balance.outstanding) > 0 ? "border-amber-300 bg-amber-50" : "border-emerald-300 bg-emerald-50"}`}>
-          <p className="text-zinc-500">Outstanding</p>
+        <div className={`rounded-xl border p-3 ${wentAhead && Number(balance.outstanding) > 0 ? "border-danger-border bg-danger-soft text-danger-ink" : "border-primary-border bg-primary-soft text-primary-ink"}`}>
+          <p>Outstanding</p>
           <p className="font-semibold">{formatNad(Math.max(Number(balance.outstanding), 0))}</p>
         </div>
       </div>
-      <p className="text-sm text-zinc-600">
-        Deposit held: <span className="font-semibold text-zinc-900">{formatNad(balance.deposit_held)}</span>
+      <p className="text-sm text-muted-foreground">
+        Deposit held: <span className="font-semibold text-foreground">{formatNad(balance.deposit_held)}</span>
         {Number(balance.deposit_received) === 0 && Number(expectedDeposit) > 0 && ` (expected ${formatNad(expectedDeposit)})`}
       </p>
 
       {live.length > 0 && (
-        <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white text-sm">
+        <ul className="divide-y divide-border rounded-xl border border-border bg-card text-sm">
           {live.map((p) => (
             <li key={p.id} className="px-4 py-3">
               <div className="flex justify-between gap-2">
                 <span className="font-medium">{KIND_LABEL[p.kind]}</span>
-                <span className={isOutgoing(p.kind) ? "text-zinc-600" : "font-semibold"}>
+                <span className={isOutgoing(p.kind) ? "text-muted-foreground" : "font-semibold"}>
                   {isOutgoing(p.kind) ? "−" : ""}{formatNad(p.amount)}
                 </span>
               </div>
-              <p className="text-zinc-600">
+              <p className="text-muted-foreground">
                 {formatDate(p.paid_on)}
                 {p.method && ` · ${METHOD_LABEL[p.method]}`}
                 {p.note && ` · ${p.note}`}
                 {p.customer_confirmed_at && " · Confirmed by customer"}
               </p>
               <details className="mt-1">
-                <summary className="cursor-pointer text-xs text-zinc-500 underline">Void this record</summary>
+                <summary className="cursor-pointer text-xs text-muted-foreground underline">Void this record</summary>
                 <form action={voidPayment.bind(null, bookingId, p.id)} className="mt-2 flex gap-2">
                   <input name="reason" required placeholder="Why?" aria-label="Reason for voiding" className={inputClass} />
                   <button className={secondaryButtonClass}>Void</button>
@@ -85,7 +88,7 @@ export function MoneySection({
         </ul>
       )}
 
-      <details className="rounded-xl border border-zinc-200 bg-white p-3">
+      <details className="rounded-xl border border-border bg-card p-3">
         <summary className="cursor-pointer text-sm font-semibold">Record a payment or deposit</summary>
         <form action={recordPayment.bind(null, bookingId)} className="mt-3 space-y-3">
           <Field label="What happened">
@@ -114,7 +117,7 @@ export function MoneySection({
             <input name="note" className={inputClass} />
           </Field>
           <button className={`${buttonClass} w-full`}>Save record</button>
-          <p className="text-xs text-zinc-500">The customer pays you directly. This only records it.</p>
+          <p className="text-xs text-muted-foreground">The customer pays you directly. This only records it.</p>
         </form>
       </details>
 
@@ -126,11 +129,11 @@ export function MoneySection({
       </div>
 
       {voided.length > 0 && (
-        <details className="text-xs text-zinc-500">
+        <details className="text-xs text-muted-foreground">
           <summary className="cursor-pointer underline">{voided.length} voided record{voided.length > 1 ? "s" : ""}</summary>
           <ul className="mt-1 space-y-1">
             {voided.map((p) => (
-              <li key={p.id} className="line-through decoration-zinc-400">
+              <li key={p.id} className="line-through decoration-input">
                 {KIND_LABEL[p.kind]} {formatNad(p.amount)} on {formatDate(p.paid_on)}
                 <span className="no-underline"> ({p.void_reason})</span>
               </li>

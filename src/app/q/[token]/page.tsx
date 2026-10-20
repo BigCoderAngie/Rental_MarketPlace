@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BusinessHeader, LineCards, TotalsBox } from "@/components/customer-page";
+import { QuoteBadge } from "@/components/status-badge";
 import { ErrorNote, Field, buttonClass, inputClass, secondaryButtonClass } from "@/components/ui";
-import { formatRange } from "@/lib/dates";
+import { formatDays, formatRange } from "@/lib/dates";
 import { itemPhotoUrl } from "@/lib/item-photos";
-import { formatNad } from "@/lib/money";
+import { extraCharges, type SummaryRow } from "@/lib/price-summary";
 import { createClient } from "@/lib/supabase/server";
 import type { PublicQuote } from "@/lib/types";
 import { whatsAppLink } from "@/lib/whatsapp";
 import { acceptQuote } from "./actions";
-import { PackageLines } from "@/components/package-lines";
 
 export const metadata: Metadata = {
   title: "Your quote",
@@ -33,105 +34,112 @@ export default async function PublicQuotePage({ params, searchParams }: PageProp
     ? whatsAppLink(`Hi ${b.name}, I have a question about quote ${quote.reference}.`, contact)
     : null;
 
+  const open = quote.status === "OPEN";
+  const validUntil = new Date(quote.expires_at).toLocaleDateString("en-NA", { timeZone: "Africa/Windhoek", dateStyle: "medium" });
+  const totals: SummaryRow[] = [
+    ...extraCharges(quote),
+    { label: "Total", amount: quote.total, tone: "strong" },
+    ...(quote.deposit_amount > 0 ? [{ label: "Refundable deposit", amount: quote.deposit_amount, tone: "quiet" as const }] : []),
+  ];
+
   return (
-    <main className="mx-auto max-w-lg px-4 py-6">
-      <p className="text-sm text-zinc-600">Quote from</p>
-      <h1 className="text-2xl font-semibold">{b.name}</h1>
-      {b.towns.length > 0 && <p className="text-sm text-zinc-600">{b.towns.join(", ")}</p>}
+    <>
+      <BusinessHeader eyebrow="Quote from" name={b.name} towns={b.towns} />
 
-      <section className="mt-5 rounded-xl border border-zinc-200 bg-white p-4 text-sm">
-        <p className="flex justify-between gap-2">
-          <span className="font-medium">For {quote.customer_name}</span>
-          <span className="text-zinc-500">{quote.reference}</span>
-        </p>
-        <p className="mt-1">{formatRange(quote.start_date, quote.end_date)} ({quote.days} day{quote.days > 1 ? "s" : ""})</p>
-
-        <ul className="mt-3 space-y-1">
-          <PackageLines packages={quote.packages ?? []} days={quote.days} />
-          {quote.items.map((item) => (
-            <li key={item.name} className="flex items-center justify-between gap-2">
-              <span className="flex items-center gap-2">
-                {item.photo_path && (
-                  // eslint-disable-next-line @next/next/no-img-element -- Supabase Storage URL
-                  <img src={itemPhotoUrl(supabase, item.photo_path)!} alt="" className="h-10 w-10 shrink-0 rounded-md object-cover" />
-                )}
-                <span>{item.quantity} × {item.name}</span>
-              </span>
-              <span>{formatNad(item.quantity * item.daily_price * quote.days)}</span>
-            </li>
-          ))}
-          {quote.delivery_fee > 0 && (
-            <li className="flex justify-between"><span>Delivery</span><span>{formatNad(quote.delivery_fee)}</span></li>
-          )}
-          {quote.setup_fee > 0 && (
-            <li className="flex justify-between"><span>Setup</span><span>{formatNad(quote.setup_fee)}</span></li>
-          )}
-          {quote.discount > 0 && (
-            <li className="flex justify-between"><span>Discount</span><span>−{formatNad(quote.discount)}</span></li>
-          )}
-        </ul>
-        <p className="mt-3 flex justify-between border-t border-zinc-200 pt-2 text-base font-semibold">
-          <span>Total</span>
-          <span>{formatNad(quote.total)}</span>
-        </p>
-        {quote.deposit_amount > 0 && (
-          <p className="flex justify-between text-zinc-600">
-            <span>Refundable deposit</span>
-            <span>{formatNad(quote.deposit_amount)}</span>
+      {/* While the quote is open, phones get a sticky action bar: leave room for it. */}
+      <main className={`mx-auto max-w-lg px-4 pt-5 ${open ? "pb-[calc(7rem+env(safe-area-inset-bottom))] sm:pb-10" : "pb-10"}`}>
+        <section className="rounded-xl border border-border bg-card p-4">
+          <p className="flex items-center justify-between gap-2">
+            <span className="font-semibold">For {quote.customer_name}</span>
+            <QuoteBadge status={quote.status} />
           </p>
-        )}
-        {quote.notes && <p className="mt-3 text-zinc-700">{quote.notes}</p>}
-      </section>
-
-      {(b.payment_terms || b.terms) && (
-        <section className="mt-4 space-y-2 text-sm text-zinc-700">
-          {b.payment_terms && (
-            <p><span className="font-medium">Payment: </span>{b.payment_terms}</p>
-          )}
-          {b.terms && (
-            <p className="whitespace-pre-line"><span className="font-medium">Terms: </span>{b.terms}</p>
-          )}
-          <p className="text-xs text-zinc-500">You pay {b.name} directly. This website does not take payments.</p>
+          <p className="mt-1 text-sm">
+            {formatRange(quote.start_date, quote.end_date)} ({formatDays(quote.days)})
+          </p>
+          <p className="text-sm text-muted-foreground">Quote {quote.reference}</p>
+          {quote.notes && <p className="mt-3 whitespace-pre-line border-t border-border pt-3 text-sm text-foreground-soft">{quote.notes}</p>}
         </section>
-      )}
 
-      <div className="mt-6">
-        <ErrorNote message={typeof error === "string" ? error : undefined} />
+        <h2 className="mb-2 mt-6 text-sm font-semibold text-foreground-soft">What you&apos;re hiring</h2>
+        <LineCards
+          packages={quote.packages ?? []}
+          items={quote.items}
+          days={quote.days}
+          photoUrl={(path) => itemPhotoUrl(supabase, path)}
+        />
 
-        {quote.status === "OPEN" && (
-          <form action={acceptQuote.bind(null, token)} className="space-y-3">
-            <Field label="Your name">
-              <input name="customer_name" required defaultValue={quote.customer_name} className={inputClass} />
-            </Field>
-            <Field label="Your phone number">
-              <input name="customer_phone" type="tel" required defaultValue={quote.customer_phone ?? ""} className={inputClass} />
-            </Field>
-            <button className={`${buttonClass} w-full`}>Accept quote</button>
-            <p className="text-xs text-zinc-500">
-              Valid until {new Date(quote.expires_at).toLocaleDateString("en-NA", { timeZone: "Africa/Windhoek", dateStyle: "medium" })}.
-              {" "}{b.name} will confirm your booking.
+        <div className="mt-4">
+          <TotalsBox rows={totals}>
+            <p className="mt-3 text-xs text-muted-foreground">You pay {b.name} directly once they confirm. This website does not take payments.</p>
+          </TotalsBox>
+        </div>
+
+        {(b.payment_terms || b.terms) && (
+          <section className="mt-4 space-y-2 text-sm text-foreground-soft">
+            {b.payment_terms && (
+              <p><span className="font-medium">Payment: </span>{b.payment_terms}</p>
+            )}
+            {b.terms && (
+              <p className="whitespace-pre-line"><span className="font-medium">Terms: </span>{b.terms}</p>
+            )}
+          </section>
+        )}
+
+        <div className="mt-6">
+          <ErrorNote message={typeof error === "string" ? error : undefined} />
+
+          {open && (
+            <form id="accept-quote" action={acceptQuote.bind(null, token)} className="space-y-3">
+              <Field label="Your name">
+                <input name="customer_name" required defaultValue={quote.customer_name} className={inputClass} />
+              </Field>
+              <Field label="Your phone number">
+                <input name="customer_phone" type="tel" required defaultValue={quote.customer_phone ?? ""} className={inputClass} />
+              </Field>
+              {/* Also shown on phones: the sticky bar's button relies on form="accept-quote", which some older in-app browsers ignore. */}
+              <button className={`${buttonClass} w-full`}>Accept quote</button>
+              <p className="text-xs text-muted-foreground">
+                Valid until {validUntil}. {b.name} will confirm your booking.
+              </p>
+            </form>
+          )}
+
+          {quote.status === "ACCEPTED" && (
+            <p className="rounded-xl bg-primary-soft p-4 text-sm text-primary-ink">
+              You accepted this quote. {b.name} will confirm your booking.
             </p>
-          </form>
-        )}
+          )}
+          {quote.status === "EXPIRED" && (
+            <p className="rounded-xl bg-muted p-4 text-sm">This quote has expired. Ask {b.name} for a new one.</p>
+          )}
+          {quote.status === "CANCELLED" && (
+            <p className="rounded-xl bg-muted p-4 text-sm">{b.name} has withdrawn this quote.</p>
+          )}
 
-        {quote.status === "ACCEPTED" && (
-          <p className="rounded-xl bg-emerald-50 p-4 text-sm text-emerald-900">
-            You accepted this quote. {b.name} will confirm your booking.
-          </p>
-        )}
-        {quote.status === "EXPIRED" && (
-          <p className="rounded-xl bg-zinc-100 p-4 text-sm">This quote has expired. Ask {b.name} for a new one.</p>
-        )}
-        {quote.status === "CANCELLED" && (
-          <p className="rounded-xl bg-zinc-100 p-4 text-sm">{b.name} has withdrawn this quote.</p>
-        )}
+          {askLink && (
+            <div className={open ? "hidden sm:block" : undefined}>
+              <a href={askLink} target="_blank" rel="noopener noreferrer" className={`${secondaryButtonClass} mt-3 w-full`}>
+                Ask on WhatsApp
+              </a>
+            </div>
+          )}
+        </div>
+      </main>
 
-        {askLink && (
-          <a href={askLink} target="_blank" rel="noopener noreferrer" className={`${secondaryButtonClass} mt-3 w-full`}>
-            Ask a question on WhatsApp
-          </a>
-        )}
-      </div>
-    </main>
+      {open && (
+        <div className="fixed inset-x-0 bottom-0 z-10 border-t border-border bg-card pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pl-[calc(1rem+env(safe-area-inset-left))] pr-[calc(1rem+env(safe-area-inset-right))] sm:hidden">
+          <div className={`mx-auto grid max-w-lg gap-2 ${askLink ? "grid-cols-2" : ""}`}>
+            {askLink && (
+              <a href={askLink} target="_blank" rel="noopener noreferrer" className={secondaryButtonClass}>
+                Ask on WhatsApp
+              </a>
+            )}
+            <button form="accept-quote" className={buttonClass}>
+              Accept quote
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

@@ -1,17 +1,93 @@
 @import "tailwindcss";
 
+/*
+ * Botanical Garden theme. Use these names (bg-primary, text-muted-foreground,
+ * border-border, bg-card, bg-accent, text-danger, ...) instead of Tailwind's
+ * built-in colours (zinc, emerald, amber, red, ...) so the whole app changes
+ * from this one place.
+ *
+ * Contrast rules: every text colour here is at least 4.5:1 on the
+ * background it is paired with. Marigold (accent) is only 1.8:1 on cream,
+ * so never use text-accent: use it as a fill with text-accent-foreground on
+ * top, and use text-accent-ink for warning text.
+ */
 :root {
-  --background: #f6f7f5;
-  --foreground: #18181b;
+  /* Core palette */
+  --background: #f5f3ed; /* cream */
+  --foreground: #1f2a22;
+  --primary: #3f6b4c; /* fern green, darker than the stock #4a7c59 for 5.5:1 on cream */
+  --primary-foreground: #ffffff;
+  --accent: #f9a620; /* marigold: fill only, never text */
+  --accent-foreground: #1f2a22; /* 7.4:1 on accent */
+  --danger: #b7472a; /* terracotta: 4.8:1 on cream, 5.3:1 on card */
+  --danger-foreground: #ffffff;
+  --muted: #e8e4d8; /* quiet backgrounds: hover, placeholders, bars */
+  --muted-foreground: #5b6158; /* hints, captions, meta text */
+  --border: #d9d4c5;
+  --card: #ffffff;
+
+  /* Extras the app needs */
+  --foreground-soft: #3b4339; /* secondary headings, strong labels */
+  --input: #c9c2b0; /* input borders, dashed upload box */
+  --primary-strong: #33573e; /* primary button hover */
+  --primary-soft: #e3eee5; /* success notes, confirmed pills */
+  --primary-border: #b9d0bd;
+  --primary-ink: #24402d; /* text on primary-soft */
+  --accent-soft: #fdf1d6; /* warnings, low stock, requested pills */
+  --accent-border: #f1d494;
+  --accent-ink: #6b4500; /* warning text */
+  --danger-soft: #f7e3dc;
+  --danger-border: #e8bcae;
+  --danger-ink: #6e2716; /* text on danger-soft (danger itself is only 4.3:1 there) */
+  --info-soft: #dfeaee; /* plan notices */
+  --info-ink: #1e4351;
+
+  /* Phone bottom tab bar height (at least 44px tap targets); the app layout pads the page by this much. */
+  --tab-bar-height: 3.5rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-card: var(--card);
+
+  --color-foreground-soft: var(--foreground-soft);
+  --color-input: var(--input);
+  --color-primary-strong: var(--primary-strong);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-border: var(--primary-border);
+  --color-primary-ink: var(--primary-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-border: var(--accent-border);
+  --color-accent-ink: var(--accent-ink);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-border: var(--danger-border);
+  --color-danger-ink: var(--danger-ink);
+  --color-info-soft: var(--info-soft);
+  --color-info-ink: var(--info-ink);
+
+  --font-sans: var(--font-geist), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* viewport-fit=cover (root layout) lets the page reach the notch in landscape; keep content clear of it. */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }

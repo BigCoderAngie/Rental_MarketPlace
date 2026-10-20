@@ -39,9 +39,9 @@ export function PackageForm({
         />
       </Field>
 
-      <fieldset className="space-y-2 rounded-xl border border-zinc-200 bg-white p-4">
+      <fieldset className="space-y-2 rounded-xl border border-border bg-card p-4">
         <legend className="px-1 text-sm font-semibold">What is in the package</legend>
-        {items.length === 0 && <p className="text-sm text-zinc-600">Add items to your inventory first.</p>}
+        {items.length === 0 && <p className="text-sm text-muted-foreground">Add items to your inventory first.</p>}
         {items.map((item) => (
           <label key={item.id} className="flex items-center justify-between gap-3 text-sm">
             <span>{item.name}</span>

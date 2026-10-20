@@ -1,7 +1,8 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { BOOKING_STATUSES, HOLDS_STOCK, NEXT_STATUSES, isOverdue, staffActions, wentAhead } from "./bookings";
+import { BOOKING_STATUSES, HOLDS_STOCK, NEXT_STATUSES, STATUS_TONE, isOverdue, staffActions, wentAhead } from "./bookings";
+import { QUOTE_STATUS_TONE } from "./quotes";
 
 const migrationsDir = join(__dirname, "../../supabase/migrations");
 const sql = readdirSync(migrationsDir)
@@ -49,5 +50,22 @@ describe("went ahead", () => {
     expect(wentAhead("CLOSED")).toBe(true);
     expect(wentAhead("REQUESTED")).toBe(false);
     expect(wentAhead("CANCELLED")).toBe(false);
+  });
+});
+
+describe("status badge tones", () => {
+  it("greys out every finished booking and nothing else", () => {
+    const finished = BOOKING_STATUSES.filter((s) => NEXT_STATUSES[s].length === 0);
+    const muted = BOOKING_STATUSES.filter((s) => STATUS_TONE[s] === "muted");
+    expect(muted.sort()).toEqual([...finished].sort());
+  });
+
+  it("marks the statuses that need action as danger", () => {
+    expect(STATUS_TONE.OVERDUE).toBe("danger");
+    expect(STATUS_TONE.PROBLEM_OPEN).toBe("danger");
+  });
+
+  it("uses the same tones for quotes: open waits, accepted is confirmed, the rest are finished", () => {
+    expect(QUOTE_STATUS_TONE).toEqual({ OPEN: "accent", ACCEPTED: "primary", CANCELLED: "muted", EXPIRED: "muted" });
   });
 });

@@ -47,41 +47,41 @@ export default async function CustomerPage({ params, searchParams }: PageProps<"
     <>
       <PageHeader title={customer.full_name} action={<Link href={`/bookings/new?${new URLSearchParams({ customer_name: customer.full_name, customer_phone: customer.phone })}`} className={secondaryButtonClass}>New booking</Link>} />
       <ErrorNote message={typeof error === "string" ? error : undefined} />
-      {saved && <p className="mb-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-900">Saved.</p>}
+      {saved && <p className="mb-4 rounded-lg bg-primary-soft p-3 text-sm text-primary-ink">Saved.</p>}
 
-      <section className="mb-4 rounded-xl border border-zinc-200 bg-white p-4 text-sm">
+      <section className="mb-4 rounded-xl border border-border bg-card p-4 text-sm">
         <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <a href={`tel:${customer.phone.replace(/\s/g, "")}`} className="font-medium underline">{customer.phone}</a>
-          <a href={whatsAppLink(`Hi ${firstName}, this is ${business.name}. `, customer.phone)} target="_blank" rel="noopener noreferrer" className="font-medium text-emerald-800 underline">
+          <a href={whatsAppLink(`Hi ${firstName}, this is ${business.name}. `, customer.phone)} target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline">
             WhatsApp
           </a>
         </p>
         <dl className="mt-3 grid grid-cols-2 gap-3">
           <div>
-            <dt className="text-xs text-zinc-500">Bookings</dt>
+            <dt className="text-xs text-muted-foreground">Bookings</dt>
             <dd className="font-semibold">{customer.bookings}</dd>
           </div>
           <div>
-            <dt className="text-xs text-zinc-500">Total value</dt>
+            <dt className="text-xs text-muted-foreground">Total value</dt>
             <dd className="font-semibold">{formatNad(customer.total_value)}</dd>
           </div>
           <div>
-            <dt className="text-xs text-zinc-500">Still owed</dt>
-            <dd className={`font-semibold ${Number(customer.outstanding) > 0 ? "text-amber-800" : ""}`}>{formatNad(customer.outstanding)}</dd>
+            <dt className="text-xs text-muted-foreground">Still owed</dt>
+            <dd className={`font-semibold ${Number(customer.outstanding) > 0 ? "text-danger" : ""}`}>{formatNad(customer.outstanding)}</dd>
           </div>
           <div>
-            <dt className="text-xs text-zinc-500">Deposit held</dt>
+            <dt className="text-xs text-muted-foreground">Deposit held</dt>
             <dd className="font-semibold">{formatNad(customer.deposit_held)}</dd>
           </div>
         </dl>
-        {customer.notes && <p className="mt-3 whitespace-pre-line rounded-lg bg-amber-50 p-3 text-amber-950">{customer.notes}</p>}
+        {customer.notes && <p className="mt-3 whitespace-pre-line rounded-lg bg-accent-soft p-3 text-accent-ink">{customer.notes}</p>}
       </section>
 
-      <h2 className="mb-2 text-sm font-semibold text-zinc-700">Bookings</h2>
+      <h2 className="mb-2 text-sm font-semibold text-foreground-soft">Bookings</h2>
       {(bookings ?? []).length === 0 ? (
-        <p className="mb-4 text-sm text-zinc-600">No bookings yet.</p>
+        <p className="mb-4 text-sm text-muted-foreground">No bookings yet.</p>
       ) : (
-        <ul className="mb-6 divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white">
+        <ul className="mb-6 divide-y divide-border rounded-xl border border-border bg-card">
           {bookings!.map((b) => {
             const bal = balanceById.get(b.id);
             return (
@@ -91,10 +91,12 @@ export default async function CustomerPage({ params, searchParams }: PageProps<"
                     <span className="font-medium">{formatRange(b.start_date, b.end_date)}</span>
                     <StatusBadge status={b.status} />
                   </span>
-                  <span className="block text-zinc-600">
+                  <span className="block text-muted-foreground">
                     {b.reference}
                     {bal && ` · ${formatNad(bal.amount_due)}`}
-                    {bal && wentAhead(b.status) && Number(bal.outstanding) > 0 && ` · ${formatNad(bal.outstanding)} owed`}
+                    {bal && wentAhead(b.status) && Number(bal.outstanding) > 0 && (
+                      <> · <span className="text-danger">{formatNad(bal.outstanding)} owed</span></>
+                    )}
                   </span>
                 </Link>
               </li>
@@ -103,7 +105,7 @@ export default async function CustomerPage({ params, searchParams }: PageProps<"
         </ul>
       )}
 
-      <details className="rounded-xl border border-zinc-200 bg-white p-4">
+      <details className="rounded-xl border border-border bg-card p-4">
         <summary className="cursor-pointer text-sm font-semibold">Edit details and notes</summary>
         <form action={updateCustomer.bind(null, customer.id)} className="mt-3 space-y-3">
           <Field label="Name">

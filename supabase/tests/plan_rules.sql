@@ -267,4 +267,31 @@ begin
   assert not has_table_privilege('anon', 'public.plan_payments', 'select'), 'visitors cannot read payments';
 end $$;
 
+-- 13. The public homepage: visitors read plans, but cannot change them or
+--     read bank details, subscriptions or payments.
+set local role anon;
+set local request.jwt.claims to '{"role": "anon"}';
+do $$
+begin
+  assert (select count(*) from public.plans) = 3, 'visitors read all three plans';
+  begin
+    update public.plans set yearly_price = 1 where code = 'pro';
+    raise exception 'expected visitors to be refused changing prices';
+  exception when insufficient_privilege then null;
+  end;
+  assert (select yearly_price from public.plans where code = 'pro') = 349, 'prices are unchanged';
+  assert (select launch_ends_on from public.platform_settings) is not null, 'visitors read the launch date';
+  begin
+    perform bank_details from public.platform_settings;
+    raise exception 'expected visitors to be refused bank details';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform 1 from public.subscriptions;
+    raise exception 'expected visitors to be refused subscriptions';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
 rollback;

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LinkButton, PageHeader } from "@/components/ui";
+import { EmptyState, LinkButton, PageHeader, upgradeBadgeClass } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { formatNad } from "@/lib/money";
 import { itemPhotoUrl } from "@/lib/item-photos";
@@ -31,18 +31,22 @@ export default async function InventoryPage() {
     <>
       <PageHeader title="Inventory" action={<LinkButton href="/inventory/new">Add item</LinkButton>} />
       {plan?.item_limit != null && (
-        <p className={`mb-3 text-sm ${atLimit ? "text-amber-800" : "text-zinc-600"}`}>
+        <p className={`mb-3 text-sm ${atLimit ? "text-accent-ink" : "text-muted-foreground"}`}>
           {items.length} of {plan.item_limit} items on {plan.name}.{" "}
           {items.length >= plan.item_limit - 2 && (
-            <Link href="/plan" className="font-medium underline">Upgrade for more</Link>
+            <Link href="/plan" className={upgradeBadgeClass}>Upgrade for more</Link>
           )}
         </p>
       )}
 
       {items.length === 0 ? (
-        <p className="text-sm text-zinc-600">No items yet. Add your first item to start taking bookings.</p>
+        <EmptyState
+          message="Your items go here: tents, chairs, tables and anything else you hire out."
+          actionHref="/inventory/new"
+          actionLabel="Add your first item"
+        />
       ) : (
-        <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white">
+        <ul className="divide-y divide-border rounded-xl border border-border bg-card">
           {items.map((item) => (
             <li key={item.id}>
               <Link href={`/inventory/${item.id}`} className="flex items-center justify-between gap-3 px-4 py-3">
@@ -50,11 +54,11 @@ export default async function InventoryPage() {
                   // eslint-disable-next-line @next/next/no-img-element -- Supabase Storage URL
                   <img src={itemPhotoUrl(supabase, item.photo_path)!} alt="" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
                 ) : (
-                  <span className="h-12 w-12 shrink-0 rounded-lg bg-zinc-100" aria-hidden />
+                  <span className="h-12 w-12 shrink-0 rounded-lg bg-muted" aria-hidden />
                 )}
                 <span className="min-w-0 flex-1">
                   <span className="block font-medium">{item.name}</span>
-                  <span className="text-sm text-zinc-600">
+                  <span className="text-sm text-muted-foreground">
                     {formatNad(item.daily_price)} per day
                     {item.turnaround_days > 0 && ` · ${item.turnaround_days} day turnaround`}
                   </span>
@@ -62,7 +66,7 @@ export default async function InventoryPage() {
                 <span className="text-right text-sm">
                   <span className="block font-semibold">{item.quantity_owned - item.units_out_of_service} in service</span>
                   {item.units_out_of_service > 0 && (
-                    <span className="text-amber-700">{item.units_out_of_service} out of service</span>
+                    <span className="text-accent-ink">{item.units_out_of_service} out of service</span>
                   )}
                 </span>
               </Link>
@@ -75,22 +79,22 @@ export default async function InventoryPage() {
         <section className="mt-8">
           <div className="mb-2 flex items-center justify-between gap-3">
             <h2 className="font-semibold">Packages</h2>
-            <Link href="/inventory/packages/new" className="text-sm font-medium text-emerald-800 underline">
+            <Link href="/inventory/packages/new" className="text-sm font-medium text-primary underline">
               Add package
             </Link>
           </div>
           {(packages ?? []).length === 0 ? (
-            <p className="text-sm text-zinc-600">
+            <p className="text-sm text-muted-foreground">
               Group items you rent together, like a tent with 100 chairs, and give them one price per day.
             </p>
           ) : (
-            <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white">
+            <ul className="divide-y divide-border rounded-xl border border-border bg-card">
               {packages!.map((pkg) => (
                 <li key={pkg.id}>
                   <Link href={`/inventory/packages/${pkg.id}`} className="flex items-center justify-between gap-3 px-4 py-3">
                     <span className="min-w-0 flex-1">
                       <span className="block font-medium">{pkg.name}</span>
-                      <span className="text-sm text-zinc-600">{packageContents(pkg)}</span>
+                      <span className="text-sm text-muted-foreground">{packageContents(pkg)}</span>
                     </span>
                     <span className="text-right text-sm font-semibold">{formatNad(pkg.daily_price)} per day</span>
                   </Link>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PageHeader, inputClass, secondaryButtonClass } from "@/components/ui";
+import { EmptyState, PageHeader, inputClass, secondaryButtonClass } from "@/components/ui";
 import { requireBusiness } from "@/lib/business";
 import { customerSearchFilter, type CustomerSummary } from "@/lib/customers";
 import { formatNad } from "@/lib/money";
@@ -35,22 +35,28 @@ export default async function CustomersPage({ searchParams }: PageProps<"/custom
       </form>
 
       {customers.length === 0 ? (
-        <p className="text-sm text-zinc-600">
-          {filter ? "No customer matches that search." : "Customers appear here after their first booking."}
-        </p>
+        filter ? (
+          <p className="text-sm text-muted-foreground">No customer matches that search.</p>
+        ) : (
+          <EmptyState
+            message="Everyone who books with you appears here, with what they still owe. Customers are added with their first booking."
+            actionHref="/bookings/new"
+            actionLabel="Add your first booking"
+          />
+        )
       ) : (
-        <ul className="divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white">
+        <ul className="divide-y divide-border rounded-xl border border-border bg-card">
           {customers.map((c) => (
             <li key={c.id}>
               <Link href={`/customers/${c.id}`} className="flex items-center justify-between gap-3 px-4 py-3">
                 <span className="min-w-0">
                   <span className="block truncate font-medium">{c.full_name}</span>
-                  <span className="text-sm text-zinc-600">
+                  <span className="text-sm text-muted-foreground">
                     {c.phone} · {c.bookings} booking{c.bookings === 1 ? "" : "s"}
                   </span>
                 </span>
                 {Number(c.outstanding) > 0 && (
-                  <span className="shrink-0 text-right text-sm font-medium text-amber-800">
+                  <span className="shrink-0 text-right text-sm font-medium text-danger">
                     {formatNad(c.outstanding)} owed
                   </span>
                 )}

@@ -17,7 +17,7 @@ export default async function NewPackagePage({ searchParams }: PageProps<"/inven
     <>
       <PageHeader title="New package" />
       <ErrorNote message={typeof error === "string" ? error : undefined} />
-      <p className="mb-4 text-sm text-zinc-600">
+      <p className="mb-4 text-sm text-muted-foreground">
         Group items you often rent together, like a tent with 100 chairs, and give the group one price per day.
       </p>
       <PackageForm action={createPackage} items={items ?? []} />

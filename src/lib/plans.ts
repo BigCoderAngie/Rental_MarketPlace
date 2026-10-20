@@ -60,14 +60,34 @@ export const METHOD_LABEL: Record<PlanPayment["method"], string> = {
   ewallet: "eWallet",
 };
 
+/** Free, Pro and Business in display order. Signed-out visitors can read these too (the homepage). */
+export async function loadPlans(supabase: SupabaseClient): Promise<Plan[]> {
+  const { data, error } = await supabase.from("plans").select("*").order("sort_order").returns<Plan[]>();
+  if (error) console.error("Could not load plans:", error.message);
+  return data ?? [];
+}
+
+/**
+ * The last day a new business gets founding prices (YYYY-MM-DD). Signed-out
+ * visitors can read this one setting too; null if it could not be loaded.
+ */
+export async function loadLaunchEndsOn(supabase: SupabaseClient): Promise<string | null> {
+  const { data, error } = await supabase
+    .from("platform_settings")
+    .select("launch_ends_on")
+    .maybeSingle<Pick<PlatformSettings, "launch_ends_on">>();
+  if (error) console.error("Could not load the launch date:", error.message);
+  return data?.launch_ends_on ?? null;
+}
+
 /** The plan in force, the subscription row behind it, and today's prices. */
 export async function loadPlan(supabase: SupabaseClient, businessId: string) {
-  const [{ data: plan }, { data: subscription }, { data: plans }] = await Promise.all([
+  const [{ data: plan }, { data: subscription }, plans] = await Promise.all([
     supabase.rpc("business_plan", { p_business_id: businessId }).single<Plan>(),
     supabase.from("subscriptions").select("*").eq("business_id", businessId).maybeSingle<Subscription>(),
-    supabase.from("plans").select("*").order("sort_order").returns<Plan[]>(),
+    loadPlans(supabase),
   ]);
-  return { plan: plan ?? null, subscription: subscription ?? null, plans: plans ?? [] };
+  return { plan: plan ?? null, subscription: subscription ?? null, plans };
 }
 
 /** What this business pays for a year of a plan today (mirrors plan_price() in the database). */
@@ -78,6 +98,19 @@ export function priceFor(plan: Plan, subscription: Pick<Subscription, "founding_
 
 export function limitText(limit: number | null, noun: string): string {
   return limit == null ? `Unlimited ${noun}` : `Up to ${limit} ${noun}`;
+}
+
+/** What a plan includes, as shown on the plan page and the homepage. */
+export function planFeatures(plan: Pick<Plan, "item_limit" | "user_limit" | "full_reports">): string[] {
+  return [
+    limitText(plan.item_limit, "items"),
+    limitText(plan.user_limit, plan.user_limit === 1 ? "user" : "users"),
+    plan.full_reports ? "Full reports and CSV downloads" : "Money and booking reports",
+  ];
+}
+
+export function bookingFeeText(plan: Pick<Plan, "booking_fee_rate">): string {
+  return `Marketplace booking fee ${Math.round(Number(plan.booking_fee_rate) * 100)}% when the marketplace opens`;
 }
 
 export function priceText(amount: number): string {

@@ -37,7 +37,7 @@ export default async function EditBookingPage({ params, searchParams }: PageProp
     return (
       <>
         <PageHeader title={`Change ${booking.reference}`} />
-        <p className="text-sm text-zinc-600">
+        <p className="text-sm text-muted-foreground">
           This booking can no longer be changed. <Link href={`/bookings/${id}`} className="underline">Back to the booking</Link>
         </p>
       </>
@@ -57,7 +57,7 @@ export default async function EditBookingPage({ params, searchParams }: PageProp
   return (
     <>
       <PageHeader title={`Change ${booking.reference}`} />
-      <p className="mb-4 text-sm text-zinc-600">
+      <p className="mb-4 text-sm text-muted-foreground">
         {booking.customers?.full_name} · now {formatRange(booking.start_date, booking.end_date)}
       </p>
       <ErrorNote message={error} />
@@ -78,18 +78,18 @@ export default async function EditBookingPage({ params, searchParams }: PageProp
           packageQuantities={packageQuantities}
         />
         {unlistedPackages.map((bp) => (
-          <p key={bp.package_id} className="text-sm text-zinc-600">
+          <p key={bp.package_id} className="text-sm text-muted-foreground">
             <input type="hidden" name={`pkg:${bp.package_id}`} value={bp.quantity} />
             {bp.quantity} × {bp.packages?.name} stays on the booking (no longer in your packages).
           </p>
         ))}
         {unlisted.map((bi) => (
-          <p key={bi.item_id} className="text-sm text-zinc-600">
+          <p key={bi.item_id} className="text-sm text-muted-foreground">
             <input type="hidden" name={`qty:${bi.item_id}`} value={bi.quantity - bi.package_units} />
             {bi.quantity - bi.package_units} × {bi.items?.name} stays on the booking (no longer in your inventory list).
           </p>
         ))}
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-muted-foreground">
           Set an item to 0 to remove it. Free numbers leave out this booking&apos;s own units. Items already on the
           booking keep the price they were booked at.
         </p>

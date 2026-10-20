@@ -1,4 +1,4 @@
-# Rental Marketplace
+# RentLoop
 
 Booking software for hire businesses in Namibia.
 
@@ -16,11 +16,12 @@ Full requirements: [SRS document](https://claude.ai/code/artifact/53bc03dd-b135-
 
 1. [What works so far](#what-works-so-far)
 2. [Run it on your computer](#run-it-on-your-computer)
-3. [Put it online](#put-it-online)
-4. [How the code is organised](#how-the-code-is-organised)
-5. [Rules to know before changing code](#rules-to-know-before-changing-code)
-6. [Working as two partners](#working-as-two-partners)
-7. [What to build next](#what-to-build-next)
+3. [Set up Claude Code](#set-up-claude-code)
+4. [Put it online](#put-it-online)
+5. [How the code is organised](#how-the-code-is-organised)
+6. [Rules to know before changing code](#rules-to-know-before-changing-code)
+7. [Working as two partners](#working-as-two-partners)
+8. [What to build next](#what-to-build-next)
 
 ---
 
@@ -94,6 +95,42 @@ Nothing is really emailed when running locally:
 | Mailpit | <http://127.0.0.1:54324> | Read your login code |
 | Supabase Studio | <http://127.0.0.1:54323> | Browse the database |
 
+### After every pull: update your database
+
+> **Do this every time you pull, before `npm run dev`.** When one of us adds a
+> file to `supabase/migrations/`, the other's database needs it too.
+> Otherwise pages that use it fail, for example the homepage shows no plans.
+
+**Online database (Option A):** see what's missing:
+
+```bash
+npx supabase migration list
+```
+
+Each row shows a **Local** and a **Remote** version. If every row has both,
+you're up to date and there's nothing to do (for example, because we share the
+same Supabase project and the other partner already applied them). If a row
+has a Local version but an empty Remote, apply it:
+
+```bash
+npx supabase db push
+```
+
+Type `Y` when asked. It only adds the new changes; it doesn't delete any data.
+Then run `npx supabase migration list` again: every row should now have both.
+
+**Local database (Option B):**
+
+```bash
+npx supabase migration up
+```
+
+If that fails, `npm run db:reset` rebuilds the database from scratch (this
+**deletes local data**).
+
+**What each new migration does** is written in a comment at the top of its
+file in `supabase/migrations/`.
+
 ### Useful commands
 
 | Command | What it does |
@@ -106,6 +143,83 @@ Nothing is really emailed when running locally:
 | `npx supabase migration new <name>` | Starts a new database change |
 
 Run `lint`, `typecheck` and `test` before every push.
+
+---
+
+## Set up Claude Code
+
+> **Both partners: do this once on every computer you code on.** We share one
+> Claude account, but that only shares the claude.ai skills (Word, PDF,
+> Excel and so on). The skills below are installed on the computer itself, so
+> each of us has to install them. Without them, Claude can't follow the
+> workflow in `CLAUDE.md`.
+
+`CLAUDE.md` tells Claude how we work: plan first, use the theme colours, then
+simplify, review and test before every commit. It names these tools:
+
+| Tool | What it does | Where it comes from |
+| --- | --- | --- |
+| **theme-factory** | Colour and font themes (our theme is Botanical Garden) | Install below |
+| **frontend-design** | Guidance for designing and restyling screens | Install below |
+| **webapp-testing** | Opens the app in a hidden browser and takes phone and desktop screenshots | Install below, plus Playwright |
+| **/simplify** | Tidies the code you just changed without changing what it does | Built into Claude Code |
+| **/code-review** | Checks your changes for bugs before you commit | Built into Claude Code |
+
+### 1. Install the skills
+
+They go in your personal Claude folder (`~/.claude/skills`), so they work in
+any folder you open and are never committed to this repo.
+
+**Windows (PowerShell):**
+
+```powershell
+$src = "$env:TEMP\anthropic-skills"
+if (Test-Path $src) { git -C $src pull } else { git clone --depth 1 https://github.com/anthropics/skills.git $src }
+New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
+foreach ($s in "theme-factory", "frontend-design", "webapp-testing") {
+  Copy-Item -Recurse -Force "$src\skills\$s" "$HOME\.claude\skills\"
+}
+```
+
+**Mac or Linux:**
+
+```bash
+rm -rf /tmp/anthropic-skills
+git clone --depth 1 https://github.com/anthropics/skills.git /tmp/anthropic-skills
+mkdir -p ~/.claude/skills
+cp -R /tmp/anthropic-skills/skills/{theme-factory,frontend-design,webapp-testing} ~/.claude/skills/
+```
+
+### 2. Install Playwright (for screenshots)
+
+webapp-testing needs Python and Playwright:
+
+```bash
+pip install playwright
+python -m playwright install chromium
+```
+
+On a Mac, use `pip3` and `python3`.
+
+### 3. Optional: Figma
+
+Only if you design screens in Figma first. This lets Claude read a Figma link:
+
+```bash
+claude mcp add --transport http --scope user figma https://mcp.figma.com/mcp
+```
+
+The first time you use it, Claude asks you to log in to Figma.
+
+### 4. Check it worked
+
+Start a **new** Claude Code chat (skills only load when a chat starts) and
+ask: *"What skills do you have?"* You should see **theme-factory**,
+**frontend-design** and **webapp-testing** in the list.
+
+To sign in for screenshots, Claude opens its own hidden browser. It asks you
+to paste the login link from the Supabase email: right-click the link and
+choose **Copy link** rather than clicking it.
 
 ---
 
@@ -229,6 +343,10 @@ Split the work by layer so you rarely edit the same files:
 **For each feature:** agree on the function names and inputs first (in an
 issue or pull request). Partner B then builds the database part and its tests
 while Partner A builds the screen on top.
+
+**Before you start:** make sure Claude Code is set up on your computer
+([Set up Claude Code](#set-up-claude-code)). We share a Claude account, but
+the skills are installed per computer, so each of us has to do it.
 
 **Day to day:**
 

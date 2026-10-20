@@ -25,19 +25,19 @@ export default async function PayPage({ searchParams }: PageProps<"/plan/pay">) 
       <PageHeader title={`Pay for ${chosen.name}`} />
       <ErrorNote message={typeof error === "string" ? error : undefined} />
 
-      <section className="mb-4 rounded-xl border border-zinc-200 bg-white p-4 text-sm">
+      <section className="mb-4 rounded-xl border border-border bg-card p-4 text-sm">
         <p className="flex justify-between text-base font-semibold">
           <span>{chosen.name}, 12 months</span>
           <span>{formatNad(amount)}</span>
         </p>
         <p className="mt-3 font-medium">1. Pay {formatNad(amount)} by bank deposit, EFT or eWallet</p>
-        <p className="mt-1 whitespace-pre-line text-zinc-700">{settings.bank_details}</p>
-        <p className="mt-1 whitespace-pre-line text-zinc-700">{settings.ewallet_details}</p>
-        <p className="mt-1 text-zinc-700">
+        <p className="mt-1 whitespace-pre-line text-foreground-soft">{settings.bank_details}</p>
+        <p className="mt-1 whitespace-pre-line text-foreground-soft">{settings.ewallet_details}</p>
+        <p className="mt-1 text-foreground-soft">
           Use <span className="font-semibold">{reference || "your business name"}</span> as the reference.
         </p>
         <p className="mt-3 font-medium">2. Send us the proof below</p>
-        <p className="mt-1 text-zinc-600">We switch your plan on for 12 months when we have checked it.</p>
+        <p className="mt-1 text-muted-foreground">We switch your plan on for 12 months when we have checked it.</p>
       </section>
 
       <form action={requestPlan.bind(null, chosen.code)} className="space-y-4">
