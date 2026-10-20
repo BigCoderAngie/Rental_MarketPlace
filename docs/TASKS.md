@@ -44,7 +44,7 @@ export type Profile = { user_id: string; phone: string | null; account_state: Ac
   - Files: `src/app/(marketing)/layout.tsx`, `src/components/top-bar.tsx`, `src/components/site-footer.tsx`
   - Migration: no · Skill: frontend-design · SRS: NFR-12
   - Done: homepage, terms and privacy use both parts; footer stacks on phones; no NFR-12 words.
-- [ ] **`db-business-profile`** (C1): Adds the business profile fields, the `profiles` table with phone and account state, and the payment details in the public booking and quote functions.
+- [x] **`db-business-profile`** (C1): Adds the business profile fields, the `profiles` table with phone and account state, and the payment details in the public booking and quote functions.
   - Files: `supabase/migrations/<timestamp>_business_profile.sql`, `supabase/tests/profile_rules.sql`
   - Migration: **yes** · Skill: none · SRS: FR-AC-02, FR-AC-05, FR-PY-03
   - Done: tests show a customer link returns its own business's payment details only; signed-out visitors can't read `businesses.payment_details`; `set_my_phone` moves NEW to ACTIVE.
