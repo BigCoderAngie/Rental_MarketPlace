@@ -2,6 +2,8 @@
 
 The MVP from `docs/MASTER-PLAN.md`, split into waves. Each task is one branch from `main` with the same name, and one pull request. Start a task with "Do the next unticked task in docs/TASKS.md", and tick it off in the same PR.
 
+> **Replanned on 20 October 2026.** The MVP is now a two-sided marketplace with individual and business owners (see `docs/MASTER-PLAN.md`, "Change of direction"). Waves 1 to 3 stay as they are. Wave 3's `restyle-homepage` becomes the marketplace home (wave M1). The new marketplace waves M1 to M5 below come **before** the old waves 4 to 10, which will be re-ordered and re-split around them. Contracts for the M waves are written before each wave starts.
+
 ## Rules
 
 - Tasks in the same wave can run at the same time. No two tasks in a wave change the same file.
@@ -345,7 +347,15 @@ No contract: run `db-admin` first, then `admin-screens`.
   - Files: `docs/MVP-CHECK.md`
   - Migration: no · Skill: none · SRS: section 9
 
-## Phase 2 (split into tasks before it starts)
+## Marketplace MVP waves (to be split into tasks with contracts before each wave)
+
+- **M1, marketplace home and owner sign-up:** marketplace home page from the mockup (search box, categories, popular items, how it works for both sides); sign up as an individual or a business; the individual's simple "list an item" flow.
+- **M2, public listings:** public item pages without sign-in; the public flag on items; owner profile page; categories for individuals.
+- **M3, search:** search by item or category, town and dates showing only items with free stock (FR-SR-01); browse by category and town; event search with a guest count (FR-SR-02) later.
+- **M4, booking requests and renter accounts:** request from a listing with an email-code sign-up; owner accepts or declines; private contact details until accepted (FR-PV-01 to 03); "My bookings" for renters.
+- **M5, trust:** verification badge for owners (FR-AC-03), public reviews and ratings (FR-RV-03), Report a Problem for marketplace bookings.
+
+## Earlier Phase 2 list (folded into the waves above)
 
 1. Customer accounts
 2. Verification and the public flag (FR-AC-03, FR-IN-05)
