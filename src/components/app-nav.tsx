@@ -6,15 +6,20 @@ import type { ReactNode } from "react";
 import { focusRingInsetClass } from "@/components/ui";
 import { MORE_HREF, TABS, isActive, isMoreActive, moreLinks, type TabHref } from "@/lib/nav";
 
-// The only client part of the app layout: it needs the current path to
-// highlight where you are.
+// Client parts of the app layout: they need the current path to highlight
+// where you are. The desktop sidebar (sidebar.tsx) uses the same menu and icons.
 
-/** Top navigation row for screens 640px and wider. */
+/** Top navigation row for screens 640 to 1023px wide (the sidebar takes over from 1024px). */
+/** Every destination, in menu order: the tabs, then what sits behind More. Shared by the top row and the sidebar. */
+export function mainLinks(isAdmin: boolean) {
+  return [...TABS, ...moreLinks(isAdmin)];
+}
+
 export function TopNav({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
-  const links = [...TABS, ...moreLinks(isAdmin)];
+  const links = mainLinks(isAdmin);
   return (
-    <nav aria-label="Main" className="hidden border-b border-border bg-card sm:block">
+    <nav aria-label="Main" className="hidden border-b border-border bg-card sm:block lg:hidden">
       <ul className="flex gap-1 overflow-x-auto px-2">
         {links.map((l) => {
           const active = isActive(pathname, l.href);
@@ -60,7 +65,7 @@ export function BottomTabs() {
               } ${focusRingInsetClass}`}
             >
               {t.active && <span aria-hidden className="absolute inset-x-5 top-0 h-0.5 rounded-full bg-primary" />}
-              {ICONS[t.href]}
+              <NavIcon href={t.href} />
               {t.label}
             </Link>
           </li>
@@ -87,7 +92,14 @@ function Icon({ children }: { children: ReactNode }) {
   );
 }
 
-const ICONS: Record<TabHref, ReactNode> = {
+/** The icon for a menu destination; shared by the tab bar and the sidebar. */
+export function NavIcon({ href }: { href: string }) {
+  // hasOwnProperty, not Object.hasOwn: older Safari and in-app browsers lack the latter.
+  return Object.prototype.hasOwnProperty.call(ICONS, href) ? ICONS[href] : ICONS[MORE_HREF];
+}
+
+// Every tab must have an icon (a missing one fails the typecheck); the More pages add theirs below.
+const TAB_ICONS: Record<TabHref, ReactNode> = {
   "/calendar": (
     <Icon>
       <rect x="3.5" y="5" width="17" height="15" rx="2" />
@@ -117,6 +129,40 @@ const ICONS: Record<TabHref, ReactNode> = {
       <circle cx="5.5" cy="12" r="1.3" fill="currentColor" />
       <circle cx="12" cy="12" r="1.3" fill="currentColor" />
       <circle cx="18.5" cy="12" r="1.3" fill="currentColor" />
+    </Icon>
+  ),
+};
+
+const ICONS: Record<string, ReactNode> = {
+  ...TAB_ICONS,
+  "/inventory": (
+    <Icon>
+      <path d="M3.5 8L12 3.5 20.5 8v8L12 20.5 3.5 16z" />
+      <path d="M3.5 8L12 12.5 20.5 8M12 12.5v8" />
+    </Icon>
+  ),
+  "/reports": (
+    <Icon>
+      <path d="M4 20V4M4 20h16" />
+      <path d="M8 16v-4M12 16V8M16 16v-6" />
+    </Icon>
+  ),
+  "/settings": (
+    <Icon>
+      <path d="M4 7h10M18 7h2M4 17h4M12 17h8" />
+      <circle cx="16" cy="7" r="2" />
+      <circle cx="10" cy="17" r="2" />
+    </Icon>
+  ),
+  "/plan": (
+    <Icon>
+      <path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z" />
+    </Icon>
+  ),
+  "/admin": (
+    <Icon>
+      <path d="M12 3.5l7 2.8v5.4c0 4.3-3 7.6-7 8.8-4-1.2-7-4.5-7-8.8V6.3z" />
+      <path d="M9 12l2 2 4-4" />
     </Icon>
   ),
 };
