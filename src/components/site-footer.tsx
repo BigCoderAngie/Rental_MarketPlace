@@ -1,12 +1,11 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { RentLoopMark } from "@/components/top-bar";
+import { focusRingOnDeepClass } from "@/components/ui";
 import { SUPPORT_WHATSAPP } from "@/lib/contact";
 import { whatsAppLink } from "@/lib/whatsapp";
 
-// A white focus ring: the usual green one barely shows on deep green.
-const focusOnDeep = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-deep-foreground";
-const footerLink = `inline-flex min-h-11 items-center rounded underline underline-offset-2 hover:text-deep-foreground ${focusOnDeep}`;
+const footerLink = `inline-flex min-h-11 items-center rounded underline underline-offset-2 hover:text-deep-foreground ${focusRingOnDeepClass}`;
 
 /**
  * The deep green footer strip (docs/DESIGN.md "Footer strip"). Trust items are
@@ -23,7 +22,7 @@ export function SiteFooter() {
             <RentLoopMark className="text-deep-foreground" arrows="var(--deep)" />
             RentLoop
           </p>
-          <p>Booking software for Namibian hire businesses</p>
+          <p>Rent from people and hire businesses near you</p>
         </div>
 
         <ul className="flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:gap-6 lg:flex-col lg:items-start lg:gap-2">
