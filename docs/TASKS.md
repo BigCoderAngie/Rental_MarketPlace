@@ -34,7 +34,7 @@ export type Profile = { user_id: string; phone: string | null; account_state: Ac
 // Business gains BusinessProfile's fields; PublicQuote["business"] gains logo_path and payment_details.
 ```
 
-- [ ] **`shared-ui-parts`**: Builds the shared parts from `docs/DESIGN.md`: `StatCard`, `StepIndicator`, `ViewAllLink` and `CategoryTile`. Gives buttons pressed and hover states and adds a shared card style.
+- [x] **`shared-ui-parts`**: Builds the shared parts from `docs/DESIGN.md`: `StatCard`, `StepIndicator`, `ViewAllLink` and `CategoryTile`. Gives buttons pressed and hover states and adds a shared card style.
   - Files: `src/components/ui.tsx`, `src/components/stat-card.tsx`, `src/components/step-indicator.tsx`, `src/components/view-all-link.tsx`, `src/components/category-tile.tsx`
   - Migration: no · Skill: frontend-design · SRS: NFR-08
   - Done: each part renders on a test page in the PR screenshots at 390 px and desktop; every text pair at least 4.5:1; tap targets at least 44 px.

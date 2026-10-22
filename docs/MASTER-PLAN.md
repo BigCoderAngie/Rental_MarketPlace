@@ -179,7 +179,7 @@ The launch waits for the SRS gate: 30 to 50 businesses keeping their inventory a
 
 ## Changes to the SRS
 
-Copy these into the online SRS before sales begin.
+Copy these into the online SRS before sales begin. **Done on 20 Oct 2026:** all three are in the online SRS and in `docs/SRS.md`.
 
 1. **FR-AC-01:** email login for the MVP; phone login later.
 2. **FR-NT-01:** push and email instead of SMS or WhatsApp for the MVP.
