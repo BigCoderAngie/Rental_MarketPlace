@@ -49,13 +49,34 @@ export const focusRingClass = "focus-visible:outline-2 focus-visible:outline-off
 // Same, drawn just inside the edge, for items in scrolling or rounded clipped lists where an outer ring would be cut off.
 export const focusRingInsetClass = "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary";
 
+// The same two rings in white, for the deep green surfaces, where green barely shows.
+export const focusRingOnDeepClass = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-deep-foreground";
+export const focusRingInsetOnDeepClass = "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-deep-foreground";
+
 // Buttons: at least 44px tall (NFR-08), a pressed look, and no motion for people who turn it off.
-const buttonBase =
-  `inline-flex min-h-11 items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition-[background-color,transform] duration-150 active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0 ${focusRingClass}`;
+const buttonShape =
+  "inline-flex min-h-11 items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition-[background-color,transform] duration-150 active:translate-y-px motion-reduce:transition-none motion-reduce:active:translate-y-0";
+const buttonBase = `${buttonShape} ${focusRingClass}`;
 
 export const buttonClass = `${buttonBase} bg-primary text-primary-foreground hover:bg-primary-strong active:bg-primary-strong`;
 
 export const secondaryButtonClass = `${buttonBase} border border-border bg-card text-foreground-soft hover:bg-muted active:bg-muted`;
+
+/** A thin light outline on deep green, for chips and secondary buttons there. */
+export const outlineOnDeepClass = `border border-deep-muted/50 hover:bg-deep-foreground/10 ${focusRingOnDeepClass}`;
+
+// Buttons on deep green. Star yellow is a fill only, with dark text (9.1:1).
+export const accentButtonOnDeepClass = `${buttonShape} ${focusRingOnDeepClass} bg-accent text-accent-foreground hover:bg-accent/85`;
+export const secondaryButtonOnDeepClass = `${buttonShape} ${outlineOnDeepClass}`;
+
+/** A tick. Decorative; it takes the text colour. */
+export function CheckIcon({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 20 20" className={className} fill="none">
+      <path d="M4 10.5l4 4 8-9" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 /** The card look from docs/DESIGN.md: 12px corners, light border, white, soft shadow. */
 export const cardClass = "rounded-xl border border-border bg-card shadow-sm";

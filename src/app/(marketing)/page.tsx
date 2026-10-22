@@ -1,21 +1,32 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { buttonClass, focusRingClass, secondaryButtonClass, upgradeBadgeClass } from "@/components/ui";
-import { FAQ } from "@/lib/faq";
+import { CategoryTile } from "@/components/category-tile";
+import {
+  CheckIcon,
+  accentButtonOnDeepClass,
+  buttonClass,
+  focusRingClass,
+  inputClass,
+  outlineOnDeepClass,
+  secondaryButtonOnDeepClass,
+  upgradeBadgeClass,
+} from "@/components/ui";
+import { CATEGORIES, POPULAR_SEARCHES, SEARCH_TOWNS, searchHref } from "@/lib/categories";
+import { OWNER_FAQ, RENTER_FAQ, type Faq } from "@/lib/faq";
 import { formatNad } from "@/lib/money";
-import { formatDateWithYear } from "@/lib/dates";
-import { bookingFeeText, loadLaunchEndsOn, loadPlans, planFeatures } from "@/lib/plans";
+import { formatDateWithYear, namibiaToday } from "@/lib/dates";
+import { bookingFeeText, launchIsOn, loadLaunchEndsOn, loadPlans, planFeatures } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/server";
 
 const DESCRIPTION =
-  "Stop double bookings and send quotes on WhatsApp. Stock, bookings, deposits and returns for tent, chair and event hire businesses in Namibia. Free plan, prices in N$.";
+  "Rent tents, tools, cameras and event gear from people and hire businesses in Windhoek and Erongo. Requests are free and you pay the owner directly.";
 
 export const metadata: Metadata = {
-  title: "Booking software for Namibian hire businesses | RentLoop",
+  title: "RentLoop: rent it nearby instead of buying it | Namibia",
   description: DESCRIPTION,
   openGraph: {
-    title: "Stop double bookings. Send quotes on WhatsApp.",
+    title: "Why buy it? Rent it nearby.",
     description: DESCRIPTION,
     type: "website",
     locale: "en_NA",
@@ -23,91 +34,116 @@ export const metadata: Metadata = {
   },
 };
 
-const TRUST = ["Your money goes straight to you", "Works on WhatsApp", "No double bookings", "Built for phones"];
+const MOTTO = "We only earn when you earn.";
+
+// Only what is true today: requests are free, renters never pay RentLoop (SRS 1.3)
+// and RentLoop never holds rental money (2.4). No verification promise until M5.
+const TRUST = ["Free to request", "Renters never pay RentLoop", "Pay the owner directly"];
 
 const STEPS = [
+  { title: "Find it near you", body: "Search by town and dates. See photos, the price and the deposit." },
+  { title: "Send a free request", body: "Several people can ask for the same dates. The owner picks one." },
   {
-    title: "Add your items and packages",
-    body: "Enter what you rent, how many you own and the price per day. Group items into packages like \"Wedding 100\".",
-  },
-  {
-    title: "Send a quote on WhatsApp",
-    body: "Pick the dates and items; the app shows what is free. Send the quote link to your customer in one tap.",
-  },
-  {
-    title: "Customer accepts and you track the booking",
-    body: "They accept on their phone. You confirm it, record payments and deposits, and count items out and back in.",
+    title: "Collect and pay the owner",
+    body: "Once the owner accepts, you both see each other's name and number. Pay the rent and deposit when you collect.",
   },
 ];
 
-const COMPARISON = [
-  {
-    topic: "Double bookings",
-    notebook: "Two people write the same tent down for the same Saturday.",
-    app: "Shows what is free before you accept, and refuses a booking that would leave you short.",
-  },
-  {
-    topic: "Deposits",
-    notebook: "Who paid what is somewhere in a chat thread.",
-    app: "Every deposit received, returned or kept is recorded, and the customer confirms it.",
-  },
-  {
-    topic: "Overdue returns",
-    notebook: "You notice the chairs are missing when the next customer arrives.",
-    app: "Bookings past their return date are marked Overdue every night.",
-  },
-  {
-    topic: "Reports",
-    notebook: "Adding up the month means going back through every page.",
-    app: "Money and bookings for any dates, with item use and who still owes you on Pro and Business.",
-  },
+const OWNER_POINTS = [
+  "Free listings, no monthly fee on the Free plan",
+  "Renters pay you directly, rent and deposit",
+  "Hire businesses get staff, quotes and checkout records",
 ];
 
-/** The public homepage. proxy.ts sends signed-in users to their calendar instead. */
+// Quiet light green ticks: bright green (highlight) is only for headline words.
+const tick = "mt-0.5 h-5 w-5 shrink-0 text-deep-muted";
+
+/** The public homepage: the marketplace front door for renters and owners. proxy.ts sends signed-in users to their calendar instead. */
 export default async function HomePage() {
   const supabase = await createClient();
   const [plans, launchEndsOn] = await Promise.all([loadPlans(supabase), loadLaunchEndsOn(supabase)]);
-  // Only offer founding prices while the launch is on (mirrors plan_price() in the database).
-  // The database decides founding prices on the UTC date a business is created, so compare the same date.
-  const launchOn = launchEndsOn != null && new Date().toISOString().slice(0, 10) <= launchEndsOn;
+  // Founding prices and the 0% booking fee only while the launch is on.
+  const launchOn = launchIsOn(launchEndsOn);
 
   return (
     <>
-      {/* Hero */}
-      <section className="mx-auto grid max-w-5xl gap-10 px-4 pb-14 pt-10 sm:pt-16 lg:grid-cols-[1.15fr_1fr] lg:items-center">
-        <div>
-          <p className="text-sm text-muted-foreground">Booking software for Namibian hire businesses</p>
+      {/* Hero with search (FR-SR-01). /search arrives in M3. */}
+      <section className="bg-deep text-deep-foreground">
+        <div className="mx-auto max-w-5xl px-4 pb-12 pt-10 sm:pb-16 sm:pt-16">
+          <p className="text-sm font-medium text-deep-muted">{MOTTO}</p>
           <h1 className="mt-3 text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
-            <span className="block">Stop double bookings.</span>
-            <span className="block">Send quotes on WhatsApp.</span>
+            <span className="block">Why buy it?</span>
+            <span className="block text-highlight">Rent it nearby.</span>
           </h1>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/login" className={`${buttonClass} ${focusRingClass}`}>
-              Start free
-            </Link>
-            <a href="#how-it-works" className={`${secondaryButtonClass} ${focusRingClass}`}>
-              See how it works
-            </a>
+          <p className="mt-4 max-w-xl text-lg text-deep-muted">
+            Tents, tools, cameras and event gear from people and hire businesses near you. Pay the owner directly.
+          </p>
+
+          <form
+            action="/search"
+            method="get"
+            role="search"
+            aria-label="Search for something to rent"
+            className="mt-8 grid gap-3 rounded-2xl bg-card p-3 text-foreground shadow-lg sm:grid-cols-[1.6fr_1fr_1fr_auto] sm:items-end sm:p-4"
+          >
+            <SearchField label="What">
+              <input name="q" type="search" placeholder="Tent, drill, camera" className={`${inputClass} min-h-12`} />
+            </SearchField>
+            <SearchField label="Where">
+              <select name="town" defaultValue="" className={`${inputClass} min-h-12`}>
+                <option value="">Anywhere</option>
+                {SEARCH_TOWNS.map((t) => (
+                  <option key={t}>{t}</option>
+                ))}
+              </select>
+            </SearchField>
+            <SearchField label="When">
+              <input name="date" type="date" min={namibiaToday()} className={`${inputClass} min-h-12`} />
+            </SearchField>
+            <button type="submit" className={`${buttonClass} min-h-12 px-6`}>
+              Search
+            </button>
+          </form>
+
+          {/* One row that scrolls sideways on phones, wrapping from sm up. */}
+          <div className="-mx-4 mt-5 flex items-center gap-2 overflow-x-auto px-4 py-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+            <span className="shrink-0 text-sm text-deep-muted">Popular:</span>
+            {POPULAR_SEARCHES.map((q) => (
+              <Link
+                key={q}
+                href={searchHref({ q })}
+                prefetch={false}
+                className={`inline-flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-full px-4 text-sm font-medium ${outlineOnDeepClass}`}
+              >
+                {q}
+              </Link>
+            ))}
           </div>
-          <p className="mt-3 text-sm text-muted-foreground">Free plan. No card needed. Prices in N$.</p>
+
+          <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
+            {TRUST.map((t) => (
+              <li key={t} className="flex items-center gap-2">
+                <CheckIcon className={tick} />
+                {t}
+              </li>
+            ))}
+          </ul>
         </div>
-        <QuoteOnWhatsApp />
       </section>
 
-      {/* Trust strip */}
-      <section aria-label="Why hire businesses use it" className="border-y border-border bg-card">
-        <ul className="mx-auto grid max-w-5xl grid-cols-1 gap-x-6 gap-y-3 px-4 py-5 text-sm font-medium sm:grid-cols-2 lg:grid-cols-4">
-          {TRUST.map((t) => (
-            <li key={t} className="flex items-center gap-2">
-              <Check />
-              {t}
+      {/* Categories (FR-IN-06) */}
+      <Section id="categories" title="Browse by category">
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          {CATEGORIES.map((c) => (
+            <li key={c.slug} className="grid">
+              <CategoryTile slug={c.slug} label={c.name} href={searchHref({ category: c.slug })} prefetch={false} />
             </li>
           ))}
         </ul>
-      </section>
+      </Section>
 
       {/* How it works */}
-      <Section id="how-it-works" title="How it works">
+      <Section id="how-it-works" title="How RentLoop works" intro="Renting is free. You deal with the owner directly.">
         <ol className="grid gap-8 sm:grid-cols-3">
           {STEPS.map((s, i) => (
             <li key={s.title}>
@@ -121,37 +157,35 @@ export default async function HomePage() {
         </ol>
       </Section>
 
-      {/* Notebook vs app */}
-      <Section id="compare" title="Why not just WhatsApp and a notebook?">
-        <div className="overflow-hidden rounded-xl border border-border bg-card">
-          <div className="hidden grid-cols-[10rem_1fr_1fr] gap-6 border-b border-border px-5 py-3 text-sm font-semibold text-muted-foreground sm:grid">
-            <span />
-            <span>WhatsApp and a notebook</span>
-            <span className="text-foreground">RentLoop</span>
+      {/* For owners */}
+      <section aria-labelledby="owners-title" className="mx-auto max-w-5xl px-4">
+        <div className="grid gap-8 rounded-2xl bg-deep p-6 text-deep-foreground sm:p-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
+          <div>
+            <h2 id="owners-title" className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              Earn with what you own.
+            </h2>
+            <p className="mt-3 max-w-md text-deep-muted">
+              List your tent, tools or camera in minutes. You set the price and approve every booking. {MOTTO}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/login" className={accentButtonOnDeepClass}>
+                List an item free
+              </Link>
+              <Link href="/login" className={secondaryButtonOnDeepClass}>
+                Set up a hire business
+              </Link>
+            </div>
           </div>
-          <dl className="divide-y divide-border">
-            {COMPARISON.map((row) => (
-              <div key={row.topic} className="grid gap-2 px-5 py-4 sm:grid-cols-[10rem_1fr_1fr] sm:gap-6">
-                <dt className="font-semibold">{row.topic}</dt>
-                <dd className="flex gap-2 text-muted-foreground">
-                  <span aria-hidden className="select-none">–</span>
-                  <span>
-                    <span className="font-medium sm:sr-only">Notebook: </span>
-                    {row.notebook}
-                  </span>
-                </dd>
-                <dd className="flex gap-2">
-                  <Check />
-                  <span>
-                    <span className="font-medium sm:sr-only">This app: </span>
-                    {row.app}
-                  </span>
-                </dd>
-              </div>
+          <ul className="space-y-3">
+            {OWNER_POINTS.map((p) => (
+              <li key={p} className="flex gap-2">
+                <CheckIcon className={tick} />
+                {p}
+              </li>
             ))}
-          </dl>
+          </ul>
         </div>
-      </Section>
+      </section>
 
       {/* Plans */}
       <Section id="plans" title="Plans" intro="Launch prices, may change. Pay yearly by bank deposit or eWallet.">
@@ -175,7 +209,7 @@ export default async function HomePage() {
                     {planFeatures(p).map((f) => (
                       <li key={f}>{f}</li>
                     ))}
-                    <li className="text-muted-foreground">{bookingFeeText(p)}</li>
+                    <li className="text-muted-foreground">{bookingFeeText(p, launchOn)}</li>
                   </ul>
                 </li>
               );
@@ -183,7 +217,7 @@ export default async function HomePage() {
           </ul>
         )}
         <div className="mt-6">
-          <Link href="/login" className={`${buttonClass} ${focusRingClass}`}>
+          <Link href="/login" className={buttonClass}>
             Start free
           </Link>
         </div>
@@ -191,20 +225,9 @@ export default async function HomePage() {
 
       {/* FAQ */}
       <Section id="faq" title="Questions">
-        <div className="divide-y divide-border rounded-xl border border-border bg-card">
-          {FAQ.map((f) => (
-            <details key={f.question} className="group px-5">
-              <summary
-                className={`flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium [&::-webkit-details-marker]:hidden ${focusRingClass}`}
-              >
-                {f.question}
-                <span aria-hidden className="text-xl leading-none text-primary transition-transform group-open:rotate-45 motion-reduce:transition-none">
-                  +
-                </span>
-              </summary>
-              <p className="max-w-[65ch] pb-5 text-foreground-soft">{f.answer}</p>
-            </details>
-          ))}
+        <div className="grid gap-8 lg:grid-cols-2">
+          <FaqGroup title="Renting" items={RENTER_FAQ} />
+          <FaqGroup title="Listing" items={OWNER_FAQ} />
         </div>
       </Section>
     </>
@@ -223,60 +246,34 @@ function Section({ id, title, intro, children }: { id: string; title: string; in
   );
 }
 
-function Check() {
+function SearchField({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <svg aria-hidden viewBox="0 0 20 20" className="mt-0.5 h-5 w-5 shrink-0 text-primary" fill="none">
-      <path d="M4 10.5l4 4 8-9" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <label className="block">
+      <span className="mb-1 block px-1 text-sm font-semibold text-foreground-soft">{label}</span>
+      {children}
+    </label>
   );
 }
 
-/** The hero picture: a quote as a customer receives it on WhatsApp. Decorative, not interactive. */
-function QuoteOnWhatsApp() {
-  const lines: [string, number][] = [
-    ["1 × Stretch tent 10x15m", 1200],
-    ["100 × White plastic chair", 800],
-    ["10 × Trestle table 1.8m", 450],
-  ];
-  const total = lines.reduce((sum, [, amount]) => sum + amount, 0);
+function FaqGroup({ title, items }: { title: string; items: Faq[] }) {
   return (
-    <figure className="mx-auto w-full max-w-sm">
-      <div className="rounded-[1.75rem] border border-border bg-muted p-3">
-        <p className="px-2 pb-2 pt-1 text-sm font-semibold">Kalahari Tent &amp; Chair Hire</p>
-        <div className="ml-6 rounded-2xl rounded-tr-sm bg-primary-soft p-3 text-sm text-primary-ink">
-          <p>Hi Nomsa, here is your quote for the wedding on Sat, 24 Oct.</p>
-          <div className="mt-2 rounded-xl border border-primary-border bg-card p-3 text-foreground">
-            <p className="font-semibold">Quote QT-000014</p>
-            <ul className="mt-2 space-y-1">
-              {lines.map(([item, price]) => (
-                <li key={item} className="flex justify-between gap-3">
-                  <span>{item}</span>
-                  <span className="shrink-0">{formatNad(price)}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-2 flex justify-between border-t border-border pt-2 font-semibold">
-              <span>Total</span>
-              <span>{formatNad(total)}</span>
-            </p>
-            <p className="flex justify-between text-muted-foreground">
-              <span>Deposit</span>
-              <span>{formatNad(2000)}</span>
-            </p>
-            <p className="mt-2 flex items-center gap-1.5 text-primary">
-              <Check />
-              Everything is free on Sat, 24 Oct
-            </p>
-            <span className="mt-3 block rounded-lg bg-primary py-2 text-center font-semibold text-primary-foreground">
-              Accept quote
-            </span>
-          </div>
-          <p className="mt-1 text-right text-xs text-muted-foreground">09:14</p>
-        </div>
+    <div>
+      <h3 className="mb-3 text-lg font-semibold">{title}</h3>
+      <div className="divide-y divide-border rounded-xl border border-border bg-card">
+        {items.map((f) => (
+          <details key={f.question} className="group px-5">
+            <summary
+              className={`flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium [&::-webkit-details-marker]:hidden ${focusRingClass}`}
+            >
+              {f.question}
+              <span aria-hidden className="text-xl leading-none text-primary transition-transform group-open:rotate-45 motion-reduce:transition-none">
+                +
+              </span>
+            </summary>
+            <p className="max-w-[65ch] pb-5 text-foreground-soft">{f.answer}</p>
+          </details>
+        ))}
       </div>
-      <figcaption className="mt-3 text-center text-sm text-muted-foreground">
-        What your customer sees: one link, no account needed.
-      </figcaption>
-    </figure>
+    </div>
   );
 }
