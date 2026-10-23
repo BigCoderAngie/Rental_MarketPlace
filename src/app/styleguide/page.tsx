@@ -2,13 +2,18 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { Button, type ButtonSize, type ButtonVariant } from "@/components/button";
+import { CategoryBar } from "@/components/category-bar";
 import { Flag } from "@/components/flag";
 import { ImagePlaceholder } from "@/components/image-placeholder";
 import { Logo, LogoMark } from "@/components/logo";
+import { SiteHeader } from "@/components/site-header";
+import { StoreButtons } from "@/components/store-buttons";
+import { TopStrip } from "@/components/top-strip";
 
 export const metadata: Metadata = { title: "Styleguide | RentLoop", robots: { index: false } };
 
-// Build kit Part 1 check page: every button, the logo, the flag, colours and type.
+// Build kit check page: every button, the logo, the flag, colours and type
+// (Part 1), and the shell signed out and signed in (Part 2).
 // Only on your computer: the live site answers 404.
 
 const VARIANTS: { variant: ButtonVariant; label: string }[] = [
@@ -180,7 +185,38 @@ export default function StyleguidePage() {
         <p className="text-[13px] text-muted-foreground">Muted 13–14px. Klein Windhoek, Windhoek</p>
         <p className="text-[11px] font-bold uppercase tracking-[.06em] text-primary-ink">Category kicker 11px</p>
       </Block>
+
+      <Block title="Shell (Part 2)">
+        <p className="text-sm text-muted-foreground">
+          The real pages show these at the top. Below 768px the phone header and menu button show instead.
+        </p>
+        <ShellDemo label="Signed out">
+          <TopStrip />
+          <SiteHeader viewer={null} />
+        </ShellDemo>
+        <ShellDemo label="Signed in, on Explore, Electronics picked">
+          <TopStrip />
+          <SiteHeader viewer={{ name: "Tangeni" }} current="/explore" />
+          <CategoryBar current="electronics" />
+        </ShellDemo>
+        <div className="flex flex-wrap gap-8">
+          <StoreButtons />
+          <div className="rounded-panel bg-deep p-4">
+            <StoreButtons onDeep stacked />
+          </div>
+        </div>
+      </Block>
     </main>
+  );
+}
+
+function ShellDemo({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <h3 className="text-sm font-bold text-foreground-soft">{label}</h3>
+      {/* The header is sticky; overflow-hidden keeps it inside this box. */}
+      <div className="overflow-hidden rounded-panel border border-border">{children}</div>
+    </div>
   );
 }
 

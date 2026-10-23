@@ -56,6 +56,7 @@
   --danger-ink: #6e2716; /* text on danger-soft: 9.1:1 */
   --info-soft: #e8f0fa; /* kit info: "Waiting for owner" pill, plan notices */
   --info-ink: #1f4a7a;
+  --store: #0f1d17; /* App Store and Google Play buttons */
 
   /* Phone bottom tab bar height (at least 44px tap targets); the app layout pads the page by this much. */
   --tab-bar-height: 3.5rem;
@@ -100,6 +101,7 @@
   --color-danger-ink: var(--danger-ink);
   --color-info-soft: var(--info-soft);
   --color-info-ink: var(--info-ink);
+  --color-store: var(--store);
 
   /* Kit radii: rounded-btn, rounded-card, rounded-panel ... */
   --radius-btn-sm: 12px;
@@ -168,5 +170,17 @@ body {
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+}
+
+/* The phone menu (site-menu.tsx) slides in from the right. */
+@keyframes site-menu-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .site-menu[open] {
+    animation: site-menu-in 0.2s ease-out;
   }
 }
