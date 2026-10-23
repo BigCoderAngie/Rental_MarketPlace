@@ -202,7 +202,7 @@ export default function StyleguidePage() {
         <div className="flex flex-wrap gap-8">
           <StoreButtons />
           <div className="rounded-panel bg-deep p-4">
-            <StoreButtons onDeep stacked />
+            <StoreButtons onDeep light stacked />
           </div>
         </div>
       </Block>

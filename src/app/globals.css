@@ -56,7 +56,8 @@
   --danger-ink: #6e2716; /* text on danger-soft: 9.1:1 */
   --info-soft: #e8f0fa; /* kit info: "Waiting for owner" pill, plan notices */
   --info-ink: #1f4a7a;
-  --store: #0f1d17; /* App Store and Google Play buttons */
+  --store: #0f1d17; /* App Store and Google Play buttons, phone mockup */
+  --deep-bar: #2e7d5b; /* bars in the earnings chart on deep green */
 
   /* Phone bottom tab bar height (at least 44px tap targets); the app layout pads the page by this much. */
   --tab-bar-height: 3.5rem;
@@ -102,6 +103,7 @@
   --color-info-soft: var(--info-soft);
   --color-info-ink: var(--info-ink);
   --color-store: var(--store);
+  --color-deep-bar: var(--deep-bar);
 
   /* Kit radii: rounded-btn, rounded-card, rounded-panel ... */
   --radius-btn-sm: 12px;
@@ -133,6 +135,14 @@ body {
   box-sizing: border-box;
   @media (width >= 48rem) {
     padding-inline: 32px;
+  }
+}
+
+/* Sideways-scrolling rows on phones (the kit's .hs) hide their scrollbar. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 

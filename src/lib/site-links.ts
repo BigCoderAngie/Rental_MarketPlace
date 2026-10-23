@@ -13,9 +13,11 @@ export const ROUTES = {
   explore: "/explore", // Part 5
   signIn: "/login", // the kit's /signin page arrives in Part 4
   join: "/login", // the kit's /join page arrives in Part 4
+  ownerSignUp: "/login", // the kit's /signup/owner page arrives in Part 4
   listItem: "/owner/list", // Part 8
   myBookings: "/my/bookings", // Part 7
   owner: "/owner", // Part 8
+  howItWorks: "/#how",
   help: "/#faq",
   getApp: "/#app",
   terms: "/terms",
@@ -23,7 +25,7 @@ export const ROUTES = {
 
 export const HEADER_NAV: SiteLink[] = [
   { href: ROUTES.explore, label: "Browse" },
-  { href: "/#how-it-works", label: "How it works" },
+  { href: ROUTES.howItWorks, label: "How it works" },
   { href: ROUTES.owner, label: "For businesses" },
   { href: ROUTES.help, label: "Help" },
 ];
@@ -50,7 +52,7 @@ export const FOOTER_COLUMNS: { title: string; links: SiteLink[] }[] = [
     title: "Rent",
     links: [
       { href: ROUTES.explore, label: "Browse" },
-      { href: "/#how-it-works", label: "How it works" },
+      { href: ROUTES.howItWorks, label: "How it works" },
       { href: ROUTES.explore, label: "All categories" },
       { href: ROUTES.getApp, label: "Get the app" },
     ],
@@ -89,6 +91,9 @@ export const POPULAR_SEARCHES = [
   "Camping gear",
   "Laptops",
 ];
+
+/** The launch towns search covers (MASTER-PLAN decision 10). */
+export const SEARCH_TOWNS = ["Windhoek", "Swakopmund", "Walvis Bay"];
 
 export function searchHref(q: string): string {
   return `${ROUTES.explore}?q=${encodeURIComponent(q)}`;

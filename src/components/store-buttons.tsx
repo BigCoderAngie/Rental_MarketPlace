@@ -1,12 +1,12 @@
 /**
  * "Download on the App Store" / "Get it on Google Play" (docs/build-kit
- * 01-DESIGN-SYSTEM.md "StoreButtons"): dark on light backgrounds and in the desktop
- * footer, white in the phone footer. The apps aren't out yet (Part 0 answer), so these are not links and
- * a "Coming soon" note sits under them.
+ * 01-DESIGN-SYSTEM.md "StoreButtons"): dark buttons, or white ones (`light`)
+ * as in the app section and the phone footer. `stacked` puts them one under
+ * the other at full width. The apps aren't out yet (Part 0 answer), so these
+ * are not links and a "Coming soon" note sits under them.
  */
-export function StoreButtons({ onDeep = false, stacked = false }: { onDeep?: boolean; stacked?: boolean }) {
-  // Dark buttons, except the white ones in the phone footer.
-  const look = stacked
+export function StoreButtons({ onDeep = false, light = false, stacked = false }: { onDeep?: boolean; light?: boolean; stacked?: boolean }) {
+  const look = light
     ? "bg-card text-store [--edge:var(--input)] [--glow:rgba(0,0,0,.1)]"
     : "bg-store text-white [--edge:#000] [--glow:rgba(0,0,0,.25)]";
   const button = `b3 rl-btn h-[54px] cursor-default gap-2.5 rounded-btn px-[18px] ${look}`;

@@ -23,7 +23,7 @@ export function SiteFooter() {
       <div className="flex flex-col gap-4 px-4 pt-8 pb-10 md:hidden">
         <Logo onDeep className="text-[22px] [--mark:36px]" />
         <strong className="text-base text-accent">We only earn when you earn.</strong>
-        <StoreButtons onDeep stacked />
+        <StoreButtons onDeep light stacked />
         <div className="border-t border-white/15">
           {FOOTER_COLUMNS.map((col) => (
             <details key={col.title} className="group border-b border-white/15">
