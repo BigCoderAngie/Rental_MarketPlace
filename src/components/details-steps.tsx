@@ -90,7 +90,7 @@ function Actions({ back, children }: { back: string; children: ReactNode }) {
   );
 }
 
-export function RenterDetailsStep() {
+export function RenterDetailsStep({ next }: { next: string }) {
   const account = useAccountOrRestart(ROUTES.renterSignUp);
   const [state, formAction, pending] = useActionState<SignupState, FormData>(signUpRenter, {});
   const [local, setLocal] = useState<Record<string, string>>({});
@@ -111,6 +111,7 @@ export function RenterDetailsStep() {
       className="flex flex-col gap-[18px] md:gap-[22px]"
     >
       <AccountFields />
+      <input type="hidden" name="next" value={next} />
       <FormMessage message={state.message} />
       <div className="md:max-w-[calc(50%-11px)]">
         <SelectField label="Town" name="town" required options={SIGNUP_TOWNS} defaultValue="Windhoek" error={errors.town} />
@@ -148,7 +149,7 @@ export function RenterDetailsStep() {
   );
 }
 
-export function OwnerDetailsStep() {
+export function OwnerDetailsStep({ next }: { next: string }) {
   const account = useAccountOrRestart(ROUTES.ownerSignUp);
   const [state, formAction, pending] = useActionState<SignupState, FormData>(signUpOwner, {});
   const [local, setLocal] = useState<Record<string, string>>({});
@@ -176,6 +177,7 @@ export function OwnerDetailsStep() {
       className="flex flex-col gap-[18px] md:gap-[22px]"
     >
       <AccountFields />
+      <input type="hidden" name="next" value={next} />
       <FormMessage message={state.message} />
       <fieldset>
         <legend className="mb-2.5 text-[13px] font-semibold">

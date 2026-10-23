@@ -1,16 +1,17 @@
 import Link from "next/link";
 import { Avatar } from "@/components/avatar";
-import { ButtonLink, focusRingClass, focusRingInsetClass } from "@/components/button";
+import { ButtonLink, focusRingClass } from "@/components/button";
+import { HeaderNav } from "@/components/header-nav";
 import { SearchIcon } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { SiteMenu } from "@/components/site-menu";
-import { HEADER_NAV, ROUTES, type Viewer } from "@/lib/site-links";
+import { ROUTES, type Viewer } from "@/lib/site-links";
 
 /**
  * The sticky white header (docs/build-kit 01-DESIGN-SYSTEM.md "Header").
  * Signed out: Sign in and Sign up free, never List an item. Signed in: List an
  * item and the avatar with the first name. Phones: logo, Sign up or the avatar,
- * and the menu button. `current` is the nav link to underline.
+ * and the menu button. `current` overrides which nav link is underlined (the styleguide demo).
  */
 export function SiteHeader({ viewer, current }: { viewer: Viewer; current?: string }) {
   return (
@@ -34,21 +35,7 @@ export function SiteHeader({ viewer, current }: { viewer: Viewer; current?: stri
       {/* 768px and up: the kit's desktop row; it wraps onto two lines on narrow screens. */}
       <div className="wrap hidden min-h-[72px] flex-wrap items-center gap-x-7 md:flex">
         <HomeLink className="text-[23px] [--mark:38px]" />
-        <nav aria-label="Main" className="flex flex-wrap gap-x-[26px]">
-          {HEADER_NAV.map((link) => {
-            const on = link.href === current;
-            return (
-              <Link
-                key={link.label}
-                href={link.href}
-                aria-current={on ? "page" : undefined}
-                className={`border-b-2 py-[22px] text-[15px] ${on ? "border-primary font-bold text-primary" : "border-transparent font-medium text-foreground-soft hover:text-primary"} ${focusRingInsetClass}`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
+        <HeaderNav current={current} />
         <HeaderSearch />
         <div className="flex items-center gap-3 py-3">
           {viewer ? (

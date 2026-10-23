@@ -189,8 +189,17 @@ body {
     transform: translateX(100%);
   }
 }
+/* The Explore filters (filter-sheet.tsx) slide up from the bottom on phones. */
+@keyframes filter-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
   .site-menu[open] {
     animation: site-menu-in 0.2s ease-out;
+  }
+  .filter-sheet[open] {
+    animation: filter-sheet-in 0.2s ease-out;
   }
 }

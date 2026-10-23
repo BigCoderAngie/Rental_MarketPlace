@@ -3,12 +3,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import { safeNextPath } from "@/lib/signup";
 import { supabaseEnv } from "@/lib/supabase/env";
 
-// Signed-out visitors may open these; /q/ and /b/ are the customer's quote
-// and booking links. PUBLIC_PAGES match exactly: "/" is the homepage, and as
-// a prefix it would match every page.
-const PUBLIC_PATHS = ["/login", "/signin", "/join", "/signup/", "/auth", "/q/", "/b/"];
+// Signed-out visitors may open these (build kit rule 20: Home, Explore and
+// item pages); /q/ and /b/ are the customer's quote and booking links.
+// PUBLIC_PAGES match exactly: "/" is the homepage, and as a prefix it would match every page.
+const PUBLIC_PATHS = ["/login", "/signin", "/join", "/signup/", "/auth", "/q/", "/b/", "/items/"];
 // /styleguide is a design check page for your computer only (its page answers 404 on the live site).
-const PUBLIC_PAGES = ["/", "/terms", "/privacy", ...(process.env.NODE_ENV === "production" ? [] : ["/styleguide"])];
+const PUBLIC_PAGES = ["/", "/explore", "/terms", "/privacy", ...(process.env.NODE_ENV === "production" ? [] : ["/styleguide"])];
 // Sign-in and sign-up pages that make no sense once signed in. Not "Choose a
 // new password" or "Check your email", which people reach from an email link.
 const SIGNED_OUT_ONLY = ["/signin", "/signin/code", "/signin/forgot", "/join", "/signup/renter", "/signup/renter/about", "/signup/owner", "/signup/owner/details"];

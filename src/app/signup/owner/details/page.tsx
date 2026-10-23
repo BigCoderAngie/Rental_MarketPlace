@@ -4,12 +4,14 @@ import { OwnerDetailsStep } from "@/components/details-steps";
 import { SignupFrame } from "@/components/signup-frame";
 import { AlmostDone } from "@/components/signup-draft";
 import { PhoneAppLine, SignInLink } from "@/components/signup-pages";
+import { safeNextPath } from "@/lib/signup";
 import { ROUTES } from "@/lib/site-links";
 
 export const metadata: Metadata = { title: "Owner details | Sign up to list | RentLoop" };
 
 // docs/build-kit/reference/desktop/SiteOwnerSignUp2.html and mobile/SiteOwnerSignUp2.html
-export default function OwnerDetailsPage() {
+export default async function OwnerDetailsPage({ searchParams }: PageProps<"/signup/owner/details">) {
+  const next = safeNextPath(String((await searchParams).next ?? "")) ?? "";
   return (
     <SignupFrame
       title="Start earning with RentLoop"
@@ -28,7 +30,7 @@ export default function OwnerDetailsPage() {
       }
       below={<PhoneAppLine>List faster from your phone:</PhoneAppLine>}
     >
-      <OwnerDetailsStep />
+      <OwnerDetailsStep next={next} />
     </SignupFrame>
   );
 }

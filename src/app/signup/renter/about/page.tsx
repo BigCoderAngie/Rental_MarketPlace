@@ -4,12 +4,14 @@ import { RenterDetailsStep } from "@/components/details-steps";
 import { SignupFrame } from "@/components/signup-frame";
 import { AlmostDone } from "@/components/signup-draft";
 import { PhoneAppLine, SignInLink } from "@/components/signup-pages";
+import { safeNextPath } from "@/lib/signup";
 import { ROUTES } from "@/lib/site-links";
 
 export const metadata: Metadata = { title: "About you | Sign up to rent | RentLoop" };
 
 // docs/build-kit/reference/desktop/SiteSignUp2.html and mobile/SiteSignUp2.html
-export default function RenterAboutPage() {
+export default async function RenterAboutPage({ searchParams }: PageProps<"/signup/renter/about">) {
+  const next = safeNextPath(String((await searchParams).next ?? "")) ?? "";
   return (
     <SignupFrame
       title="Create your account"
@@ -28,7 +30,7 @@ export default function RenterAboutPage() {
       }
       below={<PhoneAppLine>Prefer your phone?</PhoneAppLine>}
     >
-      <RenterDetailsStep />
+      <RenterDetailsStep next={next} />
     </SignupFrame>
   );
 }

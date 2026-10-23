@@ -12,7 +12,7 @@ const input = "w-full min-w-0 bg-transparent p-0 text-base text-foreground outli
  * §1): What / Where / When and a green Search button. Phones: three stacked
  * rows and a full-width button. From 768px: one white bar; the fields shrink
  * (never the button), so the button always stays inside the bar and clickable.
- * It sends the words, town and dates to Explore (Part 5).
+ * It sends the words, town and first day to Explore.
  */
 export function SearchBar() {
   return (
@@ -34,10 +34,10 @@ export function SearchBar() {
           ))}
         </datalist>
       </label>
-      {/* A date picker arrives with Explore (Part 5); until then the dates go along as typed. */}
+      {/* The first day; Explore's filters add an end date (one day if left out). */}
       <label className={`${field} md:flex-[1_1_0]`}>
         <span className={label}>When</span>
-        <input name="when" placeholder="Add dates" className={input} />
+        <input type="date" name="from" aria-label="When: first day" className={input} />
       </label>
       <button
         type="submit"

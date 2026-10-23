@@ -3,12 +3,14 @@ import Link from "next/link";
 import { AccountStep } from "@/components/account-step";
 import { SignupFrame } from "@/components/signup-frame";
 import { ACCOUNT_ICON, SignInLink } from "@/components/signup-pages";
+import { safeNextPath } from "@/lib/signup";
 import { ROUTES } from "@/lib/site-links";
 
 export const metadata: Metadata = { title: "Sign up to list | RentLoop" };
 
 // docs/build-kit/reference/desktop/SiteOwnerSignUp.html and mobile/SiteOwnerSignUp.html
-export default function OwnerAccountPage() {
+export default async function OwnerAccountPage({ searchParams }: PageProps<"/signup/owner">) {
+  const next = safeNextPath(String((await searchParams).next ?? ""));
   return (
     <SignupFrame
       title="Start earning with RentLoop"
@@ -36,7 +38,7 @@ export default function OwnerAccountPage() {
       }
     >
       <AccountStep
-        nextHref="/signup/owner/details"
+        nextHref={next ? `/signup/owner/details?${new URLSearchParams({ next })}` : "/signup/owner/details"}
         privacyNote="Renters only see your name, number and address once you accept their booking."
         backHref={ROUTES.join}
         backLabel="← Back"

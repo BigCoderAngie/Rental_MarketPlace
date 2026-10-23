@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import {
   hasErrors,
   normalizeNamibianMobile,
+  safeNextPath,
   validateAccount,
   validateOwnerDetails,
   validateRenterDetails,
@@ -39,9 +40,10 @@ const AFTER_SIGNUP = { renter: ROUTES.welcome, owner: ROUTES.welcome };
  * people to confirm their email first, there is no session yet, so they see
  * "Check your email" and the link brings them to the next page.
  */
-async function createAccount(account: AccountInput, details: Record<string, string | boolean>, path: "renter" | "owner"): Promise<SignupState> {
+async function createAccount(account: AccountInput, details: Record<string, string | boolean>, path: "renter" | "owner", wanted: FormDataEntryValue | null): Promise<SignupState> {
   const origin = (await headers()).get("origin") ?? "";
-  const next = AFTER_SIGNUP[path];
+  // Back to what a visitor was doing (for example an item they wanted to request), else the path's next page.
+  const next = safeNextPath(typeof wanted === "string" ? wanted : null) ?? AFTER_SIGNUP[path];
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email: account.email,
@@ -86,6 +88,7 @@ export async function signUpRenter(_prev: SignupState, formData: FormData): Prom
       whatsapp_updates: formData.get("whatsappUpdates") === "on",
     },
     "renter",
+    formData.get("next"),
   );
 }
 
@@ -110,6 +113,7 @@ export async function signUpOwner(_prev: SignupState, formData: FormData): Promi
       fee_acknowledged: true,
     },
     "owner",
+    formData.get("next"),
   );
 }
 
