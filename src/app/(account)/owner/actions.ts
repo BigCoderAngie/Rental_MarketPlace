@@ -13,3 +13,14 @@ export async function becomeHireBusiness() {
   revalidatePath("/owner", "layout");
   redirect("/settings");
 }
+
+/** Publish a draft from the dashboard; the database checks it has a price and an area first. */
+export async function publishDraft(formData: FormData) {
+  const supabase = await createClient();
+  const id = String(formData.get("id") ?? "");
+  const { error } = await supabase.rpc("publish_listing", { p_item_id: id });
+  if (error) redirect(`/owner?${new URLSearchParams({ error: error.message })}`);
+  revalidatePath("/owner", "layout");
+  revalidatePath("/explore");
+  redirect(`/items/${id}?listed=1`);
+}

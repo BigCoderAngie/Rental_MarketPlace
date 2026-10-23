@@ -11,7 +11,7 @@ import { namibiaToday } from "@/lib/dates";
 import { formatShortRange } from "@/lib/explore";
 import { itemPhotoUrl } from "@/lib/item-photos";
 import { formatNadWhole } from "@/lib/money";
-import { canClaimRefund, groupByDates, itemsWithRequests, wouldDecline, type OwnerRequest } from "@/lib/owner-requests";
+import { canClaimRefund, fits, groupByDates, itemsWithRequests, wouldDecline, type OwnerRequest } from "@/lib/owner-requests";
 import { STATUS_LABEL, expiresIn, ownerMoney } from "@/lib/requests";
 import { createClient } from "@/lib/supabase/server";
 import { whatsAppLink } from "@/lib/whatsapp";
@@ -214,6 +214,11 @@ function RequestDetail({ r, declines, today }: { r: OwnerRequest; declines: stri
           </div>
         </dl>
 
+        {waiting && !fits(r) && (
+          <p className="rounded-btn border border-danger-border bg-danger-soft px-4 py-3 text-sm text-danger-ink">
+            Not enough free on these dates any more: another booking holds the units. Decline this one, or wait in case a booking is cancelled.
+          </p>
+        )}
         {waiting && (
           <>
             <p className="text-center text-[13px] text-muted-foreground">
@@ -232,7 +237,9 @@ function RequestDetail({ r, declines, today }: { r: OwnerRequest; declines: stri
               <form action={acceptAndPay} className="flex-[2]">
                 <input type="hidden" name="id" value={r.id} />
                 <input type="hidden" name="item" value={r.item_id} />
-                <button className={buttonClasses({ size: "lg", className: "w-full" })}>Accept and pay {formatNadWhole(money.fee)}</button>
+                <button disabled={!fits(r)} className={buttonClasses({ size: "lg", className: "w-full" })}>
+                  Accept and pay {formatNadWhole(money.fee)}
+                </button>
               </form>
             </div>
           </>

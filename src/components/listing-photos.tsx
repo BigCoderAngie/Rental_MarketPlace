@@ -30,7 +30,7 @@ export type UploadedPhoto = { path: string; preview: string };
  * owner's business is made on the first upload so photos have a folder.
  * Each photo goes to the form as a hidden "photo" field.
  */
-export function ListingPhotos({ photos, onChange, error }: { photos: UploadedPhoto[]; onChange: (p: UploadedPhoto[]) => void; error?: string }) {
+export function ListingPhotos({ photos, onChange, error }: { photos: UploadedPhoto[]; onChange: (update: (current: UploadedPhoto[]) => UploadedPhoto[]) => void; error?: string }) {
   const [busy, setBusy] = useState(0);
   const [problem, setProblem] = useState<string>();
 
@@ -45,7 +45,6 @@ export function ListingPhotos({ photos, onChange, error }: { photos: UploadedPho
       setProblem(businessError.message);
       return;
     }
-    const added: UploadedPhoto[] = [];
     for (const file of picked) {
       setBusy((n) => n + 1);
       try {
@@ -53,20 +52,19 @@ export function ListingPhotos({ photos, onChange, error }: { photos: UploadedPho
         const path = `${itemPhotoFolder(businessId as string)}/${crypto.randomUUID()}.jpg`;
         const { error: uploadError } = await supabase.storage.from(ITEM_PHOTO_BUCKET).upload(path, blob, { contentType: "image/jpeg" });
         if (uploadError) throw uploadError;
-        added.push({ path, preview: URL.createObjectURL(blob) });
+        const photo = { path, preview: URL.createObjectURL(blob) };
+        // Add each photo as it finishes, to whatever the list holds by then (never past the limit).
+        onChange((current) => (current.length < MAX_PHOTOS ? [...current, photo] : current));
       } catch (e) {
         setProblem(e instanceof Error ? e.message : "A photo did not upload. Try again.");
       } finally {
         setBusy((n) => n - 1);
       }
     }
-    onChange([...photos, ...added]);
   }
 
-  function makeCover(i: number) {
-    const next = [...photos];
-    const [picked] = next.splice(i, 1);
-    onChange([picked!, ...next]);
+  function makeCover(path: string) {
+    onChange((current) => [...current.filter((x) => x.path === path), ...current.filter((x) => x.path !== path)]);
   }
 
   return (
@@ -79,14 +77,14 @@ export function ListingPhotos({ photos, onChange, error }: { photos: UploadedPho
             {i === 0 ? (
               <span className="absolute bottom-2 left-2 rounded-full bg-card px-2 py-0.5 text-xs font-bold">Cover</span>
             ) : (
-              <button type="button" onClick={() => makeCover(i)} className="absolute bottom-2 left-2 rounded-full bg-card/90 px-2 py-0.5 text-xs font-semibold focus-visible:outline-2 focus-visible:outline-primary">
+              <button type="button" onClick={() => makeCover(p.path)} className="absolute bottom-2 left-2 rounded-full bg-card/90 px-2 py-0.5 text-xs font-semibold focus-visible:outline-2 focus-visible:outline-primary">
                 Make cover
               </button>
             )}
             <button
               type="button"
               aria-label={`Remove photo ${i + 1}`}
-              onClick={() => onChange(photos.filter((_, j) => j !== i))}
+              onClick={() => onChange((current) => current.filter((x) => x.path !== p.path))}
               className="absolute top-1.5 right-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-card/90 text-sm font-bold focus-visible:outline-2 focus-visible:outline-primary"
             >
               ×
@@ -95,7 +93,7 @@ export function ListingPhotos({ photos, onChange, error }: { photos: UploadedPho
           </div>
         ))}
         {photos.length < MAX_PHOTOS && (
-          <label className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1 rounded-btn border-2 border-dashed border-primary-border font-bold text-primary has-focus-visible:outline-2 has-focus-visible:outline-primary">
+          <label aria-disabled={busy > 0} className="flex aspect-square cursor-pointer flex-col aria-disabled:cursor-wait aria-disabled:opacity-60 items-center justify-center gap-1 rounded-btn border-2 border-dashed border-primary-border font-bold text-primary has-focus-visible:outline-2 has-focus-visible:outline-primary">
             <span aria-hidden className="text-3xl leading-none">
               +
             </span>
@@ -104,6 +102,7 @@ export function ListingPhotos({ photos, onChange, error }: { photos: UploadedPho
               type="file"
               accept="image/*"
               multiple
+              disabled={busy > 0}
               className="sr-only"
               onChange={(e) => {
                 void onFiles(e.target.files);

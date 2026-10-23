@@ -42,12 +42,6 @@ export async function saveListing(_prev: ListingState, formData: FormData): Prom
   const { data: businessId, error: businessError } = await supabase.rpc("ensure_owner_business");
   if (businessError) return { message: businessError.message };
 
-  // Renters search by town, so the owner's business serves the collection town.
-  const { data: business } = await supabase.from("businesses").select("towns").eq("id", businessId as string).single<{ towns: string[] }>();
-  if (business && values.town !== "Other" && !business.towns.includes(values.town)) {
-    await supabase.from("businesses").update({ towns: [...business.towns, values.town] }).eq("id", businessId as string);
-  }
-
   const { data: item, error } = await supabase
     .from("items")
     .insert({
@@ -60,6 +54,7 @@ export async function saveListing(_prev: ListingState, formData: FormData): Prom
       deposit: values.deposit,
       min_days: values.min_days,
       quantity_owned: values.quantity_owned,
+      town: values.town === "Other" ? null : values.town,
       area: values.area || null,
       street_address: values.street_address,
       photo_path: values.photo_path,

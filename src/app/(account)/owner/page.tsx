@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ModeSwitch } from "@/components/account-sidebar";
 import { FormMessage } from "@/components/auth-fields";
 import { Avatar } from "@/components/avatar";
-import { ButtonLink, focusRingClass } from "@/components/button";
+import { ButtonLink, buttonClasses, focusRingClass } from "@/components/button";
 import { ImagePlaceholder } from "@/components/image-placeholder";
 import { formatShortRange } from "@/lib/explore";
 import { itemPhotoUrl } from "@/lib/item-photos";
@@ -12,7 +12,7 @@ import { formatNadWhole } from "@/lib/money";
 import type { OwnerRequest } from "@/lib/owner-requests";
 import { displayName } from "@/lib/site-links";
 import { createClient } from "@/lib/supabase/server";
-import { becomeHireBusiness } from "./actions";
+import { becomeHireBusiness, publishDraft } from "./actions";
 
 export const metadata: Metadata = { title: "Owner dashboard | RentLoop" };
 
@@ -64,6 +64,11 @@ export default async function OwnerDashboardPage({ searchParams }: PageProps<"/o
         <ModeSwitch owner />
       </div>
       <FormMessage message={typeof params.error === "string" ? params.error : undefined} />
+      {params.draft === "1" && (
+        <p role="status" className="rounded-btn border border-primary-border bg-primary-soft px-4 py-3 text-sm font-medium text-primary-ink">
+          Draft saved. Renters can&apos;t see it until you publish it.
+        </p>
+      )}
 
       <div className="grid gap-4 md:grid-cols-[2fr_1fr_1fr]">
         <div className="flex flex-col gap-1 rounded-panel bg-deep px-6 py-6 text-deep-foreground">
@@ -140,27 +145,46 @@ export default async function OwnerDashboardPage({ searchParams }: PageProps<"/o
           </Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {listings.map((l) => (
-            <Link key={l.id} href={`/items/${l.id}`} className={`overflow-hidden rounded-card border border-border bg-card ${focusRingClass}`}>
-              <div className="relative">
-                {itemPhotoUrl(supabase, l.photo_path) ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- owners' photos from Supabase storage
-                  <img src={itemPhotoUrl(supabase, l.photo_path)!} alt="" className="aspect-[4/3] w-full object-cover" />
-                ) : (
-                  <ImagePlaceholder alt="" radius="0" />
-                )}
-                <span className={`absolute top-3 left-3 rounded-full px-2.5 py-1 text-[11.5px] font-bold ${l.is_public ? "bg-deep text-deep-foreground" : "bg-muted text-foreground-soft"}`}>{l.is_public ? "Public" : "Hidden"}</span>
+          {listings.map((l) => {
+            const photo = itemPhotoUrl(supabase, l.photo_path);
+            const body = (
+              <>
+                <div className="relative">
+                  {photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- owners' photos from Supabase storage
+                    <img src={photo} alt="" className="aspect-[4/3] w-full object-cover" />
+                  ) : (
+                    <ImagePlaceholder alt="" radius="0" />
+                  )}
+                  <span className={`absolute top-3 left-3 rounded-full px-2.5 py-1 text-[11.5px] font-bold ${l.is_public ? "bg-deep text-deep-foreground" : "bg-muted text-foreground-soft"}`}>{l.is_public ? "Public" : "Draft"}</span>
+                </div>
+                <div className="flex flex-col gap-0.5 px-4 py-3">
+                  <span className="text-[11px] font-bold tracking-[.06em] text-primary-ink uppercase">{categoryLabel(l.category, l.category)}</span>
+                  <strong className="text-[15px]">{l.name}</strong>
+                  {l.area && <span className="text-[13px] text-muted-foreground">{l.area}</span>}
+                  <span className="text-sm">
+                    <strong>{formatNadWhole(Number(l.daily_price))}</strong> / day
+                  </span>
+                </div>
+              </>
+            );
+            return l.is_public ? (
+              <Link key={l.id} href={`/items/${l.id}`} className={`overflow-hidden rounded-card border border-border bg-card ${focusRingClass}`}>
+                {body}
+              </Link>
+            ) : (
+              <div key={l.id} className="overflow-hidden rounded-card border border-dashed border-input bg-card">
+                {body}
+                <form action={publishDraft} className="flex flex-wrap items-center gap-3 px-4 pb-4">
+                  <input type="hidden" name="id" value={l.id} />
+                  <button className={buttonClasses({ size: "sm" })}>Publish</button>
+                  <Link href={`/inventory/${l.id}`} className={`rounded text-sm font-semibold text-primary underline ${focusRingClass}`}>
+                    Edit details
+                  </Link>
+                </form>
               </div>
-              <div className="flex flex-col gap-0.5 px-4 py-3">
-                <span className="text-[11px] font-bold tracking-[.06em] text-primary-ink uppercase">{categoryLabel(l.category, l.category)}</span>
-                <strong className="text-[15px]">{l.name}</strong>
-                {l.area && <span className="text-[13px] text-muted-foreground">{l.area}</span>}
-                <span className="text-sm">
-                  <strong>{formatNadWhole(Number(l.daily_price))}</strong> / day
-                </span>
-              </div>
-            </Link>
-          ))}
+            );
+          })}
           {listings.length === 0 && (
             <div className="flex flex-col items-start gap-3 rounded-card border border-border bg-card p-6">
               <strong className="text-lg">List your first item</strong>

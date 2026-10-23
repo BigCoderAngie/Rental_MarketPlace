@@ -25,11 +25,9 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
   const today = namibiaToday();
   const filters = parseExploreParams(await searchParams, today);
   const supabase = await createClient();
-  const [{ data: claims }, results, hasListings] = await Promise.all([
-    supabase.auth.getClaims(),
-    searchListings(supabase, filters, upcomingWeekend(today)),
-    marketplaceHasListings(supabase),
-  ]);
+  const [{ data: claims }, results] = await Promise.all([supabase.auth.getClaims(), searchListings(supabase, filters, upcomingWeekend(today))]);
+  // Only needed to choose between "nothing matches" and the sample cards.
+  const hasListings = results.items.length > 0 || (await marketplaceHasListings(supabase));
   const signedIn = Boolean(claims?.claims);
   const activeFilters = [filters.town !== "Windhoek", filters.from, filters.max].filter(Boolean).length;
 

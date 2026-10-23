@@ -21,6 +21,8 @@ export type MyRequest = {
   decline_reason: "dates_taken" | "owner" | null;
   expires_at: string;
   created_at: string;
+  /** When the owner accepted or declined, or the renter cancelled. */
+  answered_at: string | null;
   paid_at: string | null;
   /** Only once the owner has paid the booking fee. */
   owner: { name: string; phone: string | null } | null;
@@ -58,7 +60,7 @@ export function recentActivity(requests: MyRequest[], limit = 5): Activity[] {
     events.push({ at: r.created_at, text: `You sent a request for the ${r.item_name.toLowerCase()}.` });
     if (r.status === "PAID" && r.paid_at) events.push({ at: r.paid_at, text: `${r.owner?.name ?? "The owner"} accepted your request for the ${r.item_name.toLowerCase()}.` });
     if (r.status === "DECLINED") {
-      events.push({ at: r.created_at, text: r.decline_reason === "dates_taken" ? `The ${r.item_name.toLowerCase()} was taken for those dates.` : `The owner declined your request for the ${r.item_name.toLowerCase()}.` });
+      events.push({ at: r.answered_at ?? r.created_at, text: r.decline_reason === "dates_taken" ? `The ${r.item_name.toLowerCase()} was taken for those dates.` : `The owner declined your request for the ${r.item_name.toLowerCase()}.` });
     }
     if (r.status === "EXPIRED") events.push({ at: r.expires_at, text: `Your request for the ${r.item_name.toLowerCase()} expired without an answer.` });
   }

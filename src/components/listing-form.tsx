@@ -35,6 +35,15 @@ export function ListingForm({ defaultTown }: { defaultTown: string }) {
   const [quantity, setQuantity] = useState(1);
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
   const errors = state.errors ?? {};
+
+  // Phones show one step at a time: when new problems come back, open the step holding the first one.
+  const [seenErrors, setSeenErrors] = useState(state.errors);
+  if (state.errors !== seenErrors) {
+    setSeenErrors(state.errors);
+    const keys = Object.keys(state.errors ?? {});
+    const stepOf = (k: string) => (k === "category" ? 0 : ["photos", "town", "area"].includes(k) ? 2 : 1);
+    if (keys.length) setStep(Math.min(...keys.map(stepOf)));
+  }
   const done = [Boolean(category), Boolean(title && price), photos.length > 0 && Boolean(area)];
 
   // Call the action ourselves so a server problem doesn't clear the form (React resets forms after a form action).

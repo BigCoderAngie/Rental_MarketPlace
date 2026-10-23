@@ -10,6 +10,8 @@ export type OwnerRequest = {
   item_name: string;
   photo_path: string | null;
   in_service: number;
+  /** Units still free on this request's dates (waiting requests only). */
+  free_units: number | null;
   label: string;
   renter_rentals: number;
   start_date: IsoDate;
@@ -35,7 +37,7 @@ export type DateGroup = {
   from: IsoDate;
   to: IsoDate;
   requests: OwnerRequest[];
-  /** More units asked for than the owner has: accepting one declines the rest. */
+  /** Accepting one of these would decline another (not enough free units for all). */
   clash: boolean;
   bestMatchId: string | null;
 };
@@ -54,8 +56,7 @@ export function groupByDates(requests: OwnerRequest[]): DateGroup[] {
     }
   }
   for (const g of groups) {
-    const asked = g.requests.reduce((sum, r) => sum + r.quantity, 0);
-    g.clash = g.requests.length > 1 && asked > (g.requests[0]?.in_service ?? 1);
+    g.clash = g.requests.some((r) => declinedBy(r, g.requests).length > 0);
     // Rule 15: the renter with the most rentals, only worth showing when there is a choice.
     if (g.requests.length > 1) {
       const best = [...g.requests].sort((a, b) => b.renter_rentals - a.renter_rentals)[0]!;
@@ -65,11 +66,24 @@ export function groupByDates(requests: OwnerRequest[]): DateGroup[] {
   return groups;
 }
 
-/** The other waiting renters accepting this one would decline (same dates, not enough units). */
+/** Whether there are still enough free units for this request (paid bookings already hold theirs). */
+export function fits(r: OwnerRequest): boolean {
+  return r.free_units === null || r.free_units >= r.quantity;
+}
+
+function overlaps(a: OwnerRequest, b: OwnerRequest): boolean {
+  return a.start_date <= b.end_date && b.start_date <= a.end_date;
+}
+
+// The other waiting requests that would no longer fit once this one takes its units, as accept_and_pay_request decides.
+function declinedBy(request: OwnerRequest, others: OwnerRequest[]): OwnerRequest[] {
+  return others.filter((o) => o.id !== request.id && overlaps(o, request) && (o.free_units ?? Infinity) - request.quantity < o.quantity);
+}
+
+/** The labels of the waiting renters accepting this request would decline (rule 11). */
 export function wouldDecline(request: OwnerRequest, groups: DateGroup[]): string[] {
   const group = groups.find((g) => g.requests.some((r) => r.id === request.id));
-  if (!group?.clash) return [];
-  return group.requests.filter((r) => r.id !== request.id).map((r) => r.label);
+  return group ? declinedBy(request, group.requests).map((r) => r.label) : [];
 }
 
 /** Rule 4: a paid booking's fee can be claimed back once, until 30 days after its start date. */

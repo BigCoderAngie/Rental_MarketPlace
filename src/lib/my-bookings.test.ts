@@ -4,7 +4,7 @@ import { groupByTab, recentActivity, tabOf, type MyRequest } from "./my-bookings
 const base: MyRequest = {
   id: "1", item_id: "i", item_name: "Camera", category: "electronics", photo_path: null, area: null, town: "Windhoek",
   start_date: "2026-11-14", end_date: "2026-11-16", quantity: 1, total: 1950, deposit: 5000, status: "REQUESTED",
-  decline_reason: null, expires_at: "2026-11-11T08:00:00Z", created_at: "2026-11-10T08:00:00Z", paid_at: null, owner: null, address: null,
+  decline_reason: null, expires_at: "2026-11-11T08:00:00Z", created_at: "2026-11-10T08:00:00Z", answered_at: null, paid_at: null, owner: null, address: null,
 };
 
 describe("tabOf", () => {
