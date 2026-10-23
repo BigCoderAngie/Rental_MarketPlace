@@ -6,12 +6,12 @@ import { supabaseEnv } from "@/lib/supabase/env";
 // Signed-out visitors may open these (build kit rule 20: Home, Explore and
 // item pages); /q/ and /b/ are the customer's quote and booking links.
 // PUBLIC_PAGES match exactly: "/" is the homepage, and as a prefix it would match every page.
-const PUBLIC_PATHS = ["/login", "/signin", "/join", "/signup/", "/auth", "/q/", "/b/", "/items/"];
+const PUBLIC_PATHS = ["/login", "/signin", "/join", "/signup", "/auth", "/q/", "/b/", "/items/"];
 // /styleguide is a design check page for your computer only (its page answers 404 on the live site).
 const PUBLIC_PAGES = ["/", "/explore", "/terms", "/privacy", ...(process.env.NODE_ENV === "production" ? [] : ["/styleguide"])];
 // Sign-in and sign-up pages that make no sense once signed in. Not "Choose a
 // new password" or "Check your email", which people reach from an email link.
-const SIGNED_OUT_ONLY = ["/signin", "/signin/code", "/signin/forgot", "/join", "/signup/renter", "/signup/renter/about", "/signup/owner", "/signup/owner/details"];
+const SIGNED_OUT_ONLY = ["/signin", "/signin/code", "/signin/forgot", "/join", "/signup", "/signup/about"];
 
 // Refreshes the Supabase session on every request and sends signed-out
 // visitors to the sign-in page.
@@ -44,7 +44,7 @@ export async function proxy(request: NextRequest) {
   // Signed-in people who open a sign-in or sign-up page go where ?next= says,
   // else owners' links to their dashboard and everyone else home.
   if (signedIn && SIGNED_OUT_ONLY.includes(path)) {
-    const next = safeNextPath(request.nextUrl.searchParams.get("next")) ?? (path.startsWith("/signup/owner") ? "/owner" : "/");
+    const next = safeNextPath(request.nextUrl.searchParams.get("next")) ?? (request.nextUrl.searchParams.get("start") === "earn" ? "/owner" : "/");
     return redirectKeepingSession(new URL(next, request.url), response);
   }
 

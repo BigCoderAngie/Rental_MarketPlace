@@ -37,25 +37,26 @@ export function validateAccount(input: AccountInput): Errors<keyof AccountInput>
   return errors;
 }
 
-export type RenterDetails = { town: string; firstGoal: string; terms: boolean };
-export type OwnerDetails = { ownerKind: string; businessName: string; town: string; feeAcknowledged: boolean; terms: boolean };
+/** What an owner answers once, at sign-up (picking Earn) or before their first listing. */
+export type OwnerTerms = { ownerKind: string; businessName: string; feeAcknowledged: boolean };
+/** Step 2 of the one sign-up: everyone answers town, Rent or Earn and Terms; Earn adds the owner questions. */
+export type AboutYou = { town: string; firstGoal: string; terms: boolean } & OwnerTerms;
 
 const TERMS_ERROR = "Tick this box to agree to the Terms and Conditions and Privacy Policy.";
 
-export function validateRenterDetails(input: RenterDetails): Errors<keyof RenterDetails> {
-  const errors: Errors<keyof RenterDetails> = {};
-  if (!SIGNUP_TOWNS.includes(input.town)) errors.town = "Choose your town.";
-  if (input.firstGoal !== "rent" && input.firstGoal !== "earn") errors.firstGoal = "Choose what you want to do first.";
-  if (!input.terms) errors.terms = TERMS_ERROR;
+export function validateOwnerTerms(input: OwnerTerms): Errors<keyof OwnerTerms> {
+  const errors: Errors<keyof OwnerTerms> = {};
+  if (input.ownerKind !== "individual" && input.ownerKind !== "business") errors.ownerKind = "Choose how you are listing.";
+  if (input.ownerKind === "business" && !input.businessName.trim()) errors.businessName = "Enter your business name.";
+  if (!input.feeAcknowledged) errors.feeAcknowledged = "Tick this box to confirm you understand the booking fee.";
   return errors;
 }
 
-export function validateOwnerDetails(input: OwnerDetails): Errors<keyof OwnerDetails> {
-  const errors: Errors<keyof OwnerDetails> = {};
-  if (input.ownerKind !== "individual" && input.ownerKind !== "business") errors.ownerKind = "Choose how you are listing.";
-  if (input.ownerKind === "business" && !input.businessName.trim()) errors.businessName = "Enter your business name.";
+export function validateAboutYou(input: AboutYou): Errors<keyof AboutYou> {
+  const errors: Errors<keyof AboutYou> = {};
   if (!SIGNUP_TOWNS.includes(input.town)) errors.town = "Choose your town.";
-  if (!input.feeAcknowledged) errors.feeAcknowledged = "Tick this box to confirm you understand the booking fee.";
+  if (input.firstGoal !== "rent" && input.firstGoal !== "earn") errors.firstGoal = "Choose what you want to do first.";
+  if (input.firstGoal === "earn") Object.assign(errors, validateOwnerTerms(input));
   if (!input.terms) errors.terms = TERMS_ERROR;
   return errors;
 }

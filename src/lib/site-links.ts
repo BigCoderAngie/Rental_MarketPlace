@@ -14,8 +14,9 @@ export const ROUTES = {
   explore: "/explore", // Part 5
   signIn: "/signin",
   join: "/join",
-  renterSignUp: "/signup/renter",
-  ownerSignUp: "/signup/owner",
+  // One sign-up for everyone; starting from "I want to earn" opens the owner questions.
+  renterSignUp: "/signup",
+  ownerSignUp: "/signup?start=earn",
   welcome: "/welcome",
   listItem: "/owner/list", // Part 8
   myBookings: "/my/bookings", // Part 7

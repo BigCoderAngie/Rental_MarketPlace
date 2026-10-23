@@ -8,6 +8,7 @@ import { CheckDot } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { FaqLink } from "@/components/signup-pages";
 import { safeNextPath } from "@/lib/signup";
+import { signupHref } from "@/lib/signup-start";
 import { ROUTES } from "@/lib/site-links";
 
 export const metadata: Metadata = { title: "Join RentLoop" };
@@ -18,6 +19,7 @@ export default async function JoinPage({ searchParams }: PageProps<"/join">) {
   // Where to go after sign-up, for example the item a visitor wanted to request (build kit rule 20).
   const next = safeNextPath(String((await searchParams).next ?? ""));
   const withNext = (href: string) => (next ? `${href}?${new URLSearchParams({ next })}` : href);
+  // Both cards open the same sign-up; the card only picks where it starts.
 
   return (
     <div className="min-h-screen bg-background">
@@ -59,7 +61,7 @@ export default async function JoinPage({ searchParams }: PageProps<"/join">) {
             title="I want to rent"
             icon={<LineIcon size={24}><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></LineIcon>}
             points={["Send free requests, no fees for renters", "See photos, prices and reviews first", "Pay the owner directly when you collect"]}
-            href={withNext(ROUTES.renterSignUp)}
+            href={signupHref(ROUTES.renterSignUp, "rent", next)}
             action="Sign up to rent →"
           />
           <PathCard
@@ -68,7 +70,7 @@ export default async function JoinPage({ searchParams }: PageProps<"/join">) {
             title="I want to earn"
             icon={<LineIcon size={24}><path d="M12 5v14M5 12h14" /></LineIcon>}
             points={["N$0 to list, you set the price", "Approve every booking yourself", "Pay a small booking fee only when you accept a renter"]}
-            href={withNext(ROUTES.ownerSignUp)}
+            href={signupHref(ROUTES.renterSignUp, "earn", next)}
             action="Sign up to list →"
           />
         </div>

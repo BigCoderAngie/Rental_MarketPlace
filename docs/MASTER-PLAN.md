@@ -83,6 +83,10 @@ These choices were made while building Parts 5 to 10 without stopping to ask. Ea
 8. **Owner links** ("For businesses", "List an item") go to owner sign-up for visitors; signed-in owners land on their dashboard. After sign-in, hire businesses go to their calendar, individual owners to /owner, renters to the home page.
 9. **768 to 1023 px**: the header nav folds into the menu button and the Explore filters open as the bottom sheet (decision 7). From 1024 to 1279 px the header search hides to make room for the nav.
 
+## One sign-up (decided 23 October 2026)
+
+One account rents and lists, so there is one sign-up instead of the kit's two paths. Join keeps both cards ("I want to rent", "I want to earn"); they open the same two steps (`/signup`, `/signup/about`) and only pick where it starts. Step 2 asks everyone for town, "What do you want to do first?" and the Terms box; picking "Earn from my things" also shows the owner questions (individual or hire business, business name, verify ID later) and the required booking fee box. People who signed up to rent answer those owner questions and the fee box once, on their first List an item. The old `/signup/renter` and `/signup/owner` addresses forward to the new ones. The renter form's "I run a hire business" tick is gone: picking Earn and then "A hire business" covers it. Members of an existing hire business are not asked the owner questions.
+
 ## In scope: the MVP, in this order
 
 1. **Restyle.** Shared parts first (top bar, sidebar, footer strip, stat cards, step indicator), then each staff page, then the customer pages, then the public homepage.

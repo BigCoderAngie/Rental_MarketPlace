@@ -4,9 +4,9 @@ import {
   hasErrors,
   normalizeNamibianMobile,
   safeNextPath,
+  validateAboutYou,
   validateAccount,
-  validateOwnerDetails,
-  validateRenterDetails,
+  validateOwnerTerms,
 } from "./signup";
 
 const goodAccount = { fullName: "Tangeni Amupolo", email: "t@example.com", phone: "81 234 5678", password: "longenough", confirm: "longenough" };
@@ -37,28 +37,36 @@ describe("validateAccount", () => {
   });
 });
 
-describe("validateRenterDetails", () => {
+describe("validateAboutYou", () => {
+  const renter = { town: "Windhoek", firstGoal: "rent", terms: true, ownerKind: "", businessName: "", feeAcknowledged: false };
+
   it("blocks sign-up until the terms are ticked", () => {
-    expect(validateRenterDetails({ town: "Windhoek", firstGoal: "rent", terms: false }).terms).toMatch(/Terms and Conditions/);
-    expect(hasErrors(validateRenterDetails({ town: "Windhoek", firstGoal: "rent", terms: true }))).toBe(false);
+    expect(validateAboutYou({ ...renter, terms: false }).terms).toMatch(/Terms and Conditions/);
+    expect(hasErrors(validateAboutYou(renter))).toBe(false);
   });
 
-  it("only accepts towns from the list", () => {
-    expect(validateRenterDetails({ town: "Atlantis", firstGoal: "earn", terms: true }).town).toBeDefined();
+  it("only asks renters for town, a choice and the terms", () => {
+    expect(validateAboutYou({ ...renter, town: "Atlantis" }).town).toBeDefined();
+    expect(validateAboutYou({ ...renter, firstGoal: "" }).firstGoal).toBeDefined();
+  });
+
+  it("asks people who pick Earn for the owner questions and the fee box too", () => {
+    const errors = validateAboutYou({ ...renter, firstGoal: "earn" });
+    expect(Object.keys(errors).sort()).toEqual(["feeAcknowledged", "ownerKind"]);
+    expect(hasErrors(validateAboutYou({ ...renter, firstGoal: "earn", ownerKind: "individual", feeAcknowledged: true }))).toBe(false);
   });
 });
 
-describe("validateOwnerDetails", () => {
-  const good = { ownerKind: "individual", businessName: "", town: "Rundu", feeAcknowledged: true, terms: true };
+describe("validateOwnerTerms", () => {
+  const good = { ownerKind: "individual", businessName: "", feeAcknowledged: true };
 
-  it("needs both the booking fee box and the terms box", () => {
-    const errors = validateOwnerDetails({ ...good, feeAcknowledged: false, terms: false });
-    expect(Object.keys(errors).sort()).toEqual(["feeAcknowledged", "terms"]);
+  it("needs the booking fee box", () => {
+    expect(Object.keys(validateOwnerTerms({ ...good, feeAcknowledged: false }))).toEqual(["feeAcknowledged"]);
   });
 
   it("asks hire businesses for their name only", () => {
-    expect(hasErrors(validateOwnerDetails(good))).toBe(false);
-    expect(validateOwnerDetails({ ...good, ownerKind: "business" }).businessName).toBeDefined();
+    expect(hasErrors(validateOwnerTerms(good))).toBe(false);
+    expect(validateOwnerTerms({ ...good, ownerKind: "business" }).businessName).toBeDefined();
   });
 });
 

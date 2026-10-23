@@ -9,6 +9,7 @@ import { Button, buttonClasses, focusRingClass } from "@/components/button";
 import { CATEGORY_ICONS } from "@/components/category-tiles";
 import { CheckIcon } from "@/components/icons";
 import { ListingPhotos, type UploadedPhoto } from "@/components/listing-photos";
+import { OwnerQuestions } from "@/components/owner-questions";
 import { LogoMark } from "@/components/logo";
 import { COLLECTION_TOWNS, MAX_TITLE, parseAmount } from "@/lib/listing";
 import { CONDITIONS } from "@/lib/requests";
@@ -25,7 +26,7 @@ const tile = "b3 rl-btn rl-w h-auto cursor-pointer flex-col gap-2 px-2 py-4 text
  * in the middle, the live preview, "How you get paid" and Publish on the right.
  * Phones: one step at a time with progress bars and a sticky button.
  */
-export function ListingForm({ defaultTown }: { defaultTown: string }) {
+export function ListingForm({ defaultTown, askOwnerTerms }: { defaultTown: string; askOwnerTerms: boolean }) {
   const [state, formAction, pending] = useActionState<ListingState, FormData>(saveListing, {});
   const [step, setStep] = useState(0);
   const [category, setCategory] = useState("");
@@ -34,6 +35,7 @@ export function ListingForm({ defaultTown }: { defaultTown: string }) {
   const [area, setArea] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [photos, setPhotos] = useState<UploadedPhoto[]>([]);
+  const [feeTicked, setFeeTicked] = useState(false);
   const errors = state.errors ?? {};
 
   // Phones show one step at a time: when new problems come back, open the step holding the first one.
@@ -41,10 +43,10 @@ export function ListingForm({ defaultTown }: { defaultTown: string }) {
   if (state.errors !== seenErrors) {
     setSeenErrors(state.errors);
     const keys = Object.keys(state.errors ?? {});
-    const stepOf = (k: string) => (k === "category" ? 0 : ["photos", "town", "area"].includes(k) ? 2 : 1);
+    const stepOf = (k: string) => (["category", "ownerKind", "businessName", "feeAcknowledged"].includes(k) ? 0 : ["photos", "town", "area"].includes(k) ? 2 : 1);
     if (keys.length) setStep(Math.min(...keys.map(stepOf)));
   }
-  const done = [Boolean(category), Boolean(title && price), photos.length > 0 && Boolean(area)];
+  const done = [Boolean(category) && (!askOwnerTerms || feeTicked), Boolean(title && price), photos.length > 0 && Boolean(area)];
 
   // Call the action ourselves so a server problem doesn't clear the form (React resets forms after a form action).
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -58,7 +60,16 @@ export function ListingForm({ defaultTown }: { defaultTown: string }) {
   const categoryLabel = CATEGORIES.find((c) => c.slug === category)?.label ?? "Category";
 
   return (
-    <form id="listing-form" onSubmit={submit} noValidate className="min-h-screen bg-background">
+    <form
+      id="listing-form"
+      onSubmit={submit}
+      onChange={(e) => {
+        const target = e.target as unknown as HTMLInputElement;
+        if (target.name === "feeAcknowledged") setFeeTicked(target.checked);
+      }}
+      noValidate
+      className="min-h-screen bg-background"
+    >
       <header className="sticky top-0 z-10 border-b border-border bg-card">
         <div className="wrap flex min-h-[64px] items-center gap-3 py-2 md:min-h-20 md:gap-5">
           <Link href="/owner" aria-label="Close" className={`flex h-11 w-11 flex-none items-center justify-center rounded text-xl ${focusRingClass}`}>
@@ -102,6 +113,13 @@ export function ListingForm({ defaultTown }: { defaultTown: string }) {
 
           <div className="flex flex-col gap-5">
             <FormMessage message={state.message} />
+
+            {askOwnerTerms && (
+              <section className={`${card} ${show(0)}`}>
+                <Heading title="Before your first listing" line="You answer these once. Renting stays free; you pay a small fee only when you accept a renter." />
+                <OwnerQuestions errors={errors} />
+              </section>
+            )}
 
             <section className={`${card} ${show(0)}`}>
               <Heading title="What are you renting out?" line="Each category asks for its own details." />
@@ -214,7 +232,7 @@ export function ListingForm({ defaultTown }: { defaultTown: string }) {
         )}
         {step < 2 ? (
           <>
-            <button type="button" onClick={() => setStep(step + 1)} className={buttonClasses({ size: "lg", className: "flex-1 md:hidden" })}>
+            <button type="button" disabled={step === 0 && !done[0]} onClick={() => setStep(step + 1)} className={buttonClasses({ size: "lg", className: "flex-1 md:hidden" })}>
               {step === 0 ? "Continue to details →" : "Continue to photos →"}
             </button>
             <Button type="submit" name="intent" value="publish" variant="yellow" size="lg" disabled={pending} className="hidden flex-1 md:inline-flex">
