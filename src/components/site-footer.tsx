@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { RentLoopMark } from "@/components/top-bar";
+import { Logo } from "@/components/logo";
 import { SUPPORT_WHATSAPP } from "@/lib/contact";
 import { whatsAppLink } from "@/lib/whatsapp";
 
@@ -19,10 +19,7 @@ export function SiteFooter() {
     <footer className="bg-deep text-deep-muted">
       <div className="mx-auto grid max-w-5xl gap-8 px-4 py-10 text-center text-sm sm:text-left lg:grid-cols-[1fr_auto_auto] lg:items-center">
         <div className="flex flex-col items-center gap-2 sm:items-start">
-          <p className="flex items-center gap-2 text-lg font-bold tracking-tight text-deep-foreground">
-            <RentLoopMark className="text-deep-foreground" arrows="var(--deep)" />
-            RentLoop
-          </p>
+          <Logo onDeep className="text-[22px] [--mark:36px]" />
           <p>Booking software for Namibian hire businesses</p>
         </div>
 

@@ -1,53 +1,61 @@
 @import "tailwindcss";
 
 /*
- * RentLoop theme, from the mockups in docs/design (see docs/DESIGN.md). Use
+ * RentLoop theme. Exact values from the build kit (docs/build-kit/01-DESIGN-SYSTEM.md
+ * and docs/build-kit/assets/styles/rentloop-tokens.css); see docs/DESIGN.md. Use
  * these names (bg-primary, text-muted-foreground, border-border, bg-card,
  * bg-deep, text-danger, ...) instead of Tailwind's built-in colours (zinc,
  * emerald, amber, red, ...) so the whole app changes from this one place.
  *
  * Contrast rules: every text colour here is at least 4.5:1 on the
- * background it is paired with. Star yellow (accent) is only 1.9:1 on white,
+ * background it is paired with. Yellow (accent) is only about 1.4:1 on cream,
  * so never use text-accent: use it as a fill with text-accent-foreground on
  * top, and use text-accent-ink for warning text. Bright green (highlight) is
- * only for headline words on deep green or a dark photo (2.0:1 on white).
+ * only for headline words on deep green or a dark photo (1.8:1 on cream).
  */
 :root {
   /* Core palette */
-  --background: #ffffff; /* white page */
-  --foreground: #0f1d17; /* 17.4:1 on white */
+  --background: #f6f2ea; /* kit cream page; cards stay white */
+  --foreground: #1a2420; /* kit ink: 14.3:1 on cream, 15.9:1 on white */
   --primary: #00743f; /* button green, measured #007440; white text 5.9:1 */
   --primary-foreground: #ffffff;
-  --accent: #f3b017; /* star yellow: fill only, never text */
-  --accent-foreground: #0f1d17; /* 9.1:1 on accent */
+  --accent: #ffc83d; /* kit yellow: fill only, never text */
+  --accent-foreground: #06402f; /* deep green on yellow: 7.6:1 */
   --danger: #b7472a; /* terracotta: 5.3:1 on white */
   --danger-foreground: #ffffff;
-  --muted: #f2f4f5; /* quiet backgrounds: hover, placeholders, bars */
-  --muted-foreground: #5b6670; /* hints, captions, meta text: 5.9:1 on white, 5.3:1 on muted */
-  --border: #e3e8eb; /* light grey card borders, measured #eaeef0 */
+  --muted: #efe9dd; /* quiet warm fills: hover rows, bars */
+  --muted-foreground: #5b6670; /* kit muted: 5.9:1 on white, 5.2:1 on cream, 4.8:1 on muted */
+  --border: #e6e0d4; /* kit line: card borders, dividers */
   --card: #ffffff;
 
   /* Deep green: header bands, footer strip, dashboard sidebar */
   --deep: #06402f; /* measured #084838 (footer) and #003828 (sidebar) */
   --deep-foreground: #ffffff; /* 11.8:1 on deep */
-  --deep-muted: #b9d3c5; /* quiet text on deep: 7.4:1 */
+  --deep-muted: #cfe3d8; /* kit on-deep: body text on deep green, 8.8:1 */
+  --deep-2: #0b5a3e; /* circles, cards and toggles on deep green */
+  --on-deep-2: #9fe0b8; /* italic slogan and highlights on deep green: 7.8:1 */
   --highlight: #3dd15f; /* bright green headline words, only on deep: 5.9:1 */
 
   /* Extras the app needs */
   --foreground-soft: #34403a; /* secondary headings, strong labels */
-  --input: #cdd5da; /* input borders, dashed upload box */
-  --primary-strong: #005c32; /* primary button hover: white text 8.2:1 */
-  --primary-soft: #e6f4ec; /* pale green panels, icon circles, confirmed notes */
+  --input: #cdc5b5; /* kit line-strong: input borders, white-button edge */
+  --primary-strong: #005c32; /* link hover: white text 8.2:1 */
+  --primary-edge: #00502b; /* the 4px edge under green buttons */
+  --primary-soft: #e3f1e8; /* pale green panels, icon circles, confirmed notes */
   --primary-border: #b8dcc6;
-  --primary-ink: #0b4d2c; /* text on primary-soft: 8.8:1 */
-  --accent-soft: #fdf3dc; /* waiting and warning pills and notes */
-  --accent-border: #f3d68a;
-  --accent-ink: #7a4d00; /* warning text: 6.6:1 on accent-soft */
+  --primary-ink: #0b4d2c; /* kit mint-text: text on primary-soft 8.5:1, logo wordmark */
+  --accent-edge: #d9a11f; /* the 4px edge under yellow buttons */
+  --accent-soft: #fff8e6; /* kit warn: waiting and warning notes */
+  --accent-border: #f2dfa8;
+  --accent-ink: #5c3a00; /* kit warn text: 9.6:1 on accent-soft */
+  --star: #e8a317; /* star fills on cards (fill only) */
+  --star-ink: #7a4d00; /* stars inline in text: 6.5:1 on cream */
+  --lock: #ddd5c6; /* bars standing in for hidden names, phones, addresses */
   --danger-soft: #fbe9e4;
   --danger-border: #f0c4b8;
   --danger-ink: #6e2716; /* text on danger-soft: 9.1:1 */
-  --info-soft: #e3eef6; /* plan notices */
-  --info-ink: #1e4351;
+  --info-soft: #e8f0fa; /* kit info: "Waiting for owner" pill, plan notices */
+  --info-ink: #1f4a7a;
 
   /* Phone bottom tab bar height (at least 44px tap targets); the app layout pads the page by this much. */
   --tab-bar-height: 3.5rem;
@@ -69,15 +77,22 @@
   --color-deep: var(--deep);
   --color-deep-foreground: var(--deep-foreground);
   --color-deep-muted: var(--deep-muted);
+  --color-deep-2: var(--deep-2);
+  --color-on-deep-2: var(--on-deep-2);
   --color-highlight: var(--highlight);
 
   --color-foreground-soft: var(--foreground-soft);
   --color-input: var(--input);
   --color-primary-strong: var(--primary-strong);
+  --color-primary-edge: var(--primary-edge);
   --color-primary-soft: var(--primary-soft);
   --color-primary-border: var(--primary-border);
   --color-primary-ink: var(--primary-ink);
+  --color-accent-edge: var(--accent-edge);
   --color-accent-soft: var(--accent-soft);
+  --color-star: var(--star);
+  --color-star-ink: var(--star-ink);
+  --color-lock: var(--lock);
   --color-accent-border: var(--accent-border);
   --color-accent-ink: var(--accent-ink);
   --color-danger-soft: var(--danger-soft);
@@ -86,7 +101,17 @@
   --color-info-soft: var(--info-soft);
   --color-info-ink: var(--info-ink);
 
-  --font-sans: var(--font-geist), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Kit radii: rounded-btn, rounded-card, rounded-panel ... */
+  --radius-btn-sm: 12px;
+  --radius-btn: 14px;
+  --radius-btn-lg: 16px;
+  --radius-input: 14px;
+  --radius-card: 18px;
+  --radius-panel: 22px;
+  --radius-hero: 28px;
+  --radius-section: 32px;
+
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
@@ -95,6 +120,49 @@ body {
   /* viewport-fit=cover (root layout) lets the page reach the notch in landscape; keep content clear of it. */
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+}
+
+/* Content width from the kit: 1360px max, 32px sides (16px on phones). */
+@utility wrap {
+  width: 100%;
+  max-width: 1360px;
+  margin-inline: auto;
+  padding-inline: 16px;
+  box-sizing: border-box;
+  @media (width >= 48rem) {
+    padding-inline: 32px;
+  }
+}
+
+/*
+ * The lit, press-down button, copied from docs/build-kit/assets/styles/rentloop-tokens.css.
+ * Do not change these values: they are the approved design. Buttons must use
+ * background-color, never the `background` shorthand, or the gradient is lost.
+ * Variant and size classes are prefixed rl- so they never clash with Tailwind.
+ * Additions (marked): [data-pressed] and [data-hover] for the styleguide demo,
+ * and no movement for people who turn motion off.
+ */
+@layer components {
+  .b3{--edge:#CDC5B5;--glow:rgba(26,36,32,.10);background-image:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0) 55%,rgba(0,0,0,.06));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.18),0 4px 0 var(--edge),0 6px 3px -1px rgba(0,0,0,.16),0 12px 24px -8px var(--glow);transition:transform .06s ease,box-shadow .06s ease,filter .12s ease;cursor:pointer}
+  .b3:hover,.b3[data-hover]{filter:brightness(1.05)}
+  .b3:active,.b3[data-pressed]{transform:translateY(4px);background-image:linear-gradient(0deg,rgba(255,255,255,.12),rgba(255,255,255,0) 55%,rgba(0,0,0,.08));box-shadow:inset 0 2px 3px rgba(0,0,0,.18),inset 0 -1px 0 rgba(255,255,255,.12),0 0 0 var(--edge),0 1px 1px rgba(0,0,0,.14),0 4px 10px -6px var(--glow)}
+  .b3:disabled{cursor:not-allowed;opacity:.55;filter:none}
+  .rl-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:14px;font-family:inherit;font-weight:700;font-size:15px;text-decoration:none;border:0;box-sizing:border-box;white-space:nowrap}
+  .rl-sm{height:40px;padding:0 16px;border-radius:12px;font-size:14px}
+  .rl-lg{height:56px;border-radius:16px;font-size:16px}
+  .rl-g{background-color:#00743F;color:#fff;--edge:#00502B;--glow:rgba(0,116,63,.45)}
+  .rl-g:hover{color:#fff}
+  .rl-y{background-color:#FFC83D;color:#06402F;--edge:#D9A11F;--glow:rgba(255,200,61,.55)}
+  .rl-y:hover{color:#06402F}
+  .rl-w{background-color:#fff;color:#1A2420;border:1px solid #CDC5B5;--edge:#CDC5B5}
+  .rl-w:hover{color:#1A2420}
+  .rl-lt{background-color:#E3F1E8;color:#0B4D2C;--edge:#B8DCC6;--glow:rgba(0,116,63,.18)}
+  .rl-ol{background-color:transparent;color:#fff;border:1px solid #3E8E68;--edge:#3E8E68;--glow:rgba(62,142,104,.35)}
+  .rl-ol:hover{color:#fff}
+  .rl-chip{height:40px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:600}
+  .rl-cta{width:100%;height:46px;border-radius:999px;font-size:15px}
+  /* Addition: when motion is off the button stays still and keeps its resting look and edge. */
+  @media (prefers-reduced-motion: reduce){.b3{transition:none}.b3:active,.b3[data-pressed]{transform:none;background-image:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0) 55%,rgba(0,0,0,.06));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.18),0 4px 0 var(--edge),0 6px 3px -1px rgba(0,0,0,.16),0 12px 24px -8px var(--glow)}}
 }
 
 @media (prefers-reduced-motion: no-preference) {

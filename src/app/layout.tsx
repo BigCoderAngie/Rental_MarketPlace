@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
+// Inter 400 to 800 (one variable font file), as in the build kit.
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "RentLoop",
@@ -14,12 +15,13 @@ export const viewport: Viewport = {
   initialScale: 1,
   // Lets env(safe-area-inset-bottom) report the iPhone home bar, so the tab bar can sit above it.
   viewportFit: "cover",
-  themeColor: "#3f6b4c",
+  // The browser bar matches the white header (--card in globals.css).
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geist.variable} h-full antialiased`}>
+    <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full">{children}</body>
     </html>
   );

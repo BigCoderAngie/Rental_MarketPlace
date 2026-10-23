@@ -82,10 +82,10 @@ export default async function HomePage() {
             <span className="block">Send quotes on WhatsApp.</span>
           </h1>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/login" className={`${buttonClass} ${focusRingClass}`}>
+            <Link href="/login" className={buttonClass}>
               Start free
             </Link>
-            <a href="#how-it-works" className={`${secondaryButtonClass} ${focusRingClass}`}>
+            <a href="#how-it-works" className={secondaryButtonClass}>
               See how it works
             </a>
           </div>
@@ -183,7 +183,7 @@ export default async function HomePage() {
           </ul>
         )}
         <div className="mt-6">
-          <Link href="/login" className={`${buttonClass} ${focusRingClass}`}>
+          <Link href="/login" className={buttonClass}>
             Start free
           </Link>
         </div>

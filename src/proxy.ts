@@ -6,7 +6,8 @@ import { supabaseEnv } from "@/lib/supabase/env";
 // and booking links. PUBLIC_PAGES match exactly: "/" is the homepage, and as
 // a prefix it would match every page.
 const PUBLIC_PATHS = ["/login", "/auth", "/q/", "/b/"];
-const PUBLIC_PAGES = ["/", "/terms", "/privacy"];
+// /styleguide is a design check page for your computer only (its page answers 404 on the live site).
+const PUBLIC_PAGES = ["/", "/terms", "/privacy", ...(process.env.NODE_ENV === "production" ? [] : ["/styleguide"])];
 
 // Refreshes the Supabase session on every request and sends signed-out
 // visitors to the login page.
