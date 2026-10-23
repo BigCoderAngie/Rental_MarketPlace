@@ -21,7 +21,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    // data-scroll-behavior lets Next.js turn off the smooth scrolling (globals.css) while it changes pages.
+    <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full">{children}</body>
     </html>
   );

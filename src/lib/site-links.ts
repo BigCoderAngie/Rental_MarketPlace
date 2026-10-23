@@ -1,7 +1,7 @@
 // Links in the public shell: top strip, header, phone menu, category bar and
 // footer (docs/build-kit/reference/desktop/SiteHome.html and SiteExplore.html).
 // Routes follow docs/build-kit/03-PAGES-AND-ROUTES.md. Pages that are not built
-// yet are placeholders: signed-out visitors land on /login until they exist.
+// yet are placeholders: signed-out visitors land on /signin until they exist.
 
 export type SiteLink = { href: string; label: string };
 
@@ -11,9 +11,11 @@ export type Viewer = { name: string } | null;
 export const ROUTES = {
   home: "/",
   explore: "/explore", // Part 5
-  signIn: "/login", // the kit's /signin page arrives in Part 4
-  join: "/login", // the kit's /join page arrives in Part 4
-  ownerSignUp: "/login", // the kit's /signup/owner page arrives in Part 4
+  signIn: "/signin",
+  join: "/join",
+  renterSignUp: "/signup/renter",
+  ownerSignUp: "/signup/owner",
+  welcome: "/welcome",
   listItem: "/owner/list", // Part 8
   myBookings: "/my/bookings", // Part 7
   owner: "/owner", // Part 8

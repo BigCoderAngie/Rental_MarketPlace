@@ -27,3 +27,12 @@ export function friendlyError(error: { message: string }): string {
   }
   return error.message;
 }
+
+/**
+ * Where someone goes after signing in: their business calendar if they run a
+ * hire business on RentLoop, otherwise the marketplace home.
+ */
+export async function homeAfterSignIn(supabase: Awaited<ReturnType<typeof createClient>>): Promise<string> {
+  const { data } = await supabase.from("businesses").select("id").limit(1).maybeSingle();
+  return data ? "/calendar" : "/";
+}

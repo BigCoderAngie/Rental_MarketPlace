@@ -1,16 +1,20 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { safeNextPath } from "@/lib/signup";
 import { supabaseEnv } from "@/lib/supabase/env";
 
 // Signed-out visitors may open these; /q/ and /b/ are the customer's quote
 // and booking links. PUBLIC_PAGES match exactly: "/" is the homepage, and as
 // a prefix it would match every page.
-const PUBLIC_PATHS = ["/login", "/auth", "/q/", "/b/"];
+const PUBLIC_PATHS = ["/login", "/signin", "/join", "/signup/", "/auth", "/q/", "/b/"];
 // /styleguide is a design check page for your computer only (its page answers 404 on the live site).
 const PUBLIC_PAGES = ["/", "/terms", "/privacy", ...(process.env.NODE_ENV === "production" ? [] : ["/styleguide"])];
+// Sign-in and sign-up pages that make no sense once signed in. Not "Choose a
+// new password" or "Check your email", which people reach from an email link.
+const SIGNED_OUT_ONLY = ["/signin", "/signin/code", "/signin/forgot", "/join", "/signup/renter", "/signup/renter/about", "/signup/owner", "/signup/owner/details"];
 
 // Refreshes the Supabase session on every request and sends signed-out
-// visitors to the login page.
+// visitors to the sign-in page.
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
   const { url, key } = supabaseEnv();
@@ -37,28 +41,32 @@ export async function proxy(request: NextRequest) {
   const signedIn = Boolean(data?.claims);
   const path = request.nextUrl.pathname;
 
-  // The homepage is for visitors; signed-in users start on their calendar.
-  if (signedIn && path === "/") {
-    const calendar = request.nextUrl.clone();
-    calendar.pathname = "/calendar";
-    const redirect = NextResponse.redirect(calendar);
-    // Keep any session cookies refreshed above, and the headers that stop them being cached.
-    response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
-    for (const header of ["cache-control", "expires", "pragma"]) {
-      const value = response.headers.get(header);
-      if (value) redirect.headers.set(header, value);
-    }
-    return redirect;
+  // Signed-in people who open a sign-in or sign-up page go where ?next= says, or home.
+  if (signedIn && SIGNED_OUT_ONLY.includes(path)) {
+    const next = safeNextPath(request.nextUrl.searchParams.get("next")) ?? "/";
+    return redirectKeepingSession(new URL(next, request.url), response);
   }
 
   if (!signedIn && !PUBLIC_PAGES.includes(path) && !PUBLIC_PATHS.some((p) => path.startsWith(p))) {
-    const login = request.nextUrl.clone();
-    login.pathname = "/login";
-    login.search = "";
-    return NextResponse.redirect(login);
+    const signIn = request.nextUrl.clone();
+    signIn.pathname = "/signin";
+    // Come back here after signing in (build kit rule 20).
+    signIn.search = new URLSearchParams({ next: path + request.nextUrl.search }).toString();
+    return redirectKeepingSession(signIn, response);
   }
 
   return response;
+}
+
+// A redirect that keeps any session cookies refreshed above, and the headers that stop them being cached.
+function redirectKeepingSession(to: URL, response: NextResponse): NextResponse {
+  const redirect = NextResponse.redirect(to);
+  response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
+  for (const header of ["cache-control", "expires", "pragma"]) {
+    const value = response.headers.get(header);
+    if (value) redirect.headers.set(header, value);
+  }
+  return redirect;
 }
 
 export const config = {

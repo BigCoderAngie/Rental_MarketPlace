@@ -6,8 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 
 // Public pages: the homepage, terms and privacy, inside the build kit shell.
 export default async function MarketingLayout({ children }: LayoutProps<"/">) {
-  // Signed-in users only reach terms and privacy here for now (proxy.ts sends
-  // them from the homepage to their calendar), so the header shows who they are.
+  // Everyone sees the home page; signed-in people get List an item and their avatar.
   const { data } = await (await createClient()).auth.getClaims();
   const claims = data?.claims;
   const viewer: Viewer = claims ? { name: displayName(claims.user_metadata?.full_name, claims.email) } : null;

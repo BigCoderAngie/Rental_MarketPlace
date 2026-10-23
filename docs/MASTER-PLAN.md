@@ -52,7 +52,7 @@ The website is now built from the RentLoop build kit in `docs/build-kit/` (refer
 
 1. **Booking fee: 10% from day one**, one setting in the database (not code). The owner sees "Your booking fee (10%)" and "Accept and pay". This replaces decision 2 (0% at launch) and SRS 3.1's launch period.
 2. **The fee is paid through PayToday.** Contact details unlock only after the fee is paid (FR-PV-01), so PayToday must work before launch. Until it is connected, payment runs in a clearly marked test mode.
-3. **Sign in with an email code** (FR-AC-01). The kit's "Mobile code" tab is built but stays off, and Email is the default, until an SMS provider is chosen.
+3. **Sign in with email and password, as in the kit** (changed 23 October 2026; this was "email code"). Sign-up asks for a password and confirm, as the kit shows, and the Email tab signs in with email and password. "Forgot password?" emails a reset link, and "Email me a sign-in code instead" stays for accounts made before passwords. The kit's "Mobile code" tab is built but stays off until an SMS provider is chosen. Sign-up details (name, town, owner type, business name, when Terms and the booking fee box were ticked) are saved on the profile.
 4. **Supabase** stays the database and photo storage.
 5. **Free plan: 15 listings**, the database value today ("2 listings · 13 more").
 6. **App Store and Google Play buttons** show as in the design with a "Coming soon" label and are not clickable. There is no store app in the MVP.
