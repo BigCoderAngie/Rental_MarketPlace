@@ -11,7 +11,11 @@ import { ImagePlaceholder } from "@/components/image-placeholder";
 import { SampleTag } from "@/components/sample-tag";
 import { SearchBar } from "@/components/search-bar";
 import { HERO_CARDS, POPULAR_LISTINGS } from "@/lib/home-samples";
+import { namibiaToday } from "@/lib/dates";
+import { parseExploreParams, upcomingWeekend } from "@/lib/explore";
+import { searchListings, type ListingResult } from "@/lib/listings";
 import { ROUTES, searchHref } from "@/lib/site-links";
+import { createClient } from "@/lib/supabase/server";
 
 const DESCRIPTION =
   "Rent cameras, tents, tools and party gear from people and hire businesses near you, all over Namibia. Free to request, no fees for renters. We only earn when you earn.";
@@ -198,8 +202,16 @@ function BigCollage() {
   );
 }
 
-/** "Popular near you": four sample cards; two columns from 768px, four from 1024px, a sideways row on phones. */
-function PopularNearYou() {
+/**
+ * "Popular near you": the newest real listings in Windhoek (free this weekend
+ * first), or the kit's four sample cards, marked, until owners have listed.
+ * Two columns from 768px, four from 1024px, a sideways row on phones.
+ */
+async function PopularNearYou() {
+  const today = namibiaToday();
+  const supabase = await createClient();
+  const real = await searchListings(supabase, { ...parseExploreParams({}, today), limit: 4 }, upcomingWeekend(today)).catch(() => ({ total: 0, items: [] as ListingResult[] }));
+  const items = real.items.length > 0 ? real.items : null;
   return (
     <section aria-labelledby="popular-title" className="flex flex-col gap-3.5 md:gap-5">
       <SectionHead
@@ -209,7 +221,7 @@ function PopularNearYou() {
         phoneNote="Requests are free."
         side={
           <span className="flex items-center gap-3">
-            <SampleTag />
+            {!items && <SampleTag />}
             <Link href={ROUTES.explore} className={`rounded py-2 text-sm font-semibold whitespace-nowrap text-primary hover:text-primary-strong ${focusRingClass}`}>
               View all →
             </Link>
@@ -217,11 +229,17 @@ function PopularNearYou() {
         }
       />
       <div className="no-scrollbar -mr-4 flex gap-3 overflow-x-auto pr-4 pb-2 md:mr-0 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:pr-0 md:pb-0 lg:grid-cols-4">
-        {POPULAR_LISTINGS.map((item) => (
-          <div key={item.title} className="w-[280px] flex-none md:w-auto">
-            <BookingCard item={item} href={ROUTES.explore} saveHref={ROUTES.signIn} />
-          </div>
-        ))}
+        {items
+          ? items.map((item) => (
+              <div key={item.id} className="w-[280px] flex-none md:w-auto">
+                <BookingCard item={item} href={`/items/${item.id}`} saveHref={`/items/${item.id}`} />
+              </div>
+            ))
+          : POPULAR_LISTINGS.map((item) => (
+              <div key={item.title} className="w-[280px] flex-none md:w-auto">
+                <BookingCard item={item} href={ROUTES.explore} saveHref={ROUTES.signIn} />
+              </div>
+            ))}
       </div>
     </section>
   );

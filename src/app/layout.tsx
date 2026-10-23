@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "RentLoop",
-  description: "Inventory, bookings and calendar for Namibian hire businesses",
+  description: "Rent cameras, tents, tools and party gear from people and hire businesses near you in Namibia. We only earn when you earn.",
 };
 
 export const viewport: Viewport = {

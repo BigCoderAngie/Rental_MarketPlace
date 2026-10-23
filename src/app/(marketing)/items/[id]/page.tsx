@@ -136,7 +136,7 @@ export default async function ItemPage({ params, searchParams }: PageProps<"/ite
 
             <div className="mx-4 flex items-start justify-between gap-4 rounded-card border border-primary-border bg-primary-soft px-5 py-4 md:mx-0 md:px-6 md:py-5">
               <span className="flex flex-col">
-                <span className="text-[28px] font-extrabold tracking-[-0.02em] md:text-[32px]">
+                <span className="text-[28px] font-extrabold tracking-[-0.02em] whitespace-nowrap md:text-[32px]">
                   {formatNadWhole(Number(l.daily_price))} <small className="text-base font-medium text-foreground-soft">/ day</small>
                 </span>
                 <span className="text-sm text-foreground-soft">Minimum {l.min_days} day{l.min_days === 1 ? "" : "s"}</span>

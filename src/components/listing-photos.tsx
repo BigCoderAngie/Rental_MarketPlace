@@ -36,6 +36,8 @@ export function ListingPhotos({ photos, onChange, error }: { photos: UploadedPho
 
   async function onFiles(files: FileList | null) {
     if (!files?.length) return;
+    // Copy now: the picker is cleared right after this starts, which empties the live FileList.
+    const picked = [...files].slice(0, MAX_PHOTOS - photos.length);
     setProblem(undefined);
     const supabase = createClient();
     const { data: businessId, error: businessError } = await supabase.rpc("ensure_owner_business");
@@ -43,9 +45,8 @@ export function ListingPhotos({ photos, onChange, error }: { photos: UploadedPho
       setProblem(businessError.message);
       return;
     }
-    const room = MAX_PHOTOS - photos.length;
     const added: UploadedPhoto[] = [];
-    for (const file of [...files].slice(0, room)) {
+    for (const file of picked) {
       setBusy((n) => n + 1);
       try {
         const blob = await shrink(file);
