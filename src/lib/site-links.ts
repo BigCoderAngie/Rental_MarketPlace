@@ -1,7 +1,8 @@
 // Links in the public shell: top strip, header, phone menu, category bar and
 // footer (docs/build-kit/reference/desktop/SiteHome.html and SiteExplore.html).
 // Routes follow docs/build-kit/03-PAGES-AND-ROUTES.md. Pages that are not built
-// yet are placeholders: signed-out visitors land on /signin until they exist.
+// Owner links point at owner sign-up; signed-in owners who follow them land on
+// their dashboard (proxy.ts).
 
 export type SiteLink = { href: string; label: string };
 
@@ -28,7 +29,7 @@ export const ROUTES = {
 export const HEADER_NAV: SiteLink[] = [
   { href: ROUTES.explore, label: "Browse" },
   { href: ROUTES.howItWorks, label: "How it works" },
-  { href: ROUTES.owner, label: "For businesses" },
+  { href: ROUTES.ownerSignUp, label: "For businesses" },
   { href: ROUTES.help, label: "Help" },
 ];
 
@@ -62,8 +63,8 @@ export const FOOTER_COLUMNS: { title: string; links: SiteLink[] }[] = [
   {
     title: "Earn",
     links: [
-      { href: ROUTES.listItem, label: "List an item" },
-      { href: ROUTES.owner, label: "For hire businesses" },
+      { href: ROUTES.ownerSignUp, label: "List an item" },
+      { href: ROUTES.ownerSignUp, label: "For hire businesses" },
       { href: ROUTES.help, label: "How the booking fee works" },
     ],
   },

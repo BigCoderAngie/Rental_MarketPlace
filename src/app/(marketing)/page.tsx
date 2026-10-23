@@ -144,11 +144,11 @@ function PhotoCard({ label, price, className, style }: { label: string; price: s
   );
 }
 
-/** Below 1280px: the phone reference's small collage, two photos and "Request accepted", under the text. */
+/** Phones: the phone reference's small collage, two photos and "Request accepted", under the text. Hidden from 768px until the big one fits (build kit decision 7). */
 function SmallCollage() {
   const [camera, second] = HERO_CARDS;
   return (
-    <div className="relative mt-2 h-[250px] w-full max-w-[390px] xl:hidden" aria-label="Sample listings" role="group">
+    <div className="relative mt-2 h-[250px] w-full max-w-[390px] md:hidden" aria-label="Sample listings" role="group">
       <PhotoCard
         label={camera!.label}
         price={camera!.price}

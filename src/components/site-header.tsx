@@ -32,20 +32,20 @@ export function SiteHeader({ viewer, current }: { viewer: Viewer; current?: stri
         <SiteMenu viewer={viewer} />
       </div>
 
-      {/* 768px and up: the kit's desktop row; it wraps onto two lines on narrow screens. */}
-      <div className="wrap hidden min-h-[72px] flex-wrap items-center gap-x-7 md:flex">
+      {/* 768px and up: the kit's desktop row. From 768 to 1023px the nav folds into the menu button (build kit decision 7). */}
+      <div className="wrap hidden min-h-[72px] items-center gap-x-4 md:flex lg:gap-x-7">
         <HomeLink className="text-[23px] [--mark:38px]" />
         <HeaderNav current={current} />
         <HeaderSearch />
-        <div className="flex items-center gap-3 py-3">
+        <div className="ml-auto flex flex-none items-center gap-3 py-3">
           {viewer ? (
             <>
               <ButtonLink href={ROUTES.listItem} size="sm">
                 List an item
               </ButtonLink>
-              <Link href={ROUTES.myBookings} className={`flex items-center gap-2.5 rounded-full font-semibold text-foreground ${focusRingClass}`}>
+              <Link href={ROUTES.myBookings} aria-label={`Your bookings, ${viewer.name}`} className={`flex items-center gap-2.5 rounded-full font-semibold text-foreground ${focusRingClass}`}>
                 <Avatar name={viewer.name} />
-                {viewer.name}
+                <span className="hidden xl:inline">{viewer.name}</span>
               </Link>
             </>
           ) : (
@@ -58,6 +58,9 @@ export function SiteHeader({ viewer, current }: { viewer: Viewer; current?: stri
               </ButtonLink>
             </>
           )}
+          <span className="lg:hidden">
+            <SiteMenu viewer={viewer} />
+          </span>
         </div>
       </div>
     </header>
@@ -72,10 +75,10 @@ function HomeLink({ className }: { className: string }) {
   );
 }
 
-/** The header search goes to Explore (Part 5) with the words in ?q=. */
+/** The header search goes to Explore with the words in ?q=. Hidden from 1024 to 1279px, where the full nav needs the room. */
 function HeaderSearch() {
   return (
-    <form action={ROUTES.explore} role="search" className="flex min-w-0 flex-[1_1_240px]">
+    <form action={ROUTES.explore} role="search" className="flex min-w-0 flex-1 lg:hidden xl:flex">
       <label className="flex h-[46px] w-full items-center gap-2.5 rounded-input border border-input bg-card px-4 text-muted-foreground focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary">
         <SearchIcon />
         <span className="sr-only">Search</span>

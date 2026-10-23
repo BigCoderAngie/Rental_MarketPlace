@@ -10,7 +10,7 @@ export function HeaderNav({ current }: { current?: string }) {
   const pathname = usePathname();
   const active = current ?? pathname;
   return (
-    <nav aria-label="Main" className="flex flex-wrap gap-x-[26px]">
+    <nav aria-label="Main" className="hidden flex-wrap gap-x-[26px] lg:flex">
       {HEADER_NAV.map((link) => {
         const on = !link.href.includes("#") && (active === link.href || active.startsWith(`${link.href}/`));
         return (

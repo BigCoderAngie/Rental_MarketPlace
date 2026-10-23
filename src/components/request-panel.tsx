@@ -23,7 +23,7 @@ type Props = {
   isMine: boolean;
 };
 
-const dateInput = "h-12 w-full rounded-btn-sm border border-input bg-card px-3 text-base text-foreground md:text-[15px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+const dateInput = "h-12 w-full rounded-btn-sm border border-input bg-card px-3 text-base text-foreground md:text-[15px] focus:outline-2 focus:outline-offset-2 focus:outline-primary";
 
 /**
  * "Request to book" (SiteItem.html): dates, availability from the calendar,

@@ -37,7 +37,8 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
       <div className="wrap flex flex-col gap-3.5 pt-3.5 pb-10 md:gap-[22px] md:pt-7 md:pb-16">
         <div className="flex gap-2">
           <SearchForm filters={filters} />
-          <div className="md:hidden">
+          {/* Below 1024px the Filters card becomes the bottom sheet (build kit decision 7). */}
+          <div className="lg:hidden">
             <FilterSheet active={activeFilters}>
               <ExploreFiltersForm filters={filters} today={today} idPrefix="sheet" />
             </FilterSheet>
@@ -165,7 +166,7 @@ function Samples() {
       <div className="flex flex-wrap items-center gap-3 rounded-card border border-dashed border-input bg-card px-4 py-3 text-sm">
         <SampleTag />
         <span className="text-foreground-soft">No items are listed yet. These sample cards show what you will see once owners list.</span>
-        <Link href={ROUTES.ownerSignUp} className={`ml-auto rounded font-bold text-primary underline ${focusRingClass}`}>
+        <Link href={ROUTES.ownerSignUp} className={`ml-auto inline-block rounded py-1 font-bold text-primary underline ${focusRingClass}`}>
           List the first item
         </Link>
       </div>

@@ -29,7 +29,7 @@ export default async function CheckEmailPage({ searchParams }: PageProps<"/signu
           We sent a link to {typeof email === "string" && email ? <strong>{email}</strong> : "your email"}. Open it to confirm your account and you&apos;re in.
         </p>
         <p className="text-[13px] text-muted-foreground">Nothing there? Check your spam folder, or wait a few minutes.</p>
-        <Link href={ROUTES.signIn} className={`rounded text-sm font-semibold text-primary underline ${focusRingClass}`}>
+        <Link href={ROUTES.signIn} className={`inline-block rounded py-1 text-sm font-semibold text-primary underline ${focusRingClass}`}>
           Go to sign in
         </Link>
       </main>

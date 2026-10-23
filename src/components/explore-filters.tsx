@@ -6,7 +6,7 @@ import { formatNadWhole } from "@/lib/money";
 import { SEARCH_TOWNS } from "@/lib/site-links";
 
 const label = "flex flex-col gap-1.5 text-[13px] font-semibold";
-const control = "h-12 w-full rounded-btn-sm border border-input bg-card px-3.5 text-base font-normal text-foreground md:text-[15px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+const control = "h-12 w-full rounded-btn-sm border border-input bg-card px-3.5 text-base font-normal text-foreground md:text-[15px] focus:outline-2 focus:outline-offset-2 focus:outline-primary";
 // A white chip that turns green when its radio is picked.
 const chip = `${buttonClasses({ variant: "white", size: "chip" })} cursor-pointer has-checked:border-primary has-checked:bg-primary has-checked:text-primary-foreground has-checked:[--edge:var(--primary-edge)] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary`;
 

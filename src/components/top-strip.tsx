@@ -33,7 +33,7 @@ export function TopStrip() {
             </svg>
             Get the app
           </a>
-          <Link href={ROUTES.owner} className={`py-2 hover:text-deep-foreground ${focusOnDeep}`}>
+          <Link href={ROUTES.ownerSignUp} className={`py-2 hover:text-deep-foreground ${focusOnDeep}`}>
             For hire businesses
           </Link>
           <a href={ROUTES.help} className={`py-2 hover:text-deep-foreground ${focusOnDeep}`}>

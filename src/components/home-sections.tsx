@@ -148,7 +148,7 @@ export function EarnSection() {
           <ButtonLink href={ROUTES.ownerSignUp} variant="yellow" size="lg" className="w-full md:w-auto">
             List an item free →
           </ButtonLink>
-          <ButtonLink href={ROUTES.owner} variant="outline" size="lg" className="w-full md:w-auto">
+          <ButtonLink href={ROUTES.ownerSignUp} variant="outline" size="lg" className="w-full md:w-auto">
             Set up a hire business
           </ButtonLink>
         </div>

@@ -2,7 +2,8 @@ import { SearchIcon } from "@/components/icons";
 import { buttonClasses } from "@/components/button";
 import { ROUTES, SEARCH_TOWNS } from "@/lib/site-links";
 
-const field = "flex min-w-0 flex-col justify-center gap-0.5 px-3.5 py-2.5 md:px-4 md:py-2";
+// The ring sits on the whole field, since the input itself has no border.
+const field = "flex min-w-0 flex-col justify-center gap-0.5 rounded-[14px] px-3.5 py-2.5 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-primary md:px-4 md:py-2";
 const label = "text-xs font-bold text-foreground";
 // 16px on phones so iPhones don't zoom in on focus; 15px from 768px, as in the kit.
 const input = "w-full min-w-0 bg-transparent p-0 text-base text-foreground outline-none placeholder:text-muted-foreground md:text-[15px]";

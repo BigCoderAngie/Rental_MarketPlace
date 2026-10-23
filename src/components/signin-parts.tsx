@@ -47,7 +47,7 @@ export function SignInFooter() {
 
 export function TextLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <Link href={href} className={`rounded text-sm font-semibold text-primary underline hover:text-primary-strong ${focusRingClass}`}>
+    <Link href={href} className={`inline-block rounded py-1 text-sm font-semibold text-primary underline hover:text-primary-strong ${focusRingClass}`}>
       {children}
     </Link>
   );
