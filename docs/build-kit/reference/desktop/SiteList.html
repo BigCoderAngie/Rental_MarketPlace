@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RentLoop website list an item</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F2EA}
+a{color:#00743F}a:hover{color:#005C32}
+.pg{font-family:Inter,system-ui,sans-serif;color:#1A2420;font-size:14px;background:#F6F2EA;min-height:100vh;box-sizing:border-box}
+.wrap{max-width:1360px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.card{background:#fff;border:1px solid #E6E0D4;border-radius:18px;box-sizing:border-box}
+.muted{color:#5B6670}
+.b3{--edge:#CDC5B5;--glow:rgba(26,36,32,.10);background-image:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0) 55%,rgba(0,0,0,.06));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.18),0 4px 0 var(--edge),0 6px 3px -1px rgba(0,0,0,.16),0 12px 24px -8px var(--glow);transition:transform .06s ease,box-shadow .06s ease,filter .12s ease;cursor:pointer}
+.b3:hover{filter:brightness(1.05)}
+.b3:active{transform:translateY(4px);background-image:linear-gradient(0deg,rgba(255,255,255,.12),rgba(255,255,255,0) 55%,rgba(0,0,0,.08));box-shadow:inset 0 2px 3px rgba(0,0,0,.18),inset 0 -1px 0 rgba(255,255,255,.12),0 0 0 var(--edge),0 1px 1px rgba(0,0,0,.14),0 4px 10px -6px var(--glow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:14px;font-family:inherit;font-weight:700;font-size:15px;text-decoration:none;border:0;box-sizing:border-box;white-space:nowrap}
+.sm{height:40px;padding:0 16px;border-radius:12px;font-size:14px}
+.lg{height:56px;border-radius:16px;font-size:16px}
+.g{background-color:#00743F;color:#fff;--edge:#00502B;--glow:rgba(0,116,63,.45)}
+.g:hover{color:#fff}
+.y{background-color:#FFC83D;color:#06402F;--edge:#D9A11F;--glow:rgba(255,200,61,.55)}
+.y:hover{color:#06402F}
+.w{background-color:#fff;color:#1A2420;border:1px solid #CDC5B5;--edge:#CDC5B5}
+.w:hover{color:#1A2420}
+.lt{background-color:#E3F1E8;color:#0B4D2C;--edge:#B8DCC6;--glow:rgba(0,116,63,.18)}
+.ol{background-color:transparent;color:#fff;border:1px solid #3E8E68;--edge:#3E8E68;--glow:rgba(62,142,104,.35)}
+.ol:hover{color:#fff}
+.chip{height:40px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:600}
+.nl{color:#34403A;text-decoration:none;font-weight:500;font-size:15px;padding:22px 0;border-bottom:2px solid transparent}
+.nl.on{color:#00743F;font-weight:700;border-bottom-color:#00743F}
+.sec{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.sec h2{margin:0;font-size:22px;font-weight:800;letter-spacing:-0.01em}
+.sec p{margin:4px 0 0;font-size:13px;color:#5B6670}
+.va{display:inline-flex;align-items:center;gap:4px;font-size:14px;font-weight:600;text-decoration:none;padding:8px 0}
+.pc{position:relative;overflow:hidden;border-radius:22px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:16px;box-sizing:border-box;text-decoration:none;background:#3E8E68}
+.pc:hover{color:#fff}
+.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08) 30%,rgba(0,0,0,.72))}
+.pc>span:not(.shade){position:relative;z-index:1}
+.price{align-self:flex-start;background:#fff;color:#1A2420;font-size:13px;font-weight:800;border-radius:999px;padding:5px 11px}
+.tag{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:#06402F;color:#fff}
+.lc{position:relative;background:#fff;border:1px solid #E6E0D4;border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.lc>a{display:flex;flex-direction:column;text-decoration:none;color:#1A2420}
+.lc img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#E6E0D4}
+.lb{display:flex;flex-direction:column;gap:3px;padding:12px 14px 14px}
+.cat{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0B4D2C}
+.nm{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.heart{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;border:0;background:#fff;color:#1A2420;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer}
+.badge{position:absolute;top:12px;left:12px;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:#06402F;color:#fff}
+.ci{width:60px;height:60px;border-radius:18px;background:#fff;border:1px solid #E6E0D4;color:#0B4D2C;display:flex;align-items:center;justify-content:center}
+.tile{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:#34403A;font-size:13px;font-weight:600;min-width:76px}
+.chk{display:flex;align-items:center;gap:10px;font-size:14px;color:#1A2420}
+.ck{width:22px;height:22px;border-radius:50%;background:#00743F;color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.lbl{font-size:13px;font-weight:600;display:flex;flex-direction:column;gap:6px}
+.in{height:48px;padding:0 14px;background:#fff;border:1px solid #CDC5B5;border-radius:12px;font:inherit;font-size:15px;font-weight:400;color:#1A2420;box-sizing:border-box;width:100%}
+.lockrow{display:flex;align-items:center;gap:12px;font-size:13.5px}
+.bar{height:12px;border-radius:6px;background:#DDD5C6;flex:1;max-width:240px}
+.kv{display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:6px 0}
+.kv>span:first-child{color:#5B6670}
+.capt{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.pill{font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px}
+.side{flex:0 0 260px;background:#06402F;color:#fff;padding:24px 18px;display:flex;flex-direction:column;gap:18px;box-sizing:border-box}
+.seg{display:flex;padding:4px;border-radius:14px;background:#0B5A3E}
+.seg a{flex:1;text-align:center;padding:10px 0;border-radius:10px;font-weight:600;font-size:14px;text-decoration:none;color:#CFE3D8}
+.seg a.on{background:#fff;color:#06402F}
+.mi{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;color:#E3F1E8;text-decoration:none;font-size:14.5px;font-weight:500}
+.mi.on{background:#00743F;color:#fff;font-weight:700}
+.mi:hover{color:#fff}
+.dot{background:#B7472A;color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px}
+.stat{flex:1 1 200px;padding:18px 20px;display:flex;flex-direction:column;gap:2px}
+.step{width:44px;height:44px;border-radius:12px;font:inherit;font-size:20px;padding:0}
+.avatar{width:40px;height:40px;border-radius:50%;background:#E3F1E8;color:#0B4D2C;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="pg">
+  <header style="background: #fff; border-bottom: 1px solid #E6E0D4"><div class="wrap" style="display: flex; align-items: center; gap: 20px; min-height: 80px; flex-wrap: wrap"><a href="SiteOwner.html" aria-label="Close" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #1A2420"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></a><svg width="36" height="36" viewBox="0 0 100 100" aria-hidden="true" style="display: block; flex: none"><defs><linearGradient id="rl10" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".08"/></linearGradient><linearGradient id="rh10" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".12" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><rect width="100" height="100" rx="23" fill="#00743F"/><rect width="100" height="100" rx="23" fill="url(#rl10)"/><g fill="none" stroke="#FFC83D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M21.8 39.7A30 30 0 0 1 78.2 39.7"/><path d="M81.1 30.1L78.2 39.7L69.9 34.3"/><path d="M78.2 60.3A30 30 0 0 1 21.8 60.3"/><path d="M18.9 69.9L21.8 60.3L30.1 65.7"/></g><text x="50" y="63" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="36" font-weight="800" fill="#fff">R</text><rect x="1" y="1" width="98" height="98" rx="22" fill="none" stroke="url(#rh10)" stroke-width="2"/></svg><span style="flex: 1; display: flex; flex-direction: column"><strong style="font-size: 24px">List an item</strong><span class="muted" style="font-size: 14px">Renters see your item, never your name or number, until you accept a booking.</span></span><a href="#" class="b3 btn w">Save as draft</a></div></header>
+  <main class="wrap" style="display: flex; flex-wrap: wrap; gap: 28px; padding-top: 28px; padding-bottom: 48px; align-items: flex-start">
+    <nav aria-label="Steps" style="flex: 1 1 220px; max-width: 260px; display: flex; flex-direction: column; gap: 10px"><div class="card" style="padding: 14px 16px; display: flex; align-items: center; gap: 12px; "><span style="width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; background: #00743F; color: #fff"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></span><span style="font-size: 15px; font-weight: 500">Category</span></div><div class="card" style="padding: 14px 16px; display: flex; align-items: center; gap: 12px; border: 2px solid #00743F;"><span style="width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; background: #00743F; color: #fff">2</span><span style="font-size: 15px; font-weight: 700">Details and price</span></div><div class="card" style="padding: 14px 16px; display: flex; align-items: center; gap: 12px; "><span style="width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; background: #E6E0D4; color: #34403A">3</span><span style="font-size: 15px; font-weight: 500">Photos and place</span></div></nav>
+    <div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+      <section class="card" style="padding: 26px; display: flex; flex-direction: column; gap: 14px"><div><h2 style="margin: 0; font-size: 22px">What are you renting out?</h2><p class="muted" style="margin: 4px 0 0">Each category asks for its own details.</p></div><div style="display: flex; flex-wrap: wrap; gap: 10px"><button class="b3 btn w" aria-pressed="false" style="flex-direction: column; height: 96px; min-width: 104px; flex: 1 1 104px; gap: 8px; font-weight: 600; font-size: 13.5px; "><span style="color: #00743F"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20h20M4 20L12 4l8 16M12 12l-3 8M12 12l3 8"/></svg></span>Events</button><button class="b3 btn w" aria-pressed="false" style="flex-direction: column; height: 96px; min-width: 104px; flex: 1 1 104px; gap: 8px; font-weight: 600; font-size: 13.5px; "><span style="color: #00743F"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></span>Tools</button><button class="b3 btn w" aria-pressed="false" style="flex-direction: column; height: 96px; min-width: 104px; flex: 1 1 104px; gap: 8px; font-weight: 600; font-size: 13.5px; "><span style="color: #00743F"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14M5 17v2M19 17v2M3 13l2-6h14l2 6v4H3z"/><circle cx="7.5" cy="14" r="1"/><circle cx="16.5" cy="14" r="1"/></svg></span>Vehicles</button><button class="b3 btn w" aria-pressed="false" style="flex-direction: column; height: 96px; min-width: 104px; flex: 1 1 104px; gap: 8px; font-weight: 600; font-size: 13.5px; "><span style="color: #00743F"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span>Homes</button><button class="b3 btn w" aria-pressed="false" style="flex-direction: column; height: 96px; min-width: 104px; flex: 1 1 104px; gap: 8px; font-weight: 600; font-size: 13.5px; "><span style="color: #00743F"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18V8M3 14h18v4M21 18v-4a3 3 0 0 0-3-3h-7v3"/><circle cx="7" cy="11" r="1.6"/></svg></span>Rooms</button><button class="b3 btn w" aria-pressed="true" style="flex-direction: column; height: 96px; min-width: 104px; flex: 1 1 104px; gap: 8px; font-weight: 600; font-size: 13.5px; border: 2px solid #00743F; background-color: #E3F1E8; color: #0B4D2C;"><span style="color: #00743F"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l2-3h4l2 3"/><circle cx="12" cy="13" r="3.5"/></svg></span>Electronics</button><button class="b3 btn w" aria-pressed="false" style="flex-direction: column; height: 96px; min-width: 104px; flex: 1 1 104px; gap: 8px; font-weight: 600; font-size: 13.5px; "><span style="color: #00743F"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20l6-10 4 6 3-4 5 8z"/></svg></span>Camping</button><button class="b3 btn w" aria-pressed="false" style="flex-direction: column; height: 96px; min-width: 104px; flex: 1 1 104px; gap: 8px; font-weight: 600; font-size: 13.5px; "><span style="color: #00743F"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span>Other</button></div></section>
+      <section class="card" style="padding: 26px; display: flex; flex-direction: column; gap: 18px; border: 2px solid #00743F">
+        <h2 style="margin: 0; font-size: 22px">Describe your item</h2>
+        <label class="lbl">Title<input class="in" value="Camera with 2 lenses"><span class="muted" style="font-weight: 400; font-size: 12px; align-self: flex-end">25 / 70</span></label>
+        <label class="lbl">Description<textarea class="in" style="height: 96px; padding: 12px 14px; resize: none">Full-frame body with a 50 mm and a 24–70 mm lens, two batteries and a 128 GB card.</textarea></label>
+        <fieldset style="border: 0; padding: 0; margin: 0"><legend class="lbl" style="margin-bottom: 10px">Condition</legend><div style="display: flex; gap: 8px; flex-wrap: wrap"><button class="b3 btn chip w">New</button><button class="b3 btn chip g">Like new</button><button class="b3 btn chip w">Good</button><button class="b3 btn chip w">Fair</button></div></fieldset>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px"><label class="lbl">Price per day<input class="in" value="N$650"></label><label class="lbl">Deposit<input class="in" value="N$5,000"></label><label class="lbl">Minimum days<input class="in" value="2"></label></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px"><span class="lbl">How many do you own?<span class="muted" style="font-weight: 400; font-size: 13px">A hire business can list 300 chairs as one item</span></span><span style="display: flex; align-items: center; gap: 14px"><button class="b3 btn w step" aria-label="One less">−</button><strong style="font-size: 17px">1</strong><button class="b3 btn w step" aria-label="One more">+</button></span></div>
+      </section>
+      <section class="card" style="padding: 26px; display: flex; flex-direction: column; gap: 16px">
+        <div><h2 style="margin: 0; font-size: 22px">Add photos</h2><p class="muted" style="margin: 4px 0 0">Bright photos get booked faster. Add at least 3.</p></div>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap"><span style="position: relative; width: 160px; height: 160px; border-radius: 18px; overflow: hidden"><img class="ph" src="../assets/camera.jpg" alt="Cover photo"><span style="position: absolute; left: 10px; bottom: 10px; background: #fff; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 3px 10px">Cover</span></span><img src="../assets/camera.jpg" alt="Photo 2" style="width: 160px; height: 160px; border-radius: 18px; object-fit: cover; object-position: 80% 20%"><button style="width: 160px; height: 160px; border-radius: 18px; border: 2px dashed #B8DCC6; background: #fff; color: #00743F; font: inherit; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add</button></div>
+        <label class="lbl">Where renters collect it<select class="in"><option>Klein Windhoek, Windhoek</option><option>Swakopmund</option><option>Walvis Bay</option></select><span class="muted" style="font-weight: 400; font-size: 12.5px">Renters only see the town. Your street address shows once you accept and pay the booking fee.</span></label>
+      </section>
+    </div>
+    <aside style="flex: 1 1 300px; max-width: 380px; display: flex; flex-direction: column; gap: 16px">
+      <span class="capt muted">Preview</span>
+        <div class="lc"><a href="SiteItem.html"><img src="../assets/camera.jpg" alt="Camera with 2 lenses"><span class="lb"><span class="cat">Electronics</span><span class="nm">Camera with 2 lenses</span><span class="muted" style="font-size: 13px; display: flex; align-items: center; gap: 4px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Klein Windhoek</span><span style="font-size: 14px; margin-top: 4px"><strong style="font-size: 16px">N$650</strong> / day · <span style="color: #7A4D00">★</span> New</span></span></a><span class="badge">Free this weekend</span><button class="heart" aria-label="Save Camera with 2 lenses"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9z"/></svg></button></div>
+      <div style="background: #E3F1E8; border: 1px solid #B8DCC6; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 8px"><strong style="font-size: 17px; color: #0B4D2C">How you get paid</strong><span style="font-size: 14px; line-height: 1.5; color: #1A2420">Listing is free. When you accept a booking you pay RentLoop a small booking fee, then collect the rent and deposit straight from the renter.</span><strong style="font-size: 13.5px; color: #0B4D2C">We only earn when you earn.</strong></div>
+      <a href="SiteOwner.html" class="b3 btn y lg">Publish my listing</a>
+    </aside>
+  </main>
+</div>
+</body>
+</html>

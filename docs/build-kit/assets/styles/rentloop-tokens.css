@@ -1,0 +1,77 @@
+/* =========================================================================
+   RentLoop design tokens + the "lit, press-down" button (exact values).
+   Port these 1:1 into the project (CSS variables, Tailwind theme, or both).
+   ========================================================================= */
+:root{
+  /* Brand */
+  --rl-green:        #00743F;  /* primary, buttons, links, logo tile          */
+  --rl-green-hover:  #005C32;  /* link hover                                   */
+  --rl-green-edge:   #00502B;  /* 3D edge under green buttons                  */
+  --rl-deep:         #06402F;  /* hero, top strip, footer, dark panels         */
+  --rl-deep-2:       #0B5A3E;  /* circles/cards on deep green                  */
+  --rl-yellow:       #FFC83D;  /* accent, highlight words, primary CTA         */
+  --rl-yellow-edge:  #D9A11F;  /* 3D edge under yellow buttons                 */
+  --rl-mint:         #E3F1E8;  /* light green fills, pills                     */
+  --rl-mint-line:    #B8DCC6;
+  --rl-mint-text:    #0B4D2C;
+  --rl-on-deep:      #CFE3D8;  /* body text on deep green                      */
+  --rl-on-deep-2:    #9FE0B8;  /* italic slogan, highlights on deep green      */
+
+  /* Neutrals */
+  --rl-cream:        #F6F2EA;  /* page background                              */
+  --rl-ink:          #1A2420;  /* main text                                    */
+  --rl-ink-2:        #34403A;  /* secondary text                               */
+  --rl-muted:        #5B6670;  /* muted text                                   */
+  --rl-line:         #E6E0D4;  /* card borders                                 */
+  --rl-line-strong:  #CDC5B5;  /* input borders, white-button edge            */
+  --rl-lock:         #DDD5C6;  /* hidden-detail bars                           */
+  --rl-star:         #E8A317;  /* stars on cards                               */
+  --rl-star-text:    #7A4D00;  /* stars inline in text                         */
+  --rl-red:          #B7472A;  /* badges, decline                              */
+  --rl-warn-bg:      #FFF8E6;  --rl-warn-line: #F2DFA8;  --rl-warn-text: #5C3A00;
+  --rl-info-bg:      #E8F0FA;  --rl-info-text: #1F4A7A;
+
+  /* Type: Inter 400/500/600/700/800 (Google Fonts) */
+  --rl-font: Inter, system-ui, sans-serif;
+
+  /* Radii */
+  --rl-r-btn: 14px;  --rl-r-btn-sm: 12px;  --rl-r-btn-lg: 16px;
+  --rl-r-card: 18px; --rl-r-panel: 22px;  --rl-r-hero: 28px; --rl-r-section: 32px;
+  --rl-r-input: 14px; --rl-r-pill: 999px;
+
+  /* Layout */
+  --rl-wrap: 1360px;  /* max content width, 32px side padding (16px on phones) */
+}
+
+/* ---------- The lit, press-down button ("b3") ----------
+   Four lights + a solid edge:
+   1 inset 1px white highlight on the top edge (light hitting it)
+   2 inset 1px darker line on the bottom edge (side facing away)
+   3 solid 4px edge in the button's darker shade (Duolingo-style press depth)
+   4 tight dark shadow where it touches the page
+   5 big soft glow in the button's own colour
+   + gentle top-to-bottom gradient. On press: drop 4px, edge gone, gradient flips, highlight gone. */
+.b3{
+  --edge:#CDC5B5; --glow:rgba(26,36,32,.10);
+  background-image:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0) 55%,rgba(0,0,0,.06));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.18),0 4px 0 var(--edge),0 6px 3px -1px rgba(0,0,0,.16),0 12px 24px -8px var(--glow);
+  transition:transform .06s ease,box-shadow .06s ease,filter .12s ease;cursor:pointer
+}
+.b3:hover{filter:brightness(1.05)}
+.b3:active{
+  transform:translateY(4px);
+  background-image:linear-gradient(0deg,rgba(255,255,255,.12),rgba(255,255,255,0) 55%,rgba(0,0,0,.08));
+  box-shadow:inset 0 2px 3px rgba(0,0,0,.18),inset 0 -1px 0 rgba(255,255,255,.12),0 0 0 var(--edge),0 1px 1px rgba(0,0,0,.14),0 4px 10px -6px var(--glow)
+}
+/* IMPORTANT: buttons must use background-color (never the `background` shorthand),
+   otherwise the gradient above is wiped out. */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:14px;font-family:inherit;font-weight:700;font-size:15px;text-decoration:none;border:0;box-sizing:border-box;white-space:nowrap}
+.sm{height:40px;padding:0 16px;border-radius:12px;font-size:14px}
+.lg{height:56px;border-radius:16px;font-size:16px}
+.g {background-color:#00743F;color:#fff;--edge:#00502B;--glow:rgba(0,116,63,.45)}          /* green  */
+.y {background-color:#FFC83D;color:#06402F;--edge:#D9A11F;--glow:rgba(255,200,61,.55)}     /* yellow */
+.w {background-color:#fff;color:#1A2420;border:1px solid #CDC5B5;--edge:#CDC5B5}            /* white  */
+.lt{background-color:#E3F1E8;color:#0B4D2C;--edge:#B8DCC6;--glow:rgba(0,116,63,.18)}        /* mint   */
+.ol{background-color:transparent;color:#fff;border:1px solid #3E8E68;--edge:#3E8E68;--glow:rgba(62,142,104,.35)} /* outline on deep green */
+.chip{height:40px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:600}
+.cta{width:100%;height:46px;border-radius:999px;font-size:15px}  /* card "Request to book" (yellow) */
