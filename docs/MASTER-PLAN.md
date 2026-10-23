@@ -69,6 +69,20 @@ The website is now built from the RentLoop build kit in `docs/build-kit/` (refer
 13. **The rough look branch is dropped** (kept as a git stash). Part 1 builds the look exactly from the kit, and draft PR #19 is folded into Part 3. The business pages keep working throughout.
 14. **The kit lives in `docs/build-kit/`**, without its stock photos (`reference/assets/`, unknown licences). Pages show the kit's placeholder image until owners upload photos.
 
+## Build kit Parts 5 to 10 (built 23 October 2026, recommended choices taken while away)
+
+These choices were made while building Parts 5 to 10 without stopping to ask. Each can be changed.
+
+1. **Every owner lists through a business row.** An individual owner gets one made on their first listing (`kind = 'individual'`), so calendars, stock checks and the Free plan's 15 items work the same for everyone. "Run a hire business?" on the owner dashboard turns it into a hire business, which adds Calendar, Quotes, Customers and Reports to the sidebar (decision 9).
+2. **Marketplace requests live in their own table** (`listing_requests`), not in bookings, so owners never see a renter's name or phone before paying the fee (rule 8). Accept and pay creates a confirmed booking that holds the units, then declines other open requests that no longer fit (rules 11 and 13).
+3. **The booking fee is the plan's `booking_fee_rate`** (Free 10%, Pro 5%, Business 0%), one database setting as decision 1 asks. Payment runs in a clearly marked **test mode** (TEST reference, no money moves) until PayToday is connected (decision 2).
+4. **Fee refunds are a claim**: the owner can claim once, until 30 days after the start date; RentLoop reviews and refunds by hand for now (rule 4).
+5. **Explore shows the kit's cards as marked samples only while nothing is listed**; real searches show only items free on the searched dates (FR-SR-01). Without dates, cards say "Free this weekend" or "Booked this weekend" from the calendar.
+6. **Item pages hide the owner's name and street** until the fee is paid; renters see the area and town. The "Verified owner · ID checked" line shows as "ID check soon" until M5.
+7. **No reviews are shown yet** ("No reviews yet. Reviews come from completed bookings only.") and no Favourites or Identity check pages, because those features don't exist yet.
+8. **Owner links** ("For businesses", "List an item") go to owner sign-up for visitors; signed-in owners land on their dashboard. After sign-in, hire businesses go to their calendar, individual owners to /owner, renters to the home page.
+9. **768 to 1023 px**: the header nav folds into the menu button and the Explore filters open as the bottom sheet (decision 7). From 1024 to 1279 px the header search hides to make room for the nav.
+
 ## In scope: the MVP, in this order
 
 1. **Restyle.** Shared parts first (top bar, sidebar, footer strip, stat cards, step indicator), then each staff page, then the customer pages, then the public homepage.
