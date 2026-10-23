@@ -30,8 +30,8 @@ function accountFrom(formData: FormData): AccountInput {
   };
 }
 
-// Owners go to /owner/list once Part 8 builds it; until then both land on "You're in".
-const AFTER_SIGNUP = { renter: ROUTES.welcome, owner: ROUTES.welcome };
+// Renters see "You're in"; owners go straight to listing their first item (build kit Part 4).
+const AFTER_SIGNUP = { renter: ROUTES.welcome, owner: ROUTES.listItem };
 
 /**
  * Creates the account with Supabase email and password. The details go along

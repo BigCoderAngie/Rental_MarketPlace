@@ -72,14 +72,15 @@ export async function generateMetadata({ params }: PageProps<"/items/[id]">): Pr
 export default async function ItemPage({ params, searchParams }: PageProps<"/items/[id]">) {
   const { id } = await params;
   const today = namibiaToday();
-  const picked = pickDates(await searchParams, today);
+  const query = await searchParams;
+  const picked = pickDates(query, today);
   const first = await loadListing(id, picked.from, picked.to);
   if (!first?.listing) notFound();
   // The weekend may be shorter than the item's minimum; stretch it when no dates were chosen.
   const { from } = picked;
   let { to } = picked;
   let loaded = first;
-  if (daysInclusive(from, to) < first.listing.min_days && !(await searchParams).to) {
+  if (daysInclusive(from, to) < first.listing.min_days && !query.to) {
     to = addDays(from, first.listing.min_days - 1);
     loaded = (await loadListing(id, from, to))!;
   }
@@ -96,6 +97,11 @@ export default async function ItemPage({ params, searchParams }: PageProps<"/ite
     <>
       {signedIn && <CategoryBar current={l.category} />}
       <div className="md:wrap pb-32 md:pt-6 lg:pb-16">
+        {query.listed === "1" && l.is_mine && (
+          <p role="status" className="mx-4 mb-4 rounded-btn border border-primary-border bg-primary-soft px-4 py-3 text-sm font-medium text-primary-ink md:mx-0">
+            Your item is live. Renters can find it on Explore and send you requests.
+          </p>
+        )}
         <Link href={`/explore?cat=${l.category}`} className={`mb-4 hidden rounded text-sm md:inline-block ${focusRingClass}`}>
           <span className="font-semibold text-primary">← {shortCategory}</span> <span className="text-muted-foreground">· {l.name}</span>
         </Link>

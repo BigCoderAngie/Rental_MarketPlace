@@ -4,7 +4,7 @@ import { focusRingClass } from "@/components/button";
 import { CATEGORIES, categoryHref } from "@/lib/site-links";
 
 // Line icons from the kit's category bar, keyed by category slug.
-const ICONS: Record<string, ReactNode> = {
+export const CATEGORY_ICONS: Record<string, ReactNode> = {
   tools: <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z" />,
   electronics: (
     <>
@@ -47,7 +47,7 @@ export function CategoryTiles() {
             {/* The lit tile presses down when tapped. */}
             <span className="b3 flex h-[58px] w-[58px] items-center justify-center rounded-card border border-border bg-card text-primary-ink [--edge:var(--border)] [--glow:rgba(26,36,32,.06)] md:h-16 md:w-16">
               <svg aria-hidden width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-                {ICONS[c.slug] ?? ICONS.other}
+                {CATEGORY_ICONS[c.slug] ?? CATEGORY_ICONS.other}
               </svg>
             </span>
             {c.label}
