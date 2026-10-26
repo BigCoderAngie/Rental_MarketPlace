@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { ButtonLink } from "@/components/button";
 import { Flag } from "@/components/flag";
-import { CheckDot } from "@/components/icons";
+import { ArrowRightIcon, CheckDot, DotIcon, FiveStars } from "@/components/icons";
 import { ImagePlaceholder } from "@/components/image-placeholder";
 import { LogoMark } from "@/components/logo";
 import { SampleTag } from "@/components/sample-tag";
@@ -146,7 +146,8 @@ export function EarnSection() {
         </div>
         <div className="flex flex-col gap-3 md:mt-1.5 md:flex-row md:flex-wrap">
           <ButtonLink href={ROUTES.ownerSignUp} variant="yellow" size="lg" className="w-full md:w-auto">
-            List an item free →
+            List an item free
+            <ArrowRightIcon />
           </ButtonLink>
           <ButtonLink href={ROUTES.ownerSignUp} variant="outline" size="lg" className="w-full md:w-auto">
             Set up a hire business
@@ -163,7 +164,10 @@ export function EarnSection() {
             <div key={card.title} className="w-[170px] flex-none overflow-hidden rounded-[16px] bg-card text-foreground shadow-[0_10px_24px_rgba(0,0,0,.18)]">
               <div className="relative">
                 <ImagePlaceholder alt="" radius="0" aspect="170 / 110" />
-                <span className="absolute top-2 left-2 rounded-full bg-primary px-2 py-[3px] text-[10.5px] font-extrabold text-primary-foreground">● LIVE</span>
+                <span className="absolute top-2 left-2 rounded-full bg-primary px-2 py-[3px] text-[10.5px] font-extrabold flex items-center gap-1 text-primary-foreground">
+                  <DotIcon />
+                  LIVE
+                </span>
                 <span className="absolute top-2 right-2">
                   <SampleTag />
                 </span>
@@ -193,8 +197,9 @@ export function Reviews() {
             key={r.initial}
             className="flex w-[290px] flex-none flex-col gap-3.5 rounded-panel border border-border bg-card p-6 md:w-auto md:flex-[1_1_280px]"
           >
-            <span aria-hidden className="text-lg tracking-[2px] text-star">
-              ★★★★★
+            <span>
+              <FiveStars size={18} />
+              <span className="sr-only">5 out of 5 stars</span>
             </span>
             <blockquote className="text-base leading-[1.55] text-foreground-soft">{r.quote}</blockquote>
             <figcaption className="flex items-center gap-2.5">

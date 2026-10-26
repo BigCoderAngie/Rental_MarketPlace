@@ -4,6 +4,7 @@ import { ModeSwitch } from "@/components/account-sidebar";
 import { FormMessage } from "@/components/auth-fields";
 import { Avatar } from "@/components/avatar";
 import { ButtonLink, buttonClasses, focusRingClass } from "@/components/button";
+import { ArrowRightIcon } from "@/components/icons";
 import { ImagePlaceholder } from "@/components/image-placeholder";
 import { formatShortRange } from "@/lib/explore";
 import { itemPhotoUrl } from "@/lib/item-photos";
@@ -111,8 +112,9 @@ export default async function OwnerDashboardPage({ searchParams }: PageProps<"/o
               Booking requests
               {summary.waiting_requests > 0 && <span className="rounded-full bg-danger px-2 py-0.5 text-[11px] font-bold text-danger-foreground">{summary.waiting_requests} new</span>}
             </h2>
-            <Link href="/owner/requests" className={`rounded text-sm font-bold text-primary ${focusRingClass}`}>
-              Review →
+            <Link href="/owner/requests" className={`flex items-center gap-1 rounded text-sm font-bold text-primary ${focusRingClass}`}>
+              Review
+              <ArrowRightIcon size={14} />
             </Link>
           </div>
           {waiting.length === 0 ? (
@@ -190,7 +192,8 @@ export default async function OwnerDashboardPage({ searchParams }: PageProps<"/o
               <strong className="text-lg">List your first item</strong>
               <p className="text-sm text-muted-foreground">It&apos;s free. You set the price and approve every booking.</p>
               <ButtonLink href="/owner/list" variant="yellow">
-                List an item free →
+                List an item free
+                <ArrowRightIcon />
               </ButtonLink>
             </div>
           )}
@@ -199,7 +202,10 @@ export default async function OwnerDashboardPage({ searchParams }: PageProps<"/o
               <strong className="text-lg">Run a hire business?</strong>
               <p className="text-sm leading-normal text-muted-foreground">Add your business name and logo, invite staff, send WhatsApp quotes and keep checkout records.</p>
               <form action={becomeHireBusiness}>
-                <button className={`rounded text-sm font-bold text-primary ${focusRingClass}`}>Set up a business account →</button>
+                <button className={`flex items-center gap-1 rounded text-sm font-bold text-primary ${focusRingClass}`}>
+                  Set up a business account
+                  <ArrowRightIcon size={14} />
+                </button>
               </form>
             </div>
           )}

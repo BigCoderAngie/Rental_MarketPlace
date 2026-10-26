@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { buttonClasses } from "@/components/button";
 import { Flag } from "@/components/flag";
+import { CheckIcon, ChevronDownIcon } from "@/components/icons";
 import { Logo } from "@/components/logo";
 import { StoreButtons } from "@/components/store-buttons";
 import { FOOTER_COLUMNS, PHONE_HIDDEN_FOOTER_LINKS, POPULAR_SEARCHES, ROUTES, searchHref } from "@/lib/site-links";
@@ -8,6 +9,9 @@ import { FOOTER_COLUMNS, PHONE_HIDDEN_FOOTER_LINKS, POPULAR_SEARCHES, ROUTES, se
 // A white focus ring: the usual green one barely shows on deep green.
 const focusOnDeep = "rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-deep-foreground";
 const footerLink = `text-sm text-deep-muted hover:text-deep-foreground ${focusOnDeep}`;
+
+// The footer's three true trust points.
+const TRUST_POINTS = ["Renting is free", "Owners approve every booking", "Contact details private until booked"];
 
 /**
  * The deep green footer (docs/build-kit 01-DESIGN-SYSTEM.md "Footer"). Desktop:
@@ -29,8 +33,8 @@ export function SiteFooter() {
             <details key={col.title} className="group border-b border-white/15">
               <summary className={`flex min-h-12 cursor-pointer list-none items-center justify-between text-[15px] font-bold ${focusOnDeep}`}>
                 {col.title}
-                <span aria-hidden className="text-deep-muted transition-transform group-open:rotate-180 motion-reduce:transition-none">
-                  ▾
+                <span className="text-deep-muted transition-transform group-open:rotate-180 motion-reduce:transition-none">
+                  <ChevronDownIcon size={16} />
                 </span>
               </summary>
               <div className="flex flex-col gap-1 pb-3.5">
@@ -103,9 +107,12 @@ export function SiteFooter() {
         <div className="border-t border-white/12">
           <div className="wrap flex flex-wrap gap-6 pt-4 pb-5 text-[13px] text-deep-muted">
             <span>© RentLoop, Windhoek</span>
-            <span>✓ Renting is free</span>
-            <span>✓ Owners approve every booking</span>
-            <span>✓ Contact details private until booked</span>
+            {TRUST_POINTS.map((point) => (
+              <span key={point} className="flex items-center gap-1.5">
+                <CheckIcon size={12} />
+                {point}
+              </span>
+            ))}
             <span className="ml-auto flex items-center gap-2">
               <Flag width={20} />
               Namibia · English

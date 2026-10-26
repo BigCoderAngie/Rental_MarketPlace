@@ -6,11 +6,12 @@ import { BookingCard } from "@/components/booking-card";
 import { focusRingClass } from "@/components/button";
 import { CategoryBar } from "@/components/category-bar";
 import { SectionHead } from "@/components/home-sections";
-import { HeartIcon } from "@/components/icons";
+import { ArrowLeftIcon, HeartIcon } from "@/components/icons";
 import { ItemGallery } from "@/components/item-gallery";
 import { LockIcon, LockedDetails } from "@/components/locked-details";
 import { RequestPanel } from "@/components/request-panel";
 import { SampleTag } from "@/components/sample-tag";
+import { ViewAllLink } from "@/components/view-all-link";
 import { addDays, daysInclusive, isIsoDate, namibiaToday } from "@/lib/dates";
 import { upcomingWeekend } from "@/lib/explore";
 import { itemPhotoUrl } from "@/lib/item-photos";
@@ -103,7 +104,10 @@ export default async function ItemPage({ params, searchParams }: PageProps<"/ite
           </p>
         )}
         <Link href={`/explore?cat=${l.category}`} className={`mb-4 hidden rounded text-sm md:inline-block ${focusRingClass}`}>
-          <span className="font-semibold text-primary">← {shortCategory}</span> <span className="text-muted-foreground">· {l.name}</span>
+          <span className="inline-flex items-center gap-1 align-middle font-semibold text-primary">
+            <ArrowLeftIcon size={14} />
+            {shortCategory}
+          </span> <span className="text-muted-foreground">· {l.name}</span>
         </Link>
 
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-x-7">
@@ -202,11 +206,7 @@ export default async function ItemPage({ params, searchParams }: PageProps<"/ite
                 <SectionHead
                   id="similar-title"
                   title="Similar near you"
-                  side={
-                    <Link href={`/explore?cat=${l.category}`} className={`rounded py-2 text-sm font-semibold text-primary ${focusRingClass}`}>
-                      View all →
-                    </Link>
-                  }
+                  side={<ViewAllLink href={`/explore?cat=${l.category}`} />}
                 />
                 <div className="no-scrollbar -mr-4 flex gap-3 overflow-x-auto pr-4 md:mr-0 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:pr-0">
                   {l.similar.map((s) => {

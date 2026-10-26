@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { focusRingClass } from "@/components/button";
+import { ArrowLeftIcon } from "@/components/icons";
 import { StoreButtons } from "@/components/store-buttons";
 import { ROUTES } from "@/lib/site-links";
 
@@ -32,8 +33,9 @@ export function SignInFooter() {
       <div className="hidden md:block">
         <StoreButtons light />
       </div>
-      <Link href={ROUTES.home} className={`self-center rounded py-1.5 text-[14.5px] font-semibold text-muted-foreground hover:text-foreground ${focusRingClass}`}>
-        ← Back to home
+      <Link href={ROUTES.home} className={`flex items-center gap-1.5 self-center rounded py-1.5 text-[14.5px] font-semibold text-muted-foreground hover:text-foreground ${focusRingClass}`}>
+        <ArrowLeftIcon size={15} />
+        Back to home
       </Link>
       <p className="text-center text-[15px]">
         New to RentLoop?{" "}

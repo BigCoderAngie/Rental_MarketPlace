@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { SORTS, type Sort } from "@/lib/explore";
 
 /**
- * "Sort: Recommended ▾" from the kit, as a real select: picking an order opens
+ * "Sort: Recommended" with a drop-down arrow from the kit, as a real select: picking an order opens
  * the same search sorted that way. `hrefs` holds the address for each order.
  */
 export function SortMenu({ value, hrefs }: { value: Sort; hrefs: Record<Sort, string> }) {

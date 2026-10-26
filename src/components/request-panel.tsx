@@ -5,6 +5,7 @@ import { useActionState, useState } from "react";
 import { sendRequest, type SendState } from "@/app/(marketing)/items/[id]/actions";
 import { FormMessage } from "@/components/auth-fields";
 import { Button, buttonClasses } from "@/components/button";
+import { CheckIcon } from "@/components/icons";
 import { addDays } from "@/lib/dates";
 import { formatNadWhole } from "@/lib/money";
 import { requestMoney } from "@/lib/requests";
@@ -53,7 +54,10 @@ export function RequestPanel(props: Props) {
   const availability = tooShort ? (
     <span className="text-[13.5px] font-semibold text-accent-ink">Rents for at least {minDays} days</span>
   ) : free ? (
-    <span className="text-[13.5px] font-semibold text-primary">✓ Free on these dates</span>
+    <span className="flex items-center gap-1.5 text-[13.5px] font-semibold text-primary">
+      <CheckIcon size={13} />
+      Free on these dates
+    </span>
   ) : (
     <span className="text-[13.5px] font-semibold text-danger">Not free on these dates</span>
   );

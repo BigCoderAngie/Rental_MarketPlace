@@ -42,7 +42,7 @@ export type ListingValues = {
   gallery_paths: string[];
 };
 
-/** "N$1,250" or "1 250" → 1250. NaN when it isn't a number. */
+/** "N$1,250" or "1 250" give 1250. NaN when it isn't a number. */
 export function parseAmount(value: string): number {
   const cleaned = value.replace(/N\$|,|\s/gi, "");
   return cleaned === "" ? NaN : Number(cleaned);

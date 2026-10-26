@@ -4,6 +4,7 @@ import { startTransition, useActionState, type FormEvent } from "react";
 import { saveOwnerSetup, type OwnerSetupState } from "@/app/(focus)/owner/setup/actions";
 import { FormMessage } from "@/components/auth-fields";
 import { Button, ButtonLink } from "@/components/button";
+import { ArrowLeftIcon, ArrowRightIcon } from "@/components/icons";
 import { OwnerQuestions } from "@/components/owner-questions";
 import { StickyActions } from "@/components/signup-frame";
 import { ROUTES } from "@/lib/site-links";
@@ -25,10 +26,12 @@ export function OwnerSetupForm() {
       <OwnerQuestions errors={state.errors ?? {}} />
       <StickyActions>
         <ButtonLink href={ROUTES.home} variant="white" size="lg" aria-label="Not now" className="w-14 flex-none px-0 md:w-auto md:px-[22px]">
-          ←<span className="hidden md:inline"> Not now</span>
+          <ArrowLeftIcon />
+          <span className="hidden md:inline">Not now</span>
         </ButtonLink>
         <Button type="submit" variant="yellow" size="lg" disabled={pending} className="flex-1 md:flex-none md:px-8">
-          {pending ? "Saving…" : "Continue to my listing →"}
+          {pending ? "Saving…" : "Continue to my listing"}
+          {!pending && <ArrowRightIcon />}
         </Button>
       </StickyActions>
     </form>
