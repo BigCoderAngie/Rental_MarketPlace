@@ -52,14 +52,6 @@ export const POPULAR_LISTINGS: ListingCardData[] = [
   },
 ];
 
-/** The four tilted photo cards in the hero collage: size, place and tilt from the kit. */
-export const HERO_CARDS = [
-  { label: "Camera with 2 lenses", price: "N$650 / day", w: 320, h: 240, top: 20, left: 0, rotate: -3 },
-  { label: "PA speaker", price: "N$400 / day", w: 220, h: 180, top: 0, left: 310, rotate: 4 },
-  { label: "Marquee", price: "N$6,500 / event", w: 220, h: 165, top: 305, left: 10, rotate: -4 },
-  { label: "Dome tent", price: "N$220 / day", w: 260, h: 195, top: 290, left: 270, rotate: 3 },
-];
-
 export const REVIEW_PLACEHOLDERS = [
   { quote: "[Quote from a renter after a completed booking]", initial: "R", role: "Renter · Windhoek" },
   { quote: "[Quote from an owner about earning from their camera]", initial: "O", role: "Owner · Walvis Bay" },
