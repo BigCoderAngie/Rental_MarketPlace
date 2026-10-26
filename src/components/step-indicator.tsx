@@ -1,3 +1,5 @@
+import { CheckIcon } from "@/components/ui";
+
 /**
  * Numbered steps joined by a line (docs/DESIGN.md "Step indicator"). Done and
  * current steps are filled green. Desktop shows every label; phones show the
@@ -24,9 +26,7 @@ export function StepIndicator({ steps, current: asked }: { steps: string[]; curr
                   }`}
                 >
                   {done ? (
-                    <svg aria-hidden viewBox="0 0 20 20" className="h-4 w-4" fill="none">
-                      <path d="M4 10.5l4 4 8-9" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    <CheckIcon className="h-4 w-4" />
                   ) : (
                     n
                   )}
