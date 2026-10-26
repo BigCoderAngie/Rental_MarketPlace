@@ -8,11 +8,10 @@ import { cardLinkClass, focusRingClass } from "@/components/ui";
  * gets the grid. (hasOwnProperty, not Object.hasOwn: older Safari and in-app
  * browsers lack the latter.)
  */
-export function CategoryTile({ slug, label, href, prefetch }: { slug: string; label: string; href: string; prefetch?: boolean }) {
+export function CategoryTile({ slug, label, href }: { slug: string; label: string; href: string }) {
   return (
     <Link
       href={href}
-      prefetch={prefetch}
       className={`${cardLinkClass} flex min-h-28 flex-col items-center justify-start gap-2 p-3 pt-4 text-center ${focusRingClass}`}
     >
       <span aria-hidden className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-soft text-primary">
@@ -46,15 +45,6 @@ const ICONS: Record<string, ReactNode> = {
       <path d="M10 11V5.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V11" />
     </>
   ),
-  // A camera.
-  electronics: (
-    <>
-      <path d="M3 9a2 2 0 0 1 2-2h2.5l1.5-2.5h6L16.5 7H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <circle cx="12" cy="13" r="3.5" />
-    </>
-  ),
-  // Mountains.
-  "camping-outdoor": <path d="M2.5 20l6.5-11 4 6.5 3-4.5 5.5 9z" />,
   // A 2 by 2 grid.
   other: (
     <>

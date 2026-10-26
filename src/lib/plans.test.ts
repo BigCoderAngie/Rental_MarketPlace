@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bookingFeeText, launchIsOn, planFeatures, planReminder, priceFor, type Plan } from "./plans";
+import { bookingFeeText, planFeatures, planReminder, priceFor, type Plan } from "./plans";
 
 const pro: Plan = {
   code: "pro",
@@ -59,15 +59,7 @@ describe("plan features", () => {
   });
 
   it("shows the booking fee as a whole percentage", () => {
-    expect(bookingFeeText({ booking_fee_rate: 0.05 }, true)).toBe("Marketplace booking fee 5% after the launch, 0% until then");
-    expect(bookingFeeText({ booking_fee_rate: 0.05 }, false)).toBe("Marketplace booking fee 5%");
-    expect(bookingFeeText({ booking_fee_rate: 0 }, true)).toBe("Marketplace booking fee 0%");
-  });
-
-  it("knows when the launch is on, by UTC date, ending on its last day", () => {
-    const at = (iso: string) => new Date(iso);
-    expect(launchIsOn("2027-03-31", at("2027-03-31T23:30:00Z"))).toBe(true);
-    expect(launchIsOn("2027-03-31", at("2027-04-01T00:00:00Z"))).toBe(false);
-    expect(launchIsOn(null, at("2026-10-22T10:00:00Z"))).toBe(false);
+    expect(bookingFeeText({ booking_fee_rate: 0.05 })).toBe("Marketplace booking fee 5% when the marketplace opens");
+    expect(bookingFeeText({ booking_fee_rate: 0 })).toBe("Marketplace booking fee 0% when the marketplace opens");
   });
 });
