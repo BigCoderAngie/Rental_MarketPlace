@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ButtonLink, focusRingClass } from "@/components/button";
-import { HeartIcon } from "@/components/icons";
+import { CheckIcon, FiveStars, HeartIcon } from "@/components/icons";
 import { ImagePlaceholder } from "@/components/image-placeholder";
 import { formatNadWhole } from "@/lib/money";
 import type { ListingCardData } from "@/lib/types";
@@ -46,9 +46,7 @@ export function BookingCard({ item, href, requestHref = href, saveHref }: { item
         </Link>
         {item.rating !== undefined ? (
           <span className="text-[13.5px]">
-            <span aria-hidden className="tracking-[1px] text-star">
-              ★★★★★
-            </span>{" "}
+            <FiveStars />{" "}
             <strong>{item.rating.toFixed(1)}</strong> <span className="text-muted-foreground">({item.reviews})</span>
             <span className="sr-only"> stars from {item.reviews} reviews</span>
           </span>
@@ -61,7 +59,10 @@ export function BookingCard({ item, href, requestHref = href, saveHref }: { item
         {item.availableNow === false ? (
           <span className="text-[13.5px] font-semibold text-muted-foreground">{item.availability}</span>
         ) : (
-          <span className="text-[13.5px] font-semibold text-primary">✓ {item.availability}</span>
+          <span className="flex items-center gap-1.5 text-[13.5px] font-semibold text-primary">
+            <CheckIcon size={13} />
+            {item.availability}
+          </span>
         )}
         <span className="text-[13px] text-muted-foreground">Free to request · pay the owner at collection</span>
         <div className="mt-auto pt-2.5">

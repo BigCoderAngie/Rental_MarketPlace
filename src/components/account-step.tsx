@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { TextField } from "@/components/auth-fields";
 import { Button, ButtonLink } from "@/components/button";
+import { ArrowLeftIcon, ArrowRightIcon } from "@/components/icons";
 import { StickyActions } from "@/components/signup-frame";
 import { useSignupDraft } from "@/components/signup-draft";
 import { hasErrors, validateAccount, type AccountInput, type Errors } from "@/lib/signup";
@@ -60,10 +61,12 @@ export function AccountStep({ nextHref, privacyNote, backHref, backLabel }: { ne
       </p>
       <StickyActions>
         <ButtonLink href={backHref} variant="white" size="lg" className="hidden md:inline-flex">
+          <ArrowLeftIcon />
           {backLabel}
         </ButtonLink>
         <Button type="submit" size="lg" className="w-full md:w-auto md:px-8">
-          Next →
+          Next
+          <ArrowRightIcon />
         </Button>
       </StickyActions>
     </form>

@@ -7,7 +7,7 @@ import { FormMessage, TextField } from "@/components/auth-fields";
 import { BookingCard } from "@/components/booking-card";
 import { Button, buttonClasses, focusRingClass } from "@/components/button";
 import { CATEGORY_ICONS } from "@/components/category-tiles";
-import { CheckIcon } from "@/components/icons";
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, CloseIcon } from "@/components/icons";
 import { ListingPhotos, type UploadedPhoto } from "@/components/listing-photos";
 import { LogoMark } from "@/components/logo";
 import { COLLECTION_TOWNS, MAX_TITLE, parseAmount } from "@/lib/listing";
@@ -61,8 +61,8 @@ export function ListingForm({ defaultTown }: { defaultTown: string }) {
     <form id="listing-form" onSubmit={submit} noValidate className="min-h-screen bg-background">
       <header className="sticky top-0 z-10 border-b border-border bg-card">
         <div className="wrap flex min-h-[64px] items-center gap-3 py-2 md:min-h-20 md:gap-5">
-          <Link href="/owner" aria-label="Close" className={`flex h-11 w-11 flex-none items-center justify-center rounded text-xl ${focusRingClass}`}>
-            ×
+          <Link href="/owner" aria-label="Close" className={`flex h-11 w-11 flex-none items-center justify-center rounded ${focusRingClass}`}>
+            <CloseIcon />
           </Link>
           <span className="hidden md:block">
             <LogoMark size={38} />
@@ -209,13 +209,14 @@ export function ListingForm({ defaultTown }: { defaultTown: string }) {
       <div className="fixed inset-x-0 bottom-0 z-20 flex gap-3 border-t border-border bg-card px-4 pt-3 pb-[calc(16px+env(safe-area-inset-bottom))] lg:hidden">
         {step > 0 && (
           <button type="button" aria-label="Back" onClick={() => setStep(step - 1)} className={buttonClasses({ variant: "white", size: "lg", className: "w-14 flex-none px-0 md:hidden" })}>
-            ←
+            <ArrowLeftIcon size={18} />
           </button>
         )}
         {step < 2 ? (
           <>
             <button type="button" disabled={step === 0 && !done[0]} onClick={() => setStep(step + 1)} className={buttonClasses({ size: "lg", className: "flex-1 md:hidden" })}>
-              {step === 0 ? "Continue to details →" : "Continue to photos →"}
+              {step === 0 ? "Continue to details" : "Continue to photos"}
+              <ArrowRightIcon />
             </button>
             <Button type="submit" name="intent" value="publish" variant="yellow" size="lg" disabled={pending} className="hidden flex-1 md:inline-flex">
               Publish my listing

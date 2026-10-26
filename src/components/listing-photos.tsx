@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CloseIcon } from "@/components/icons";
 import { ITEM_PHOTO_BUCKET, itemPhotoFolder } from "@/lib/item-photos";
 import { MAX_PHOTOS } from "@/lib/listing";
 import { createClient } from "@/lib/supabase/client";
@@ -85,9 +86,9 @@ export function ListingPhotos({ photos, onChange, error }: { photos: UploadedPho
               type="button"
               aria-label={`Remove photo ${i + 1}`}
               onClick={() => onChange((current) => current.filter((x) => x.path !== p.path))}
-              className="absolute top-1.5 right-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-card/90 text-sm font-bold focus-visible:outline-2 focus-visible:outline-primary"
+              className="absolute top-1.5 right-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-card/90 focus-visible:outline-2 focus-visible:outline-primary"
             >
-              ×
+              <CloseIcon size={16} />
             </button>
             <input type="hidden" name="photo" value={p.path} />
           </div>

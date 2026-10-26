@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { FormMessage, TextField } from "@/components/auth-fields";
 import { Button } from "@/components/button";
+import { ArrowLeftIcon } from "@/components/icons";
 import { SignInHeading, TextLink } from "@/components/signin-parts";
 import { sendPasswordReset } from "../actions";
 
@@ -38,7 +39,12 @@ export default async function ForgotPasswordPage({ searchParams }: PageProps<"/s
         </form>
       )}
       <span className="self-center">
-        <TextLink href="/signin">← Back to sign in</TextLink>
+        <TextLink href="/signin">
+          <span className="inline-flex items-center gap-1.5">
+            <ArrowLeftIcon size={14} />
+            Back to sign in
+          </span>
+        </TextLink>
       </span>
     </>
   );

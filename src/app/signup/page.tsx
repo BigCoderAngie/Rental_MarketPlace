@@ -36,7 +36,7 @@ export default async function SignupAccountPage({ searchParams }: PageProps<"/si
         nextHref={signupHref("/signup/about", next)}
         privacyNote="Others only see your name and number once a booking is accepted."
         backHref={ROUTES.signIn}
-        backLabel="← Back to sign in"
+        backLabel="Back to sign in"
       />
     </SignupFrame>
   );

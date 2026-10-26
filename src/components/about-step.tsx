@@ -6,6 +6,7 @@ import { startTransition, useActionState, useEffect, useState, type FormEvent } 
 import { signUp, type SignupState } from "@/app/signup/actions";
 import { CheckboxRow, FormMessage, Required, SelectField } from "@/components/auth-fields";
 import { Button, ButtonLink } from "@/components/button";
+import { ArrowLeftIcon } from "@/components/icons";
 import { StickyActions } from "@/components/signup-frame";
 import { useSignupDraft } from "@/components/signup-draft";
 import { SIGNUP_TOWNS, hasErrors, validateAboutYou } from "@/lib/signup";
@@ -79,7 +80,8 @@ export function AboutStep({ next, step1Href }: { next: string; step1Href: string
 
       <StickyActions>
         <ButtonLink href={step1Href} variant="white" size="lg" aria-label="Previous" className="w-14 flex-none px-0 md:w-auto md:px-[22px]">
-          ←<span className="hidden md:inline"> Previous</span>
+          <ArrowLeftIcon />
+          <span className="hidden md:inline">Previous</span>
         </ButtonLink>
         <Button type="submit" size="lg" disabled={pending} className="flex-1 md:flex-none md:px-8">
           {pending ? "Creating your account…" : "Create my account"}

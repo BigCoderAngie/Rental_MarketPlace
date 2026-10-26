@@ -103,7 +103,7 @@ export function searchHref(q: string): string {
   return `${ROUTES.explore}?q=${encodeURIComponent(q)}`;
 }
 
-/** Up to two capital letters for the avatar circle: "Tangeni Amupolo" → "TA", "tangeni" → "T". */
+/** Up to two capital letters for the avatar circle: "Tangeni Amupolo" gives "TA", "tangeni" gives "T". */
 export function initials(name: string): string {
   const letters = name
     .trim()
