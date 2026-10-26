@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavIcon, mainLinks } from "@/components/app-nav";
-import { focusRingInsetOnDeepClass as focusOnDeep } from "@/components/ui";
 import { isActive } from "@/lib/nav";
+
+// A white focus ring: the usual green one barely shows on deep green (about 1.7:1).
+const focusOnDeep = "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-deep-foreground";
 
 /**
  * The deep green sidebar from the Owner Dashboard mockup (docs/DESIGN.md), for

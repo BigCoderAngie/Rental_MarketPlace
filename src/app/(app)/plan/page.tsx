@@ -3,7 +3,7 @@ import { ErrorNote, PageHeader, buttonClass, secondaryButtonClass, upgradeBadgeC
 import { requireBusiness } from "@/lib/business";
 import { namibiaToday } from "@/lib/dates";
 import { formatNad } from "@/lib/money";
-import { bookingFeeText, launchIsOn, loadLaunchEndsOn, loadPlan, planFeatures, priceFor, priceText, type PlanPayment } from "@/lib/plans";
+import { bookingFeeText, loadPlan, planFeatures, priceFor, priceText, type PlanPayment } from "@/lib/plans";
 import { Badge } from "@/components/status-badge";
 
 function when(iso: string) {
@@ -16,7 +16,7 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
   const { supabase, business } = await requireBusiness();
   const today = namibiaToday();
 
-  const [{ plan, subscription, plans }, { data: payments }, { count: itemCount }, { count: userCount }, { data: isOwner }, launchEndsOn] =
+  const [{ plan, subscription, plans }, { data: payments }, { count: itemCount }, { count: userCount }, { data: isOwner }] =
     await Promise.all([
       loadPlan(supabase, business.id),
       supabase
@@ -28,9 +28,7 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
       supabase.from("items").select("id", { count: "exact", head: true }).eq("business_id", business.id).eq("archived", false),
       supabase.from("business_members").select("user_id", { count: "exact", head: true }).eq("business_id", business.id),
       supabase.rpc("is_business_owner", { p_business_id: business.id }),
-      loadLaunchEndsOn(supabase),
     ]);
-  const launchOn = launchIsOn(launchEndsOn);
   if (!plan) throw new Error("Could not load the plan");
 
   const pending = payments?.find((p) => p.status === "PENDING");
@@ -109,7 +107,7 @@ export default async function PlanPage({ searchParams }: PageProps<"/plan">) {
                 {planFeatures(p).map((f) => (
                   <li key={f}>{f}</li>
                 ))}
-                <li className="text-muted-foreground">{bookingFeeText(p, launchOn)}</li>
+                <li className="text-muted-foreground">{bookingFeeText(p)}</li>
               </ul>
               {isOwner && p.code !== "free" && !pending && (
                 <Link href={`/plan/pay?plan=${p.code}`} className={`${current ? secondaryButtonClass : buttonClass} mt-3 w-full`}>
