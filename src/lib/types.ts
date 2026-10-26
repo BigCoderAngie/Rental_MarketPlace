@@ -139,3 +139,21 @@ export type PublicBooking = {
     customer_confirmed_at: string | null;
   }[];
 };
+
+/** What a listing card shows (BookingCard). */
+export type ListingCardData = {
+  title: string;
+  category: string;
+  area: string;
+  /** Average stars; missing until the item has reviews (shown as "New on RentLoop"). */
+  rating?: number;
+  reviews?: number;
+  /** Whole N$ per unit. */
+  price: number;
+  unit: "day" | "event";
+  availability: string;
+  /** False greys the availability line ("Booked this weekend"). */
+  availableNow?: boolean;
+  badge?: string;
+  photoUrl?: string | null;
+};

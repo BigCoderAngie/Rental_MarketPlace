@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RentLoop item page, phone</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F2EA}
+a{color:#00743F}a:hover{color:#005C32}
+.pg{font-family:Inter,system-ui,sans-serif;color:#1A2420;font-size:14px;background:#F6F2EA;min-height:100vh;box-sizing:border-box}
+.wrap{max-width:1360px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.card{background:#fff;border:1px solid #E6E0D4;border-radius:18px;box-sizing:border-box}
+.muted{color:#5B6670}
+.b3{--edge:#CDC5B5;--glow:rgba(26,36,32,.10);background-image:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0) 55%,rgba(0,0,0,.06));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.18),0 4px 0 var(--edge),0 6px 3px -1px rgba(0,0,0,.16),0 12px 24px -8px var(--glow);transition:transform .06s ease,box-shadow .06s ease,filter .12s ease;cursor:pointer}
+.b3:hover{filter:brightness(1.05)}
+.b3:active{transform:translateY(4px);background-image:linear-gradient(0deg,rgba(255,255,255,.12),rgba(255,255,255,0) 55%,rgba(0,0,0,.08));box-shadow:inset 0 2px 3px rgba(0,0,0,.18),inset 0 -1px 0 rgba(255,255,255,.12),0 0 0 var(--edge),0 1px 1px rgba(0,0,0,.14),0 4px 10px -6px var(--glow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:14px;font-family:inherit;font-weight:700;font-size:15px;text-decoration:none;border:0;box-sizing:border-box;white-space:nowrap}
+.sm{height:40px;padding:0 16px;border-radius:12px;font-size:14px}
+.lg{height:56px;border-radius:16px;font-size:16px}
+.g{background-color:#00743F;color:#fff;--edge:#00502B;--glow:rgba(0,116,63,.45)}
+.g:hover{color:#fff}
+.y{background-color:#FFC83D;color:#06402F;--edge:#D9A11F;--glow:rgba(255,200,61,.55)}
+.y:hover{color:#06402F}
+.w{background-color:#fff;color:#1A2420;border:1px solid #CDC5B5;--edge:#CDC5B5}
+.w:hover{color:#1A2420}
+.lt{background-color:#E3F1E8;color:#0B4D2C;--edge:#B8DCC6;--glow:rgba(0,116,63,.18)}
+.ol{background-color:transparent;color:#fff;border:1px solid #3E8E68;--edge:#3E8E68;--glow:rgba(62,142,104,.35)}
+.ol:hover{color:#fff}
+.chip{height:40px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:600}
+.nl{color:#34403A;text-decoration:none;font-weight:500;font-size:15px;padding:22px 0;border-bottom:2px solid transparent}
+.nl.on{color:#00743F;font-weight:700;border-bottom-color:#00743F}
+.sec{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.sec h2{margin:0;font-size:22px;font-weight:800;letter-spacing:-0.01em}
+.sec p{margin:4px 0 0;font-size:13px;color:#5B6670}
+.va{display:inline-flex;align-items:center;gap:4px;font-size:14px;font-weight:600;text-decoration:none;padding:8px 0}
+.pc{position:relative;overflow:hidden;border-radius:22px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:16px;box-sizing:border-box;text-decoration:none;background:#3E8E68}
+.pc:hover{color:#fff}
+.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08) 30%,rgba(0,0,0,.72))}
+.pc>span:not(.shade){position:relative;z-index:1}
+.price{align-self:flex-start;background:#fff;color:#1A2420;font-size:13px;font-weight:800;border-radius:999px;padding:5px 11px}
+.tag{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:#06402F;color:#fff}
+.lc{position:relative;background:#fff;border:1px solid #E6E0D4;border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.lc>a{display:flex;flex-direction:column;text-decoration:none;color:#1A2420}
+.lc img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#E6E0D4}
+.lb{display:flex;flex-direction:column;gap:3px;padding:12px 14px 14px}
+.cat{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0B4D2C}
+.nm{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.heart{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;border:0;background:#fff;color:#1A2420;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer}
+.badge{position:absolute;top:12px;left:12px;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:#06402F;color:#fff}
+.ci{width:60px;height:60px;border-radius:18px;background:#fff;border:1px solid #E6E0D4;color:#0B4D2C;display:flex;align-items:center;justify-content:center}
+.tile{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:#34403A;font-size:13px;font-weight:600;min-width:76px}
+.chk{display:flex;align-items:center;gap:10px;font-size:14px;color:#1A2420}
+.ck{width:22px;height:22px;border-radius:50%;background:#00743F;color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.lbl{font-size:13px;font-weight:600;display:flex;flex-direction:column;gap:6px}
+.in{height:48px;padding:0 14px;background:#fff;border:1px solid #CDC5B5;border-radius:12px;font:inherit;font-size:15px;font-weight:400;color:#1A2420;box-sizing:border-box;width:100%}
+.lockrow{display:flex;align-items:center;gap:12px;font-size:13.5px}
+.bar{height:12px;border-radius:6px;background:#DDD5C6;flex:1;max-width:240px}
+.kv{display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:6px 0}
+.kv>span:first-child{color:#5B6670}
+.capt{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.pill{font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px}
+.side{flex:0 0 260px;background:#06402F;color:#fff;padding:24px 18px;display:flex;flex-direction:column;gap:18px;box-sizing:border-box}
+.seg{display:flex;padding:4px;border-radius:14px;background:#0B5A3E}
+.seg a{flex:1;text-align:center;padding:10px 0;border-radius:10px;font-weight:600;font-size:14px;text-decoration:none;color:#CFE3D8}
+.seg a.on{background:#fff;color:#06402F}
+.mi{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;color:#E3F1E8;text-decoration:none;font-size:14.5px;font-weight:500}
+.mi.on{background:#00743F;color:#fff;font-weight:700}
+.mi:hover{color:#fff}
+.dot{background:#B7472A;color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px}
+.stat{flex:1 1 200px;padding:18px 20px;display:flex;flex-direction:column;gap:2px}
+.step{width:44px;height:44px;border-radius:12px;font:inherit;font-size:20px;padding:0}
+.avatar{width:40px;height:40px;border-radius:50%;background:#E3F1E8;color:#0B4D2C;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.ic{width:64px;height:64px;border-radius:18px;background-color:#fff;border:1px solid #E6E0D4;color:#0B4D2C;display:flex;align-items:center;justify-content:center;--edge:#E6E0D4;--glow:rgba(26,36,32,.06)}
+.ict{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:#34403A;font-size:13px;font-weight:600;flex:1;min-width:80px}
+.ptile{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid #E6E0D4;border-radius:18px;overflow:hidden;text-decoration:none;color:#1A2420}
+.ptile img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.ptile span{padding:12px 14px;font-weight:700;font-size:14px;display:flex;justify-content:space-between}
+.foot a{color:#CFE3D8;text-decoration:none;font-size:14px}
+.bk{position:relative;background:#fff;border:1px solid #E6E0D4;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .15s ease,transform .15s ease}
+.bk:hover{box-shadow:0 14px 34px rgba(20,40,30,.12);transform:translateY(-2px)}
+.bk>a.im{display:block;position:relative}
+.bk img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#E6E0D4}
+.bkb{display:flex;flex-direction:column;gap:6px;padding:14px 16px 16px;flex:1}
+.bkn{font-size:16px;font-weight:700;line-height:1.3;color:#1A2420;text-decoration:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:42px}
+.stars{color:#E8A317;letter-spacing:1px}
+.bkp{font-size:26px;font-weight:800;letter-spacing:-0.02em;line-height:1}
+.bkp small{font-size:14px;font-weight:500;color:#5B6670;letter-spacing:0}
+.av{font-size:13.5px;font-weight:600;color:#00743F}
+.cta{width:100%;margin-top:auto;height:46px;border-radius:999px;font-size:15px}
+.m{width:390px;position:relative;overflow:hidden}
+.mx{padding:0 16px}
+.hs{display:flex;gap:12px;overflow-x:auto;margin-right:-16px;padding-right:16px;scrollbar-width:none}
+.hs>*{flex:none}
+.mbtn{width:100%;box-sizing:border-box}
+.stick{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #E6E0D4;padding:12px 16px 26px;box-shadow:0 -8px 24px rgba(20,40,30,.08);display:flex;align-items:center;gap:12px;z-index:5}
+</style>
+</head>
+<body style="background:#e9e5dc">
+<div style="width:390px;margin:24px auto;box-shadow:0 20px 60px rgba(0,0,0,.2);border-radius:28px;overflow:hidden"><div class="pg m" style="min-height: 2650px; background: #F6F2EA">
+<div style="position: relative; height: 300px; background: #1A2420"><img src="../assets/camera.jpg" alt="Camera with a long lens" style="width: 100%; height: 100%; object-fit: cover; display: block"><a href="SiteExplore.html" aria-label="Back" style="position: absolute; top: 14px; left: 14px; width: 44px; height: 44px; border-radius: 50%; background: #fff; color: #1A2420; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,.2)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a><span style="position: absolute; top: 14px; right: 14px; display: flex; gap: 8px"><button aria-label="Save" style="width: 44px; height: 44px; border-radius: 50%; border: 0; background: #fff; color: #1A2420; display: flex; align-items: center; justify-content: center; padding: 0; box-shadow: 0 2px 8px rgba(0,0,0,.2)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9z"/></svg></button><button aria-label="Share" style="width: 44px; height: 44px; border-radius: 50%; border: 0; background: #fff; color: #1A2420; display: flex; align-items: center; justify-content: center; padding: 0; box-shadow: 0 2px 8px rgba(0,0,0,.2)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13M7 8l5-5 5 5M5 14v6h14v-6"/></svg></button></span><span style="position: absolute; bottom: 14px; right: 14px; background: rgba(15,29,23,.75); color: #fff; font-size: 12.5px; font-weight: 700; padding: 4px 11px; border-radius: 999px">1 / 4</span></div><main class="mx" style="display: flex; flex-direction: column; gap: 16px; padding-top: 18px; padding-bottom: 130px"><div style="display: flex; flex-direction: column; gap: 6px"><span style="display: flex; gap: 8px; align-items: center"><span class="cat">Electronics</span><span class="pill" style="background: #E3F1E8; color: #0B4D2C">Like new</span></span><h1 style="margin: 0; font-size: 28px; line-height: 1.15; font-weight: 800">Camera with 2 lenses</h1><span class="muted" style="font-size: 14px"><span class="stars">★★★★★</span> 4.9 · 17 reviews · Klein Windhoek</span></div><div style="background: #E3F1E8; border: 1px solid #B8DCC6; border-radius: 18px; padding: 16px 18px; display: flex; justify-content: space-between; gap: 10px"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 28px; font-weight: 800">N$650 <span style="font-size: 14px; font-weight: 500">/ day</span></span><span style="font-size: 13px; color: #34403A">Minimum 2 days</span></span><span style="display: flex; flex-direction: column; gap: 2px; text-align: right"><strong style="font-size: 18px">N$5,000</strong><span style="font-size: 13px; color: #34403A">deposit to the owner</span></span></div><section class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 14px"><div style="display: flex; justify-content: space-between; align-items: center"><strong style="font-size: 18px">Your dates</strong><span class="pill" style="background: #E3F1E8; color: #0B4D2C">Free to send</span></div><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px"><label class="lbl">Pick up<input class="in" value="Fri 14 Nov" style="font-size: 16px"></label><label class="lbl">Return<input class="in" value="Sun 16 Nov" style="font-size: 16px"></label></div><span style="font-weight: 600; color: #0B4D2C; font-size: 14px">✓ Free on these dates</span><div class="kv"><span>N$650 × 3 days</span><span>N$1,950</span></div><div class="kv"><span>Deposit, returned after</span><span>N$5,000</span></div><div class="kv" style="font-weight: 700; color: #0B4D2C"><span style="color: #0B4D2C">Booking fee for you</span><span>N$0</span></div><div class="kv" style="font-weight: 800; font-size: 17px; border-top: 1px solid #E6E0D4; padding-top: 10px"><span style="color: #1A2420">You pay the owner</span><span>N$6,950</span></div></section><section class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 12px"><div style="display: flex; gap: 12px; align-items: center"><span style="width: 44px; height: 44px; border-radius: 50%; background: #E6E0D4; color: #5B6670; display: flex; align-items: center; justify-content: center; flex: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span style="display: flex; flex-direction: column"><strong>Verified owner <span style="font-size: 12.5px; color: #0B4D2C">· ID checked</span></strong><span class="muted" style="font-size: 13px">Replies within an hour · 17 rentals</span></span></div><div style="background: #F6F2EA; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px"><span class="lockrow"><span class="muted" style="width: 64px">Name</span><span class="bar"></span></span><span class="lockrow"><span class="muted" style="width: 64px">Phone</span><span class="bar"></span></span><span class="lockrow"><span class="muted" style="width: 64px">Address</span><span class="bar"></span></span></div><strong style="font-size: 13.5px">Shows once the owner accepts your request.</strong></section><p style="margin: 0; background: #FFF8E6; border: 1px solid #F2DFA8; border-radius: 14px; padding: 12px 14px; font-size: 13.5px; line-height: 1.45; color: #5C3A00">Others may ask for the same dates. When the owner picks you, you both see each other's name and number.</p><section style="display: flex; flex-direction: column; gap: 6px"><h2 style="margin: 0; font-size: 19px">About this item</h2><p style="margin: 0; font-size: 15px; line-height: 1.6; color: #34403A">Full-frame body with a 50 mm and a 24–70 mm lens, two batteries and a 128 GB card. Great for weddings and the dunes.</p></section><section style="display: flex; flex-direction: column; gap: 10px"><h2 style="margin: 0; font-size: 19px">Reviews</h2><div class="card" style="padding: 14px 16px"><strong>Ndapewa K. <span class="stars">★★★★★</span></strong><p class="muted" style="margin: 4px 0 0">[REVIEW TEXT FROM A COMPLETED BOOKING]</p></div></section><section style="display: flex; flex-direction: column; gap: 12px"><h2 style="margin: 0; font-size: 19px">Similar near you</h2><div class="hs"><div style="width: 250px"><article class="bk"><a href="SiteItem.html" class="im"><img src="../assets/camera-body.jpg" alt="Camera body, 24 MP"></a><button class="heart" aria-label="Save Camera body, 24 MP"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9z"/></svg></button><div class="bkb"><span class="cat">Electronics · Eros</span><a href="SiteItem.html" class="bkn">Camera body, 24 MP</a><span style="font-size: 13.5px"><span class="stars">★★★★★</span> <strong>4.7</strong> <span class="muted">(6)</span></span><span class="bkp">N$250 <small>/ day</small></span><span class="av">✓ Free this weekend</span><span class="muted" style="font-size: 13px">Free to request · pay the owner at collection</span><a href="SiteItem.html" class="b3 btn y cta" style="margin-top: 10px">Request to book</a></div></article></div><div style="width: 250px"><article class="bk"><a href="SiteItem.html" class="im"><img src="../assets/laptop.jpg" alt="Laptop, 13-inch"></a><button class="heart" aria-label="Save Laptop, 13-inch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9z"/></svg></button><div class="bkb"><span class="cat">Electronics · Olympia</span><a href="SiteItem.html" class="bkn">Laptop, 13-inch</a><span style="font-size: 13.5px"><span class="stars">★★★★★</span> <strong>4.8</strong> <span class="muted">(9)</span></span><span class="bkp">N$300 <small>/ day</small></span><span class="av">✓ Free this weekend</span><span class="muted" style="font-size: 13px">Free to request · pay the owner at collection</span><a href="SiteItem.html" class="b3 btn y cta" style="margin-top: 10px">Request to book</a></div></article></div></div></section></main><div class="stick"><span style="display: flex; flex-direction: column; flex: none"><strong style="font-size: 18px">N$650 <span style="font-size: 13px; font-weight: 500">/ day</span></strong><span class="muted" style="font-size: 12.5px">Free to request</span></span><a href="SiteBookings.html" class="b3 btn g lg" style="flex: 1">Send request</a></div></div></div>
+</body>
+</html>

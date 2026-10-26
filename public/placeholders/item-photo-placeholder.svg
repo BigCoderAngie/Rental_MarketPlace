@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="Photo coming soon">
+  <defs><pattern id="s" width="28" height="28" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="28" height="28" fill="#EEF0EB"/><rect width="14" height="28" fill="#E6EAE4"/></pattern></defs>
+  <rect width="800" height="600" fill="url(#s)"/>
+  <g transform="translate(400 280)" fill="none" stroke="#7D8A82" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="-70" y="-55" width="140" height="110" rx="16"/><path d="M-70 30l40-40 30 30 22-22 48 48"/><circle cx="34" cy="-20" r="12"/>
+  </g>
+  <text x="400" y="390" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="600" fill="#7D8A82">Photo coming soon</text>
+</svg>

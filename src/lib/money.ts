@@ -6,3 +6,8 @@ export function formatNad(amount: number | string): string {
     maximumFractionDigits: 2,
   })}`;
 }
+
+/** Whole Namibian dollars for prices on listing cards, e.g. "N$650" or "N$6,500" (cents are rounded). */
+export function formatNadWhole(amount: number): string {
+  return `N$${Math.round(amount).toLocaleString("en-US")}`;
+}

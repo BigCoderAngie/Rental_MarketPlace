@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { buttonClasses } from "@/components/button";
 import type { ReactNode } from "react";
 
 // Small shared building blocks so screens look the same. Mobile first:
@@ -43,11 +44,12 @@ export function Field({
 export const inputClass =
   "w-full rounded-lg border border-input bg-card px-3 py-2.5 text-base focus:border-primary focus:outline-none";
 
-// Visible keyboard focus for links and buttons.
-export const focusRingClass = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+// The focus rings live with the Button; re-exported here for existing imports.
+export { focusRingClass, focusRingInsetClass } from "@/components/button";
 
-// Same, drawn just inside the edge, for items in scrolling or rounded clipped lists where an outer ring would be cut off.
-export const focusRingInsetClass = "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary";
+// Buttons for the business pages and customer links: the kit's lit press-down
+// Button, at least 48px tall (NFR-08), allowed to wrap for long business names.
+export const buttonClass = buttonClasses({ variant: "green", wrap: true });
 
 // The same two rings in white, for the deep green surfaces, where green barely shows.
 export const focusRingOnDeepClass = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-deep-foreground";
@@ -84,7 +86,7 @@ export const cardClass = "rounded-xl border border-border bg-card shadow-sm";
 /** A card you tap: lifts a little on hover (desktop), under 200ms, no motion when it's turned off. Callers set the display (flex, block). */
 export const cardLinkClass = `${cardClass} transition-[box-shadow,transform] duration-150 hover:-translate-y-0.5 hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0`;
 
-// Star yellow fill with accent-foreground text (9.1:1); star yellow is never a text colour.
+// Yellow fill with accent-foreground text (7.6:1); yellow is never a text colour on light backgrounds.
 export const upgradeBadgeClass =
   "inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-accent-foreground hover:bg-accent/85";
 

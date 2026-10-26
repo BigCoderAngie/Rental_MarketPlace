@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RentLoop owner sign up, step 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F2EA}
+a{color:#00743F}a:hover{color:#005C32}
+.pg{font-family:Inter,system-ui,sans-serif;color:#1A2420;font-size:14px;background:#F6F2EA;min-height:100vh;box-sizing:border-box}
+.wrap{max-width:1360px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.card{background:#fff;border:1px solid #E6E0D4;border-radius:18px;box-sizing:border-box}
+.muted{color:#5B6670}
+.b3{--edge:#CDC5B5;--glow:rgba(26,36,32,.10);background-image:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0) 55%,rgba(0,0,0,.06));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.18),0 4px 0 var(--edge),0 6px 3px -1px rgba(0,0,0,.16),0 12px 24px -8px var(--glow);transition:transform .06s ease,box-shadow .06s ease,filter .12s ease;cursor:pointer}
+.b3:hover{filter:brightness(1.05)}
+.b3:active{transform:translateY(4px);background-image:linear-gradient(0deg,rgba(255,255,255,.12),rgba(255,255,255,0) 55%,rgba(0,0,0,.08));box-shadow:inset 0 2px 3px rgba(0,0,0,.18),inset 0 -1px 0 rgba(255,255,255,.12),0 0 0 var(--edge),0 1px 1px rgba(0,0,0,.14),0 4px 10px -6px var(--glow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:14px;font-family:inherit;font-weight:700;font-size:15px;text-decoration:none;border:0;box-sizing:border-box;white-space:nowrap}
+.sm{height:40px;padding:0 16px;border-radius:12px;font-size:14px}
+.lg{height:56px;border-radius:16px;font-size:16px}
+.g{background-color:#00743F;color:#fff;--edge:#00502B;--glow:rgba(0,116,63,.45)}
+.g:hover{color:#fff}
+.y{background-color:#FFC83D;color:#06402F;--edge:#D9A11F;--glow:rgba(255,200,61,.55)}
+.y:hover{color:#06402F}
+.w{background-color:#fff;color:#1A2420;border:1px solid #CDC5B5;--edge:#CDC5B5}
+.w:hover{color:#1A2420}
+.lt{background-color:#E3F1E8;color:#0B4D2C;--edge:#B8DCC6;--glow:rgba(0,116,63,.18)}
+.ol{background-color:transparent;color:#fff;border:1px solid #3E8E68;--edge:#3E8E68;--glow:rgba(62,142,104,.35)}
+.ol:hover{color:#fff}
+.chip{height:40px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:600}
+.nl{color:#34403A;text-decoration:none;font-weight:500;font-size:15px;padding:22px 0;border-bottom:2px solid transparent}
+.nl.on{color:#00743F;font-weight:700;border-bottom-color:#00743F}
+.sec{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.sec h2{margin:0;font-size:22px;font-weight:800;letter-spacing:-0.01em}
+.sec p{margin:4px 0 0;font-size:13px;color:#5B6670}
+.va{display:inline-flex;align-items:center;gap:4px;font-size:14px;font-weight:600;text-decoration:none;padding:8px 0}
+.pc{position:relative;overflow:hidden;border-radius:22px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:16px;box-sizing:border-box;text-decoration:none;background:#3E8E68}
+.pc:hover{color:#fff}
+.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08) 30%,rgba(0,0,0,.72))}
+.pc>span:not(.shade){position:relative;z-index:1}
+.price{align-self:flex-start;background:#fff;color:#1A2420;font-size:13px;font-weight:800;border-radius:999px;padding:5px 11px}
+.tag{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:#06402F;color:#fff}
+.lc{position:relative;background:#fff;border:1px solid #E6E0D4;border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.lc>a{display:flex;flex-direction:column;text-decoration:none;color:#1A2420}
+.lc img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#E6E0D4}
+.lb{display:flex;flex-direction:column;gap:3px;padding:12px 14px 14px}
+.cat{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0B4D2C}
+.nm{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.heart{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:50%;border:0;background:#fff;color:#1A2420;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer}
+.badge{position:absolute;top:12px;left:12px;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:#06402F;color:#fff}
+.ci{width:60px;height:60px;border-radius:18px;background:#fff;border:1px solid #E6E0D4;color:#0B4D2C;display:flex;align-items:center;justify-content:center}
+.tile{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:#34403A;font-size:13px;font-weight:600;min-width:76px}
+.chk{display:flex;align-items:center;gap:10px;font-size:14px;color:#1A2420}
+.ck{width:22px;height:22px;border-radius:50%;background:#00743F;color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.lbl{font-size:13px;font-weight:600;display:flex;flex-direction:column;gap:6px}
+.in{height:48px;padding:0 14px;background:#fff;border:1px solid #CDC5B5;border-radius:12px;font:inherit;font-size:15px;font-weight:400;color:#1A2420;box-sizing:border-box;width:100%}
+.lockrow{display:flex;align-items:center;gap:12px;font-size:13.5px}
+.bar{height:12px;border-radius:6px;background:#DDD5C6;flex:1;max-width:240px}
+.kv{display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:6px 0}
+.kv>span:first-child{color:#5B6670}
+.capt{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.pill{font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px}
+.side{flex:0 0 260px;background:#06402F;color:#fff;padding:24px 18px;display:flex;flex-direction:column;gap:18px;box-sizing:border-box}
+.seg{display:flex;padding:4px;border-radius:14px;background:#0B5A3E}
+.seg a{flex:1;text-align:center;padding:10px 0;border-radius:10px;font-weight:600;font-size:14px;text-decoration:none;color:#CFE3D8}
+.seg a.on{background:#fff;color:#06402F}
+.mi{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;color:#E3F1E8;text-decoration:none;font-size:14.5px;font-weight:500}
+.mi.on{background:#00743F;color:#fff;font-weight:700}
+.mi:hover{color:#fff}
+.dot{background:#B7472A;color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px}
+.stat{flex:1 1 200px;padding:18px 20px;display:flex;flex-direction:column;gap:2px}
+.step{width:44px;height:44px;border-radius:12px;font:inherit;font-size:20px;padding:0}
+.avatar{width:40px;height:40px;border-radius:50%;background:#E3F1E8;color:#0B4D2C;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.ic{width:64px;height:64px;border-radius:18px;background-color:#fff;border:1px solid #E6E0D4;color:#0B4D2C;display:flex;align-items:center;justify-content:center;--edge:#E6E0D4;--glow:rgba(26,36,32,.06)}
+.ict{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:#34403A;font-size:13px;font-weight:600;flex:1;min-width:80px}
+.ptile{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid #E6E0D4;border-radius:18px;overflow:hidden;text-decoration:none;color:#1A2420}
+.ptile img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.ptile span{padding:12px 14px;font-weight:700;font-size:14px;display:flex;justify-content:space-between}
+.foot a{color:#CFE3D8;text-decoration:none;font-size:14px}
+.bk{position:relative;background:#fff;border:1px solid #E6E0D4;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .15s ease,transform .15s ease}
+.bk:hover{box-shadow:0 14px 34px rgba(20,40,30,.12);transform:translateY(-2px)}
+.bk>a.im{display:block;position:relative}
+.bk img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#E6E0D4}
+.bkb{display:flex;flex-direction:column;gap:6px;padding:14px 16px 16px;flex:1}
+.bkn{font-size:16px;font-weight:700;line-height:1.3;color:#1A2420;text-decoration:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:42px}
+.stars{color:#E8A317;letter-spacing:1px}
+.bkp{font-size:26px;font-weight:800;letter-spacing:-0.02em;line-height:1}
+.bkp small{font-size:14px;font-weight:500;color:#5B6670;letter-spacing:0}
+.av{font-size:13.5px;font-weight:600;color:#00743F}
+.cta{width:100%;margin-top:auto;height:46px;border-radius:999px;font-size:15px}
+</style>
+</head>
+<body>
+<div class="pg" style="">
+<div class="wrap" style="max-width: 960px; padding-bottom: 56px">
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 24px 0"><a href="SiteHome.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #0B4D2C; font-weight: 800; font-size: 23px"><svg width="38" height="38" viewBox="0 0 100 100" aria-hidden="true" style="display: block; flex: none"><defs><linearGradient id="sl5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".08"/></linearGradient><linearGradient id="sh5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".12" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><rect width="100" height="100" rx="23" fill="#00743F"/><rect width="100" height="100" rx="23" fill="url(#sl5)"/><g fill="none" stroke="#FFC83D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M21.8 39.7A30 30 0 0 1 78.2 39.7"/><path d="M81.1 30.1L78.2 39.7L69.9 34.3"/><path d="M78.2 60.3A30 30 0 0 1 21.8 60.3"/><path d="M18.9 69.9L21.8 60.3L30.1 65.7"/></g><text x="50" y="63" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="36" font-weight="800" fill="#fff">R</text><rect x="1" y="1" width="98" height="98" rx="22" fill="none" stroke="url(#sh5)" stroke-width="2"/></svg>RentLoop</a><span class="muted" style="font-size: 14.5px">Already have an account? <a href="SiteLogin.html" style="font-weight: 600">Sign in</a></span></header>
+  <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 8px 0 28px"><span class="pill" style="background: #FFC83D; color: #06402F">For owners and hire businesses</span><h1 style="margin: 0; font-size: 40px; font-weight: 800; letter-spacing: -0.02em">Start earning with RentLoop</h1><span style="display: flex; align-items: center; gap: 10px; font-size: 16px; color: #34403A"><svg width="22" height="15" viewBox="0 0 90 60" role="img" aria-label="Flag of Namibia" style="display: block; flex: none; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.12)"><defs><clipPath id="nac22_5"><rect width="90" height="60" rx="4"/></clipPath></defs><g clip-path="url(#nac22_5)"><rect width="90" height="60" fill="#009543"/><path d="M0 0H90L0 60Z" fill="#003580"/><path d="M0 60L90 0" stroke="#fff" stroke-width="22"/><path d="M0 60L90 0" stroke="#D21034" stroke-width="15"/><g transform="translate(19 17)" fill="#FFCE00"><circle r="6"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(0)"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(30)"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(60)"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(90)"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(120)"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(150)"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(180)"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(210)"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(240)"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(270)"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(300)"/><path d="M0 -11L2 -5.5H-2Z" transform="rotate(330)"/></g><circle cx="19" cy="17" r="5" fill="#FFCE00" stroke="#003580" stroke-width="1.2"/></g></svg>N$0 to list. <strong style="color: #00743F">We only earn when you earn.</strong></span></div>
+  <div style="display: flex; flex-direction: column; gap: 20px">
+    <div class="card" style="padding: 26px 32px; position: relative; display: flex; justify-content: space-around"><span aria-hidden="true" style="position: absolute; left: 32px; right: 32px; top: 46px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, #00743F 25%, #E6E0D4 25%)"></span><span style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; background: #fff; padding: 0 16px"><span style="width: 40px; height: 40px; border-radius: 50%; background: #00743F; color: #fff; border: 2px solid #00743F; font-weight: 800; display: flex; align-items: center; justify-content: center; box-sizing: border-box">1</span><span style="font-size: 13px; font-weight: 700; color: #00743F">Account</span></span><span style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; background: #fff; padding: 0 16px"><span style="width: 40px; height: 40px; border-radius: 50%; background: #fff; color: #5B6670; border: 2px solid #CDC5B5; font-weight: 800; display: flex; align-items: center; justify-content: center; box-sizing: border-box">2</span><span style="font-size: 13px; font-weight: 600; color: #5B6670">Owner details</span></span></div>
+    <section class="card" style="padding: 32px; display: flex; flex-direction: column; gap: 22px">
+      <h2 style="margin: 0; padding-bottom: 16px; border-bottom: 1px solid #E6E0D4; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px"><span style="color: #00743F"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span>Account information</h2>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 22px"><label class="lbl">Full name <span style="color: #B7472A">*</span><span style="display: flex; align-items: center; height: 52px; background: #fff; border: 1px solid #CDC5B5; border-radius: 14px; overflow: hidden"><input type="text" placeholder="Selma Nangolo" value="" style="flex: 1; min-width: 0; border: 0; outline: 0; padding: 0 14px; font: inherit; font-size: 15px; font-weight: 400; background: transparent; color: #1A2420"></span></label><label class="lbl">Email address <span style="color: #B7472A">*</span><span style="display: flex; align-items: center; height: 52px; background: #fff; border: 1px solid #CDC5B5; border-radius: 14px; overflow: hidden"><input type="email" placeholder="you@example.com" value="" style="flex: 1; min-width: 0; border: 0; outline: 0; padding: 0 14px; font: inherit; font-size: 15px; font-weight: 400; background: transparent; color: #1A2420"></span></label><label class="lbl">Mobile number <span style="color: #B7472A">*</span><span style="display: flex; align-items: center; height: 52px; background: #fff; border: 1px solid #CDC5B5; border-radius: 14px; overflow: hidden"><span style="padding: 0 14px; font-weight: 700; border-right: 1px solid #E6E0D4; align-self: stretch; display: flex; align-items: center">+264</span><input type="tel" placeholder="81 234 5678" value="" style="flex: 1; min-width: 0; border: 0; outline: 0; padding: 0 14px; font: inherit; font-size: 15px; font-weight: 400; background: transparent; color: #1A2420"></span></label><label class="lbl">Password <span style="color: #B7472A">*</span><span style="display: flex; align-items: center; height: 52px; background: #fff; border: 1px solid #CDC5B5; border-radius: 14px; overflow: hidden"><input type="password" placeholder="At least 8 characters" value="" style="flex: 1; min-width: 0; border: 0; outline: 0; padding: 0 14px; font: inherit; font-size: 15px; font-weight: 400; background: transparent; color: #1A2420"><button type="button" aria-label="Show password" style="background: none; border: 0; color: #5B6670; padding: 0 14px; height: 100%; display: flex; align-items: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></span></label><label class="lbl">Confirm password <span style="color: #B7472A">*</span><span style="display: flex; align-items: center; height: 52px; background: #fff; border: 1px solid #CDC5B5; border-radius: 14px; overflow: hidden"><input type="password" placeholder="Type it again" value="" style="flex: 1; min-width: 0; border: 0; outline: 0; padding: 0 14px; font: inherit; font-size: 15px; font-weight: 400; background: transparent; color: #1A2420"><button type="button" aria-label="Show password" style="background: none; border: 0; color: #5B6670; padding: 0 14px; height: 100%; display: flex; align-items: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></span></label></div>
+      <p class="muted" style="margin: 0; font-size: 13px">Renters only see your name, number and address once you accept their booking.</p>
+      <div style="display: flex; justify-content: space-between; gap: 12px; margin-top: 6px"><a href="SiteJoin.html" class="b3 btn w lg">← Back</a><a href="SiteOwnerSignUp2.html" class="b3 btn g lg" style="padding: 0 32px">Next →</a></div>
+    </section>
+    <p style="margin: 0; text-align: center; font-size: 15px">Only want to rent? <a href="SiteSignUp.html" style="font-weight: 700">Sign up to rent</a> · Already have an account? <a href="SiteLogin.html" style="font-weight: 700">Sign in</a></p>
+  </div>
+</div>
+</div>
+</body>
+</html>

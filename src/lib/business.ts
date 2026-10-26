@@ -27,3 +27,14 @@ export function friendlyError(error: { message: string }): string {
   }
   return error.message;
 }
+
+/**
+ * Where someone goes after signing in: hire businesses to their calendar,
+ * individual owners to the owner dashboard, everyone else to the marketplace
+ * home (build kit decision 9).
+ */
+export async function homeAfterSignIn(supabase: Awaited<ReturnType<typeof createClient>>): Promise<string> {
+  const { data } = await supabase.from("businesses").select("kind").order("created_at").limit(1).maybeSingle<{ kind: string }>();
+  if (!data) return "/";
+  return data.kind === "individual" ? "/owner" : "/calendar";
+}

@@ -2,6 +2,8 @@
 
 > **20 Oct 2026:** the MVP is now a two-sided marketplace with individual and business owners (`docs/MASTER-PLAN.md`), so the home and item page mockups are MVP screens and individual owners are in.
 
+> **22 Oct 2026: the build kit now sets the look.** Exact colours, type, radii and the lit press-down buttons come from `docs/build-kit/01-DESIGN-SYSTEM.md`, `docs/build-kit/assets/styles/` and the reference pages in `docs/build-kit/reference/`. Where this file disagrees, the kit wins, and `docs/MASTER-PLAN.md` "Build kit decisions" records where the SRS changes the kit. In code: tokens in `src/app/globals.css`, the `Button` in `src/components/button.tsx`, `Logo`, `Flag` and `ImagePlaceholder` in `src/components/`, and every piece on `/styleguide` (only on your computer).
+
 The mockups in `docs/design/` set the **look**. `docs/SRS.md` sets **what the app does**. Where they disagree, the SRS wins (see "Not from the mockups"). The name is **RentLoop** everywhere the mockups say "RentNow".
 
 - `docs/design/design-home.jpeg`: the marketplace home page.
@@ -19,33 +21,31 @@ Colours are CSS variables in `src/app/globals.css` and Tailwind classes (`bg-pri
 | --- | --- | --- | --- |
 | `deep` | `#06402f` | footer strip `#084838`, sidebar `#003828` | Top band on customer pages, footer strip, dashboard sidebar, promo banners |
 | `deep-foreground` | `#ffffff` | sidebar text | Text on `deep` (11.8:1) |
-| `deep-muted` | `#b9d3c5` | sidebar labels | Quiet text on `deep` (7.4:1) |
+| `deep-muted` | `#cfe3d8` | kit on-deep | Body text on `deep` (8.8:1) |
 | `highlight` | `#3dd15f` | headline "Earn from what you have." | The accent words of a headline, **only on `deep` or a dark photo** (5.9:1). Never on white (2.0:1) |
 | `primary` | `#00743f` | "List an Item", "Search", "Book Now" `#007440` | Buttons, links, active tab, the active sidebar item (white text 5.9:1) |
 | `primary-strong` | `#005c32` | — | Button hover and pressed |
-| `primary-soft` | `#e6f4ec` | "Why RentNow" panel `#e8f4ec`, icon circles `#e4f8f0` | Pale green panels, icon circles, confirmed notes |
+| `primary-soft` | `#e3f1e8` | kit mint | Pale green panels, pills, icon tiles |
 | `primary-border` | `#b8dcc6` | — | Borders of pale green panels |
-| `primary-ink` | `#0b4d2c` | — | Text on `primary-soft` (8.8:1) |
-| `background` | `#ffffff` | page `#f8f8fc` | Page background (white, as briefed) |
+| `primary-ink` | `#0b4d2c` | kit mint-text | Text on `primary-soft` (8.5:1), logo wordmark |
+| `background` | `#f6f2ea` | kit cream | Page background; cards stay white |
 | `card` | `#ffffff` | cards | Cards, inputs, sheets |
-| `border` | `#e3e8eb` | card borders `#eaeef0` | Card and divider lines |
-| `input` | `#cdd5da` | form fields | Input borders (darker than `border` so fields read as fields) |
-| `muted` | `#f2f4f5` | grey fills | Hover rows, image placeholders, chart bars |
-| `foreground` | `#0f1d17` | price and title text `#000307` | Main text (17.4:1) |
+| `border` | `#e6e0d4` | kit line | Card and divider lines |
+| `input` | `#cdc5b5` | kit line-strong | Input borders, white-button edge |
+| `muted` | `#efe9dd` | warm fills | Hover rows, chart bars |
+| `foreground` | `#1a2420` | kit ink | Main text (14.3:1 on cream) |
 | `foreground-soft` | `#34403a` | — | Secondary headings, strong labels |
-| `muted-foreground` | `#5b6670` | town, "Member since", captions | Meta text (5.9:1 on white, 5.3:1 on `muted`) |
-| `accent` | `#f3b017` | star rating `#f3b017` | Star fill, "Featured" and upgrade badges, **fill only** (1.9:1 as text). Text on it is `accent-foreground` |
-| `accent-foreground` | `#0f1d17` | — | Text on `accent` (9.1:1) |
-| `accent-soft` | `#fdf3dc` | "Pending" pill `#f6e0c9` | Waiting and warning pills and notes |
-| `accent-border` | `#f3d68a` | — | Borders of `accent-soft` notes |
-| `accent-ink` | `#7a4d00` | Pending text | Text on `accent-soft` (6.6:1) |
+| `muted-foreground` | `#5b6670` | kit muted | Meta text (5.9:1 on white, 5.2:1 on cream, 4.8:1 on `muted`) |
+| `accent` | `#ffc83d` | kit yellow | Yellow fills (Sign up free, Request to book, badges) and yellow words on `deep` (7.6:1). Never text on cream or white (1.4:1). Text on it is `accent-foreground` |
+| `accent-foreground` | `#06402f` | — | Deep green text on `accent` (7.6:1) |
+| `accent-soft` / `accent-border` / `accent-ink` | `#fff8e6` / `#f2dfa8` / `#5c3a00` | kit warn | Waiting and warning notes (9.6:1) |
 | `danger` | `#b7472a` | — (not in the mockups) | Overdue, unpaid, problems, errors (5.3:1); white text on it 5.3:1 |
 | `danger-soft` / `danger-border` / `danger-ink` | `#fbe9e4` / `#f0c4b8` / `#6e2716` | — | Problem and error notes (ink 9.1:1) |
-| `info-soft` / `info-ink` | `#e3eef6` / `#1e4351` | — | Neutral notices such as plan reminders (9.0:1) |
+| `info-soft` / `info-ink` | `#e8f0fa` / `#1f4a7a` | kit info | "Waiting for owner" pill, notices (7.9:1) |
 
 ### Type
 
-One family: **Geist** (already loaded in `src/app/layout.tsx`). Sizes on a 4 px rhythm.
+One family: **Inter** 400 to 800 (loaded in `src/app/layout.tsx`); sizes and weights from the kit (hero 66/42 px 800, page titles 40–44 px 800, section titles 22/21 px 800). Sizes on a 4 px rhythm.
 
 | Role | Phone | Desktop | Weight | Tailwind |
 | --- | --- | --- | --- | --- |

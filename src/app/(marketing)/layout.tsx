@@ -1,19 +1,23 @@
-import { SiteFooter } from "@/components/site-footer";
-import { TopBar } from "@/components/top-bar";
+import { HelpButton, SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { TopStrip } from "@/components/top-strip";
+import { displayName, type Viewer } from "@/lib/site-links";
 import { createClient } from "@/lib/supabase/server";
 
-// Public pages for signed-out visitors: the homepage, terms and privacy.
+// Public pages: the homepage, terms and privacy, inside the build kit shell.
 export default async function MarketingLayout({ children }: LayoutProps<"/">) {
-  // Signed-in users only reach terms and privacy here (proxy.ts sends them
-  // from the homepage to their calendar), so give them a way back.
+  // Everyone sees the home page; signed-in people get List an item and their avatar.
   const { data } = await (await createClient()).auth.getClaims();
-  const signedIn = Boolean(data?.claims);
+  const claims = data?.claims;
+  const viewer: Viewer = claims ? { name: displayName(claims.user_metadata?.full_name, claims.email) } : null;
 
   return (
     <div className="flex min-h-screen flex-col">
-      <TopBar signedIn={signedIn} />
+      <TopStrip />
+      <SiteHeader viewer={viewer} />
       <main className="flex-1">{children}</main>
       <SiteFooter />
+      <HelpButton />
     </div>
   );
 }

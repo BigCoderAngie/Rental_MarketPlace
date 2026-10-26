@@ -46,6 +46,47 @@ Build RentLoop as a simple two-sided marketplace in the design from `docs/DESIGN
 5. **Launch towns:** Windhoek and Erongo first.
 6. **Renter sign-up:** email code plus a required phone number. The phone stays hidden from the owner until the booking is confirmed (FR-PV-01).
 
+## Build kit decisions (answered 22 October 2026)
+
+The website is now built from the RentLoop build kit in `docs/build-kit/` (reference pages, design system, business rules, routes, build parts 0 to 10). The kit's reference HTML sets the look; these answers settle where the kit, the SRS and the earlier decisions disagreed. Where they differ from "Marketplace decisions" above, these win.
+
+1. **Booking fee: 10% from day one**, one setting in the database (not code). The owner sees "Your booking fee (10%)" and "Accept and pay". This replaces decision 2 (0% at launch) and SRS 3.1's launch period.
+2. **The fee is paid through PayToday.** Contact details unlock only after the fee is paid (FR-PV-01), so PayToday must work before launch. Until it is connected, payment runs in a clearly marked test mode.
+3. **Sign in with email and password, as in the kit** (changed 23 October 2026; this was "email code"). Sign-up asks for a password and confirm, as the kit shows, and the Email tab signs in with email and password. "Forgot password?" emails a reset link, and "Email me a sign-in code instead" stays for accounts made before passwords. The kit's "Mobile code" tab is built but stays off until an SMS provider is chosen. Sign-up details (name, town, owner type, business name, when Terms and the booking fee box were ticked) are saved on the profile.
+4. **Supabase** stays the database and photo storage.
+5. **Free plan: 15 listings**, the database value today ("2 listings · 13 more").
+6. **App Store and Google Play buttons** show as in the design with a "Coming soon" label and are not clickable. There is no store app in the MVP.
+7. **768 to 1023 px:** the desktop structure with fewer columns. The nav folds into the menu button, cards show 2 per row, sidebars become the phone toggle, and the hero photo collage is hidden.
+8. **Routes:** the kit's routes for the marketplace: `/signin` (with `/login` forwarding to it), `/join`, `/signup/renter`, `/signup/renter/about`, `/signup/owner`, `/signup/owner/details`, `/welcome`, `/explore`, `/items/[id]`, `/owner`, `/owner/requests`, `/owner/list`. The renter's bookings live at `/my/bookings`, because `/bookings` is the business bookings page. The business tools keep their routes.
+9. **One owner area.** Individuals see the kit's owner dashboard. Hire businesses see the same dashboard plus Calendar, Quotes, Customers and Reports in the sidebar.
+10. **Launch categories and towns stay** (decisions 4 and 5): 6 category tiles, no Vehicles, Homes or Rooms; search covers Windhoek, Swakopmund and Walvis Bay. Sign-up's home-town list can include every town.
+11. **Sample content is shown as clearly marked placeholders**, so the sections are visible: the hero notes, the earnings card, the "LIVE" cards, "What people say" and "ID-checked owners". Each switches to real data when it exists (reviews from completed bookings only; ID checks from M5). Placeholder text is never presented as a real person or a real result.
+12. **No messaging before a booking:**
+    - The item page has no "Message to the owner" box. The renter picks dates and taps "Send request".
+    - Owner requests show Renter A, B, C with only rating, number of rentals, ID checked, dates, quantity and price. No typed message.
+    - After the owner pays, both sides get a "Chat on WhatsApp" button (their number and a ready-made first message) and a Call button.
+    - No Messages page: "Messages" is left out of the sidebar and phone menus.
+13. **The rough look branch is dropped** (kept as a git stash). Part 1 builds the look exactly from the kit, and draft PR #19 is folded into Part 3. The business pages keep working throughout.
+14. **The kit lives in `docs/build-kit/`**, without its stock photos (`reference/assets/`, unknown licences). Pages show the kit's placeholder image until owners upload photos.
+
+## Build kit Parts 5 to 10 (built 23 October 2026, recommended choices taken while away)
+
+These choices were made while building Parts 5 to 10 without stopping to ask. Each can be changed.
+
+1. **Every owner lists through a business row.** An individual owner gets one made on their first listing (`kind = 'individual'`), so calendars, stock checks and the Free plan's 15 items work the same for everyone. "Run a hire business?" on the owner dashboard turns it into a hire business, which adds Calendar, Quotes, Customers and Reports to the sidebar (decision 9).
+2. **Marketplace requests live in their own table** (`listing_requests`), not in bookings, so owners never see a renter's name or phone before paying the fee (rule 8). Accept and pay creates a confirmed booking that holds the units, then declines other open requests that no longer fit (rules 11 and 13).
+3. **The booking fee is the plan's `booking_fee_rate`** (Free 10%, Pro 5%, Business 0%), one database setting as decision 1 asks. Payment runs in a clearly marked **test mode** (TEST reference, no money moves) until PayToday is connected (decision 2).
+4. **Fee refunds are a claim**: the owner can claim once, until 30 days after the start date; RentLoop reviews and refunds by hand for now (rule 4).
+5. **Explore shows the kit's cards as marked samples only while nothing is listed**; real searches show only items free on the searched dates (FR-SR-01). Without dates, cards say "Free this weekend" or "Booked this weekend" from the calendar.
+6. **Item pages hide the owner's name and street** until the fee is paid; renters see the area and town. The "Verified owner · ID checked" line shows as "ID check soon" until M5.
+7. **No reviews are shown yet** ("No reviews yet. Reviews come from completed bookings only.") and no Favourites or Identity check pages, because those features don't exist yet.
+8. **Owner links** ("For businesses", "List an item") go to owner sign-up for visitors; signed-in owners land on their dashboard. After sign-in, hire businesses go to their calendar, individual owners to /owner, renters to the home page.
+9. **768 to 1023 px**: the header nav folds into the menu button and the Explore filters open as the bottom sheet (decision 7). From 1024 to 1279 px the header search hides to make room for the nav.
+
+## One sign-up (decided 23 October 2026)
+
+One account rents and lists, so there is one sign-up instead of the kit's two paths, and it is the same for everyone: Account (`/signup`), then About you (`/signup/about`: town, Terms box, WhatsApp updates). "Sign up free" opens it directly; `/join` and the old `/signup/renter` and `/signup/owner` addresses forward to it. The owner questions (individual or hire business, business name, verify ID later) and the required booking fee box are on their own page, "Before you list" (`/owner/setup`), which opens the first time someone goes to List an item; after it they continue to the listing form. Owner links ("For businesses", "List an item") sign up with List an item as the next page. The renter form's "I run a hire business" tick is gone: "A hire business" on Before you list covers it. Members of an existing hire business are not asked the owner questions. (Changed 23 October 2026 from a Join page with two cards and owner questions inside sign-up, which read as two sign-ups.)
+
 ## In scope: the MVP, in this order
 
 1. **Restyle.** Shared parts first (top bar, sidebar, footer strip, stat cards, step indicator), then each staff page, then the customer pages, then the public homepage.
@@ -192,6 +233,12 @@ Copy these into the online SRS before sales begin. **Done on 20 Oct 2026:** all 
 6. **Section 2.1:** the gate "30 to 50 businesses before the marketplace" is removed.
 7. **FR-IN-06:** categories at launch are Events, Tools, Construction and Machinery, Electronics, Camping and Outdoor, Other; no vehicles or homes.
 8. **Section 9 (MVP scope):** rewritten to match the MVP order above.
+
+**New changes from 22 October 2026 (build kit decisions above):**
+
+9. **Section 3.1:** no 0% launch period; the booking fee is 10% from day one.
+10. **Section 7.2:** PayToday is the payment gateway for booking fees.
+11. **FR-PV-02:** no in-app messaging before confirmation; after the fee is paid, both sides get WhatsApp and Call.
 
 ## Decide before the marketplace tasks (SRS section 8)
 

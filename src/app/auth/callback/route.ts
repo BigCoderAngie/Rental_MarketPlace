@@ -1,19 +1,30 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { homeAfterSignIn } from "@/lib/business";
+import { safeNextPath } from "@/lib/signup";
 import { createClient } from "@/lib/supabase/server";
 
-// Landing page for the sign-in link in the email.
+// Landing page for the links in our emails: sign-in code, confirm your email
+// (?next=/welcome) and choose a new password (?next=/signin/new-password).
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
-  const target = new URL("/calendar", request.url);
+  const next = safeNextPath(request.nextUrl.searchParams.get("next"));
+  const supabase = await createClient();
+
+  // Supabase sends people here with ?error= when a link has expired or was already used.
+  if (request.nextUrl.searchParams.has("error")) {
+    const signIn = new URL("/signin", request.url);
+    signIn.searchParams.set("error", "That link has expired or was already used. Sign in, or ask for a new link.");
+    return NextResponse.redirect(signIn);
+  }
 
   if (code) {
-    const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (error) {
-      target.pathname = "/login";
-      target.searchParams.set("error", "That sign-in link has expired. Ask for a new code.");
+      const signIn = new URL("/signin", request.url);
+      signIn.searchParams.set("error", "That link has expired. Sign in, or ask for a new link.");
+      return NextResponse.redirect(signIn);
     }
   }
 
-  return NextResponse.redirect(target);
+  return NextResponse.redirect(new URL(next ?? (await homeAfterSignIn(supabase)), request.url));
 }
