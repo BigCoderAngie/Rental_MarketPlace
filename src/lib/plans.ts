@@ -109,8 +109,19 @@ export function planFeatures(plan: Pick<Plan, "item_limit" | "user_limit" | "ful
   ];
 }
 
-export function bookingFeeText(plan: Pick<Plan, "booking_fee_rate">): string {
-  return `Marketplace booking fee ${Math.round(Number(plan.booking_fee_rate) * 100)}% when the marketplace opens`;
+/**
+ * Whether the launch is still on (founding prices, 0% booking fee). The database
+ * decides on the UTC date (plan_price()), so compare the same date.
+ */
+export function launchIsOn(launchEndsOn: string | null, now = new Date()): boolean {
+  return launchEndsOn != null && now.toISOString().slice(0, 10) <= launchEndsOn;
+}
+
+/** The plan's marketplace booking fee; 0% for everyone while the launch is on (SRS 3.1). */
+export function bookingFeeText(plan: Pick<Plan, "booking_fee_rate">, launchOn: boolean): string {
+  const percent = Math.round(Number(plan.booking_fee_rate) * 100);
+  if (percent === 0) return "Marketplace booking fee 0%";
+  return launchOn ? `Marketplace booking fee ${percent}% after the launch, 0% until then` : `Marketplace booking fee ${percent}%`;
 }
 
 export function priceText(amount: number): string {
