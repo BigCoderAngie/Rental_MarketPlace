@@ -1,6 +1,6 @@
-// Sign-up rules for the build kit's two paths (docs/build-kit 02-BUSINESS-RULES.md
-// §16-18): Account (name, email, mobile, password) then About you (renters) or
-// Owner details (owners). The forms check these in the browser for quick
+// Sign-up rules (docs/build-kit 02-BUSINESS-RULES.md §16-18): the one sign-up's
+// Account (name, email, mobile, password) and About you steps, and the owner
+// questions asked before a first listing. The forms check these in the browser for quick
 // messages, and the server action checks them again before creating the account.
 
 /** Home towns on the sign-up forms (build kit rule 25; every town is allowed here). */
@@ -37,10 +37,10 @@ export function validateAccount(input: AccountInput): Errors<keyof AccountInput>
   return errors;
 }
 
-/** What an owner answers once, at sign-up (picking Earn) or before their first listing. */
+/** What an owner answers once, on "Before you list" ahead of their first listing. */
 export type OwnerTerms = { ownerKind: string; businessName: string; feeAcknowledged: boolean };
-/** Step 2 of the one sign-up: everyone answers town, Rent or Earn and Terms; Earn adds the owner questions. */
-export type AboutYou = { town: string; firstGoal: string; terms: boolean } & OwnerTerms;
+/** Step 2 of the one sign-up: everyone answers town and the Terms box, nothing more. */
+export type AboutYou = { town: string; terms: boolean };
 
 const TERMS_ERROR = "Tick this box to agree to the Terms and Conditions and Privacy Policy.";
 
@@ -55,8 +55,6 @@ export function validateOwnerTerms(input: OwnerTerms): Errors<keyof OwnerTerms> 
 export function validateAboutYou(input: AboutYou): Errors<keyof AboutYou> {
   const errors: Errors<keyof AboutYou> = {};
   if (!SIGNUP_TOWNS.includes(input.town)) errors.town = "Choose your town.";
-  if (input.firstGoal !== "rent" && input.firstGoal !== "earn") errors.firstGoal = "Choose what you want to do first.";
-  if (input.firstGoal === "earn") Object.assign(errors, validateOwnerTerms(input));
   if (!input.terms) errors.terms = TERMS_ERROR;
   return errors;
 }

@@ -38,22 +38,15 @@ describe("validateAccount", () => {
 });
 
 describe("validateAboutYou", () => {
-  const renter = { town: "Windhoek", firstGoal: "rent", terms: true, ownerKind: "", businessName: "", feeAcknowledged: false };
+  const good = { town: "Windhoek", terms: true };
 
   it("blocks sign-up until the terms are ticked", () => {
-    expect(validateAboutYou({ ...renter, terms: false }).terms).toMatch(/Terms and Conditions/);
-    expect(hasErrors(validateAboutYou(renter))).toBe(false);
+    expect(validateAboutYou({ ...good, terms: false }).terms).toMatch(/Terms and Conditions/);
+    expect(hasErrors(validateAboutYou(good))).toBe(false);
   });
 
-  it("only asks renters for town, a choice and the terms", () => {
-    expect(validateAboutYou({ ...renter, town: "Atlantis" }).town).toBeDefined();
-    expect(validateAboutYou({ ...renter, firstGoal: "" }).firstGoal).toBeDefined();
-  });
-
-  it("asks people who pick Earn for the owner questions and the fee box too", () => {
-    const errors = validateAboutYou({ ...renter, firstGoal: "earn" });
-    expect(Object.keys(errors).sort()).toEqual(["feeAcknowledged", "ownerKind"]);
-    expect(hasErrors(validateAboutYou({ ...renter, firstGoal: "earn", ownerKind: "individual", feeAcknowledged: true }))).toBe(false);
+  it("only asks for a known town and the terms", () => {
+    expect(Object.keys(validateAboutYou({ ...good, town: "Atlantis" }))).toEqual(["town"]);
   });
 });
 

@@ -41,10 +41,9 @@ export async function proxy(request: NextRequest) {
   const signedIn = Boolean(data?.claims);
   const path = request.nextUrl.pathname;
 
-  // Signed-in people who open a sign-in or sign-up page go where ?next= says,
-  // else owners' links to their dashboard and everyone else home.
+  // Signed-in people who open a sign-in or sign-up page go where ?next= says, else home.
   if (signedIn && SIGNED_OUT_ONLY.includes(path)) {
-    const next = safeNextPath(request.nextUrl.searchParams.get("next")) ?? (request.nextUrl.searchParams.get("start") === "earn" ? "/owner" : "/");
+    const next = safeNextPath(request.nextUrl.searchParams.get("next")) ?? "/";
     return redirectKeepingSession(new URL(next, request.url), response);
   }
 

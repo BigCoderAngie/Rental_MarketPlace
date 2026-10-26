@@ -3,8 +3,8 @@ import { CheckboxRow, ChoiceCard, LineIcon, Required, TextField } from "@/compon
 /**
  * The questions every owner answers once (docs/build-kit/reference/desktop/SiteOwnerSignUp2.html):
  * individual or hire business, business name, the "verify your ID later" note
- * and the required booking fee box. Shown on sign-up when someone picks Earn,
- * and on List an item for people who signed up to rent.
+ * and the required booking fee box. Shown on "Before you list" (/owner/setup)
+ * the first time someone lists an item.
  */
 export function OwnerQuestions({ errors }: { errors: Record<string, string> }) {
   return (

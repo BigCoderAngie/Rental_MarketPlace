@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { signupHref, signupStart } from "./signup-start";
+import { signupHref, signupNext } from "./signup-start";
 
-describe("signupStart and signupHref", () => {
-  it("reads where someone started, renting by default", () => {
-    expect(signupStart({ start: "earn" })).toEqual({ start: "earn", next: null });
-    expect(signupStart({ start: "anything", next: "//evil.com" })).toEqual({ start: "rent", next: null });
-    expect(signupStart({ next: "/items/1?from=2026-11-14" }).next).toBe("/items/1?from=2026-11-14");
+describe("signupNext and signupHref", () => {
+  it("reads where to go after sign-up, only on this site", () => {
+    expect(signupNext({ next: "/items/1?from=2026-11-14" })).toBe("/items/1?from=2026-11-14");
+    expect(signupNext({ next: "//evil.com" })).toBeNull();
+    expect(signupNext({})).toBeNull();
   });
 
-  it("keeps the start and next on the next step's address", () => {
-    expect(signupHref("/signup/about", "rent", null)).toBe("/signup/about");
-    expect(signupHref("/signup/about", "earn", "/items/1")).toBe("/signup/about?start=earn&next=%2Fitems%2F1");
+  it("keeps next on the next step's address", () => {
+    expect(signupHref("/signup/about", null)).toBe("/signup/about");
+    expect(signupHref("/signup/about", "/owner/list")).toBe("/signup/about?next=%2Fowner%2Flist");
   });
 });

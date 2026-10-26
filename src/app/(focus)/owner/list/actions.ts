@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { validateListing, type ListingInput } from "@/lib/listing";
-import { hasErrors, validateOwnerTerms } from "@/lib/signup";
+import { needsOwnerSetup } from "@/lib/owner-setup";
+import { hasErrors } from "@/lib/signup";
 import { createClient } from "@/lib/supabase/server";
 
 export type ListingState = { errors?: Record<string, string>; message?: string };
@@ -38,23 +39,16 @@ export async function saveListing(_prev: ListingState, formData: FormData): Prom
   const { errors, values } = validateListing(input, publish);
   const supabase = await createClient();
 
-  // Owners who signed up to rent answer the owner questions and the fee box once, before their first listing (rule 16).
-  // Members of a hire business aren't asked; drafts don't need it until they are published.
-  const { data: claims } = await supabase.auth.getClaims();
-  const [{ data: profile, error: profileError }, { data: hire, error: hireError }] = await Promise.all([
-    supabase.from("profiles").select("fee_acknowledged_at").eq("user_id", claims?.claims?.sub ?? "").maybeSingle<{ fee_acknowledged_at: string | null }>(),
-    supabase.from("businesses").select("id").eq("kind", "business").limit(1),
-  ]);
-  if (profileError || hireError) return { message: "We couldn't check your account. Try again." };
-  const terms = { ownerKind: text(formData, "ownerKind"), businessName: text(formData, "businessName").trim(), feeAcknowledged: formData.get("feeAcknowledged") === "on" };
-  const needsTerms = publish && !profile?.fee_acknowledged_at && !hire?.length;
-  if (needsTerms) Object.assign(errors, validateOwnerTerms(terms));
   if (hasErrors(errors)) return { errors, message: "Some details need fixing before you can continue." };
 
-  if (needsTerms) {
-    const { error: termsError } = await supabase.rpc("acknowledge_owner_terms", { p_owner_kind: terms.ownerKind, p_business_name: terms.businessName || null });
-    if (termsError) return { message: termsError.message };
+  // The owner questions and fee box are answered once on "Before you list" (rule 16); check again here.
+  let setup: boolean;
+  try {
+    setup = await needsOwnerSetup(supabase);
+  } catch (e) {
+    return { message: (e as Error).message };
   }
+  if (setup) redirect("/owner/setup");
 
   const { data: businessId, error: businessError } = await supabase.rpc("ensure_owner_business");
   if (businessError) return { message: businessError.message };

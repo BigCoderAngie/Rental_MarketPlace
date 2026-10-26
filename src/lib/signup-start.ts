@@ -1,19 +1,15 @@
-// The one sign-up keeps where someone started (Join's two cards: ?start=rent
-// or ?start=earn) and where to go back to afterwards (?next=), across both steps.
+// The one sign-up keeps where to go afterwards (?next=, for example the item a
+// visitor wanted to request, or List an item) across both steps.
 
 import { safeNextPath } from "./signup";
 
 type Params = Record<string, string | string[] | undefined>;
 
-export function signupStart(params: Params): { start: "rent" | "earn"; next: string | null } {
-  return { start: params.start === "earn" ? "earn" : "rent", next: safeNextPath(typeof params.next === "string" ? params.next : null) };
+export function signupNext(params: Params): string | null {
+  return safeNextPath(typeof params.next === "string" ? params.next : null);
 }
 
-/** A sign-up step's address with the start and next kept, for example "/signup/about?start=earn". */
-export function signupHref(path: string, start: "rent" | "earn", next: string | null): string {
-  const params = new URLSearchParams();
-  if (start === "earn") params.set("start", "earn");
-  if (next) params.set("next", next);
-  const query = params.toString();
-  return query ? `${path}?${query}` : path;
+/** A sign-up step's address with next kept, for example "/signup/about?next=%2Fowner%2Flist". */
+export function signupHref(path: string, next: string | null): string {
+  return next ? `${path}?${new URLSearchParams({ next })}` : path;
 }

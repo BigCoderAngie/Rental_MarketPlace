@@ -1,8 +1,8 @@
 // Links in the public shell: top strip, header, phone menu, category bar and
 // footer (docs/build-kit/reference/desktop/SiteHome.html and SiteExplore.html).
 // Routes follow docs/build-kit/03-PAGES-AND-ROUTES.md. Pages that are not built
-// Owner links point at owner sign-up; signed-in owners who follow them land on
-// their dashboard (proxy.ts).
+// Owner links point at sign-up with List an item next; signed-in people who
+// follow them go straight to List an item (proxy.ts).
 
 export type SiteLink = { href: string; label: string };
 
@@ -13,10 +13,10 @@ export const ROUTES = {
   home: "/",
   explore: "/explore", // Part 5
   signIn: "/signin",
-  join: "/join",
-  // One sign-up for everyone; starting from "I want to earn" opens the owner questions.
-  renterSignUp: "/signup",
-  ownerSignUp: "/signup?start=earn",
+  // One sign-up for everyone ("Sign up free"; /join forwards here).
+  join: "/signup",
+  // Owner links sign up, then go to List an item, which asks the owner questions first.
+  ownerSignUp: "/signup?next=%2Fowner%2Flist",
   welcome: "/welcome",
   listItem: "/owner/list", // Part 8
   myBookings: "/my/bookings", // Part 7
