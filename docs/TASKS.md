@@ -4,6 +4,56 @@ The MVP from `docs/MASTER-PLAN.md`, split into waves. Each task is one branch fr
 
 > **Replanned on 20 October 2026.** The MVP is now a two-sided marketplace with individual and business owners (see `docs/MASTER-PLAN.md`, "Change of direction"). Waves 1 to 3 stay as they are. Wave 3's `restyle-homepage` becomes the marketplace home (wave M1). The new marketplace waves M1 to M5 below come **before** the old waves 4 to 10, which will be re-ordered and re-split around them. Contracts for the M waves are written before each wave starts.
 
+## Roadmap tasks (27 Oct 2026)
+
+The order from `docs/ROADMAP.md` section 3. Do these from the top, one branch and one PR each. Start with "Do the next unticked task in the "Roadmap tasks" list in docs/TASKS.md, using its prompt in docs/ROADMAP.md". Tasks marked "in TASKS.md below" keep their contract in the waves below; tick them in both places.
+
+**Phase 0: the safety net**
+- [ ] `deploy-vercel`: in TASKS.md below · SRS: NFR-01
+- [ ] `release-checklist`: New · SRS: none (how we work)
+- [ ] `feature-flags`: New · SRS: none (how we work)
+- [ ] `error-pages`: New · SRS: NFR-08
+- [ ] `smoke-tests`: New (asks before adding @playwright/test) · SRS: none (testing)
+
+**Phase 1: fix what people hit first**
+- [ ] `email-sender-setup`: in TASKS.md below · SRS: FR-AC-01
+- [ ] `signup-bot-check`: New · SRS: NFR-05
+- [ ] `header-sign-out`: New · SRS: NFR-08
+- [ ] `finish-profile`: New · SRS: FR-AC-01, FR-AC-05
+- [ ] `google-sign-in`: New · SRS: FR-AC-01 (changed)
+- [ ] `share-and-link-previews`: New · SRS: FR-SR-04, NFR-02, FR-PV-01
+
+**Phase 2: save owners time**
+- [ ] `db-notifications`: in TASKS.md below (C5) · SRS: FR-NT-01, FR-CR-06, FR-PL-04
+- [ ] `notify-sender`: in TASKS.md below (C5) · SRS: FR-NT-01
+- [ ] `notifications-ui`: in TASKS.md below (C5) · SRS: FR-NT-01
+- [ ] `home-dashboard`: in TASKS.md below · SRS: FR-CA-04, FR-CR-06, FR-RP-01
+- [ ] `offline-handover-forms`: in TASKS.md below · SRS: NFR-10
+- [ ] `calendar-feed`: New · SRS: FR-CA-04
+- [ ] `listing-tools`: New · SRS: FR-IN-04, FR-CA-01
+- [ ] `add-item-flow`: in TASKS.md below (C2) · SRS: FR-IN-01, FR-IN-02, FR-CA-05, FR-PL-02, NFR-02
+
+**Phase 3: trust between renters and owners**
+- [ ] `db-customer-cancel`: in TASKS.md below (C6) · SRS: FR-BK-06, FR-CA-03
+- [ ] `customer-cancel-ui`: in TASKS.md below (C6) · SRS: FR-BK-06, 2.4, NFR-12
+- [ ] `db-reviews`: in TASKS.md below (C8) · SRS: FR-RV-01, FR-RV-02
+- [ ] `reviews-ui`: in TASKS.md below (C8) · SRS: FR-RV-01
+- [ ] `db-problems`: in TASKS.md below (C7) · SRS: FR-PR-01, FR-PR-02, FR-PR-04, FR-CR-05
+- [ ] `problems-staff-ui`: in TASKS.md below (C7) · SRS: FR-PR-01, FR-PR-02
+- [ ] `problems-customer-ui`: in TASKS.md below (C7) · SRS: FR-PR-01, FR-CR-05, NFR-12
+- [ ] `report-listing`: New · SRS: none given (admin moderation)
+
+**Phase 4: small touches that make it feel finished**
+- [ ] `saved-items`: New · SRS: none (an addition, recorded in MASTER-PLAN.md)
+- [ ] `settings-profile`: in TASKS.md below (C1) · SRS: FR-AC-02
+- [ ] `owner-shop-page`: New · SRS: FR-SR-04, FR-AC-02, FR-PV-01
+- [ ] `help-pages`: New · SRS: 1.3, 2.4, NFR-12
+- [ ] `seo-basics`: New · SRS: none (search engines)
+- [ ] `feedback-button`: New · SRS: none (an addition)
+- [ ] `delete-my-account`: New · SRS: NFR-07, FR-AC-05
+
+Phase 5 in `docs/ROADMAP.md` section 9 has no tasks yet: each idea needs a decision first.
+
 ## Rules
 
 - Tasks in the same wave can run at the same time. No two tasks in a wave change the same file.
