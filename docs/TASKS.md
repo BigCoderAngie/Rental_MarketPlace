@@ -9,7 +9,7 @@ The MVP from `docs/MASTER-PLAN.md`, split into waves. Each task is one branch fr
 The order from `docs/ROADMAP.md` section 3. Do these from the top, one branch and one PR each. Start with "Do the next unticked task in the "Roadmap tasks" list in docs/TASKS.md, using its prompt in docs/ROADMAP.md". Tasks marked "in TASKS.md below" keep their contract in the waves below; tick them in both places.
 
 **Phase 0: the safety net**
-- [ ] `deploy-vercel`: in TASKS.md below · SRS: NFR-01
+- [x] `deploy-vercel`: in TASKS.md below · SRS: NFR-01
 - [ ] `release-checklist`: New · SRS: none (how we work)
 - [ ] `feature-flags`: New · SRS: none (how we work)
 - [ ] `error-pages`: New · SRS: NFR-08
@@ -182,7 +182,7 @@ export type UnitsOut = { id: string; quantity: number; reason: UnitsOutReason; s
   - Files: `scripts/demo-reset.mjs`, `scripts/demo-data.json`, `package.json`, `.env.example`, `docs/DEMO.md`
   - Migration: no · Skill: none · SRS: none (demo)
   - Done: running it twice gives the same data; it stops with a clear message on a wrong URL or a missing key.
-- [ ] **`deploy-vercel`**: Writes the steps to put `main` on Vercel's free plan with the current Supabase project, and sets `NEXT_PUBLIC_SITE_URL` so WhatsApp links point to it. Notes the move to Vercel Pro and a production Supabase project before the first paying business.
+- [x] **`deploy-vercel`**: Writes the steps to put `main` on Vercel's free plan with the current Supabase project, and sets `NEXT_PUBLIC_SITE_URL` so WhatsApp links point to it. Notes the move to Vercel Pro and a production Supabase project before the first paying business.
   - Files: `docs/setup/vercel.md`
   - Migration: no · Skill: none · SRS: NFR-01
   - Done: the Vercel address opens on two phones; a quote link shared on WhatsApp opens there.
