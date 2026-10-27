@@ -3,7 +3,7 @@
 These steps put `main` on a real web address, with a separate live database, following `docs/ROADMAP.md` section 2. You do the clicking; nothing here changes app code. It takes about an hour the first time.
 
 **When you're done:**
-- `main` is live at `https://<your-site>.vercel.app` and uses the **live** database.
+- `main` is live at `https://rental-market-place-ochre.vercel.app` and uses the **live** database.
 - Every pull request gets its own preview address that uses the **test** database and is hidden behind Vercel sign-in.
 - A red GitHub check blocks the merge button.
 
@@ -77,63 +77,58 @@ Only the name changes. The address, keys and data stay the same, so your `.env.l
 
    Do the same in `rentloop-dev`. Keep the four values in a note for the next part. Never copy a **secret** or **service_role** key; the app doesn't need one.
 
-## Part 3. Put the site on Vercel (15 minutes)
+## Part 3. Point the Vercel site at the right databases (15 minutes)
 
-1. Go to [vercel.com/signup](https://vercel.com/signup) and sign up with **Continue with GitHub**, using the GitHub account that can see `code4namibia/Rental_MarketPlace`. Pick the **Hobby** (free) plan.
-2. Click **Add New… → Project**.
-3. Under **Import Git Repository**, find `Rental_MarketPlace` and click **Import**. If it's not listed, click **Adjust GitHub App Permissions**, allow the `code4namibia` organisation (or ask an organisation owner to approve it), then come back.
-4. On the **Configure Project** screen:
-   - **Project Name:** `rentloop` (this becomes `rentloop.vercel.app` if the name is free; otherwise Vercel adds letters, and that's fine).
-   - **Framework Preset:** Next.js (picked for you).
-   - **Root Directory:** leave as `./`.
-   - Open **Environment Variables** and add the two **live** values from Part 2 step 9:
+The site is already on Vercel at `https://rental-market-place-ochre.vercel.app`. This part checks it builds from the right place and splits its databases.
 
-     | Key | Value |
-     |---|---|
-     | `NEXT_PUBLIC_SUPABASE_URL` | the rentloop-live Project URL |
-     | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | the rentloop-live Publishable key |
+### Check where the site builds from
 
-5. Click **Deploy** and wait for the confetti (about 2 minutes). Click **Continue to Dashboard**.
-6. Under **Domains**, copy your site's address, for example `https://rentloop.vercel.app`. It's `<your-site>` below.
+1. Sign in at [vercel.com](https://vercel.com) with the account that created the site, and click the project **rental-market-place**.
+2. Click **Settings → Git**. Under **Connected Git Repository** it must say `code4namibia/Rental_MarketPlace`.
+   - If it shows another repository (for example an older copy under someone's own GitHub name), click **Disconnect**, then **Connect Git Repository** → GitHub → `code4namibia/Rental_MarketPlace`. If it's not listed, click **Adjust GitHub App Permissions**, allow the `code4namibia` organisation (or ask an organisation owner to approve it), then come back.
+3. Click **Settings → Environments → Production** (on older screens: **Settings → Git → Production Branch**). The branch must be `main`.
+
+(Starting from scratch instead? Click **Add New… → Project**, import `code4namibia/Rental_MarketPlace`, click **Deploy**, then carry on from step 4.)
 
 ### Set the environment variables properly
 
-At this point the live keys are set for every environment. Now split them so previews use the test database.
+4. Click **Settings → Environment Variables**. You probably see `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, set for all environments to the `rentloop-dev` values (the URL contains `dlqkgptkdvjdxkmdfgbr`). Next you give the live site the live database, and previews keep the test one.
+5. For `NEXT_PUBLIC_SUPABASE_URL`, click the **⋯** button → **Edit**. Change the value to the **rentloop-live** Project URL, untick **Preview** and **Development**, leave only **Production** ticked, and click **Save**. Do the same for `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, with the rentloop-live Publishable key.
 
-7. Click **Settings → Environment Variables**.
-8. For `NEXT_PUBLIC_SUPABASE_URL`, click the **⋯** button → **Edit**, untick **Preview** and **Development**, leave only **Production** ticked, and click **Save**. Do the same for `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
-9. Add the **test** values for previews. Click **Add Environment Variable** (or **Create new**), tick only **Preview**, and add:
+   Accounts and items created on the site so far stay in `rentloop-dev`. They won't appear on the live site after this; that's expected (they were test data).
+
+6. Add the **test** values for previews. Click **Add Environment Variable** (or **Create new**), tick only **Preview**, and add:
 
    | Key | Value | Environments |
    |---|---|---|
    | `NEXT_PUBLIC_SUPABASE_URL` | the rentloop-dev Project URL | Preview |
    | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | the rentloop-dev Publishable key | Preview |
 
-10. Add the site address for production, so WhatsApp links point to it:
+7. Add the site address for production, so WhatsApp links point to it:
 
-    | Key | Value | Environments |
-    |---|---|---|
-    | `NEXT_PUBLIC_SITE_URL` | `https://<your-site>.vercel.app` (no `/` at the end) | Production |
+   | Key | Value | Environments |
+   |---|---|---|
+   | `NEXT_PUBLIC_SITE_URL` | `https://rental-market-place-ochre.vercel.app` (no `/` at the end) | Production |
 
-    Don't set it for Preview: previews work out their own address (`src/lib/site-url.ts`).
+   Don't set it for Preview: previews work out their own address (`src/lib/site-url.ts`).
 
-    The final list must look like this:
+   The final list must look like this:
 
-    | Key | Production | Preview |
-    |---|---|---|
-    | `NEXT_PUBLIC_SUPABASE_URL` | rentloop-live | rentloop-dev |
-    | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | rentloop-live | rentloop-dev |
-    | `NEXT_PUBLIC_SITE_URL` | `https://<your-site>.vercel.app` | (not set) |
+   | Key | Production | Preview |
+   |---|---|---|
+   | `NEXT_PUBLIC_SUPABASE_URL` | rentloop-live | rentloop-dev |
+   | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | rentloop-live | rentloop-dev |
+   | `NEXT_PUBLIC_SITE_URL` | `https://rental-market-place-ochre.vercel.app` | (not set) |
 
-    Feature flags (`NEXT_PUBLIC_FLAG_*`) come with the task `feature-flags`.
+   Feature flags (`NEXT_PUBLIC_FLAG_*`) come with the task `feature-flags`.
 
-11. Environment variables only reach a build made after you set them. Click **Deployments**, then the **⋯** on the top deployment → **Redeploy** → **Redeploy**.
+8. Environment variables only reach a build made after you set them. Click **Deployments**, then the **⋯** on the top deployment → **Redeploy** → **Redeploy**.
 
 ### Hide previews from strangers
 
-12. Click **Settings → Deployment Protection**. Under **Vercel Authentication**, make sure it's **Enabled** and set to **Standard Protection**. Click **Save**.
+9. Click **Settings → Deployment Protection**. Under **Vercel Authentication**, make sure it's **Enabled** and set to **Standard Protection**. Click **Save**.
 
-    Previews now ask for a Vercel sign-in; the production address stays public.
+   Previews now ask for a Vercel sign-in; the production address stays public.
 
 ## Part 4. Tell Supabase about the new addresses (5 minutes)
 
@@ -141,8 +136,8 @@ Sign-up and password emails contain a link back to the site. Supabase only allow
 
 1. Find your Vercel team slug: in Vercel, click your team name at the top left → **Settings → General** → **Team URL**. The slug is the part after `vercel.com/`, for example `kirubel007s-projects`. It's `<team-slug>` below.
 2. In **rentloop-live**: **Authentication → URL Configuration**.
-   - **Site URL:** `https://<your-site>.vercel.app`
-   - **Redirect URLs** → **Add URL:** `https://<your-site>.vercel.app/**`
+   - **Site URL:** `https://rental-market-place-ochre.vercel.app`
+   - **Redirect URLs** → **Add URL:** `https://rental-market-place-ochre.vercel.app/**`
    - Click **Save**.
 3. In **rentloop-dev**: **Authentication → URL Configuration**.
    - **Site URL:** leave `http://localhost:3000`.
@@ -153,8 +148,8 @@ Sign-up and password emails contain a link back to the site. Supabase only allow
 
 ## Part 5. Check it works (10 minutes)
 
-1. Open `https://<your-site>.vercel.app` on your phone and on a second phone (mobile data, not Wi-Fi, to be sure it's really online).
-2. Sign up with a real email address. Open the confirmation email on the phone: the link must open `<your-site>.vercel.app`, not `localhost`.
+1. Open `https://rental-market-place-ochre.vercel.app` on your phone and on a second phone (mobile data, not Wi-Fi, to be sure it's really online).
+2. Sign up with a real email address. Open the confirmation email on the phone: the link must open `rental-market-place-ochre.vercel.app`, not `localhost`.
 3. Add an item and create a quote. Share the quote link on WhatsApp to the second phone and open it there.
 4. In Supabase **rentloop-live → Table Editor**, you see the new account's data. In **rentloop-dev** you don't.
 
@@ -162,7 +157,7 @@ Supabase's built-in email sends only a few emails an hour. If a confirmation ema
 
 ## Part 6. Share it with your boss
 
-- **The live site:** send `https://<your-site>.vercel.app`. Anyone can open it.
+- **The live site:** send `https://rental-market-place-ochre.vercel.app`. Anyone can open it.
 - **A preview (a pull request not merged yet):** open the pull request on GitHub, click the **Visit Preview** link in the Vercel comment, then in Vercel open that deployment and click **Share** → copy the **shareable link**. Anyone with that link can open that one preview without a Vercel account.
 
 ## Part 7. Block red pull requests on GitHub (5 minutes, once)
