@@ -12,7 +12,7 @@ The order from `docs/ROADMAP.md` section 3. Do these from the top, one branch an
 - [x] `deploy-vercel`: in TASKS.md below · SRS: NFR-01
 - [x] `release-checklist`: New · SRS: none (how we work)
 - [x] `feature-flags`: New · SRS: none (how we work)
-- [ ] `error-pages`: New · SRS: NFR-08
+- [x] `error-pages`: New · SRS: NFR-08
 - [ ] `smoke-tests`: New (asks before adding @playwright/test) · SRS: none (testing)
 
 **Phase 1: fix what people hit first**
