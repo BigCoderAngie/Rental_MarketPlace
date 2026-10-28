@@ -44,3 +44,8 @@ next-env.d.ts
 
 # database backups (contain real people's data)
 /backups/
+
+# Playwright smoke tests
+/test-results/
+/playwright-report/
+/blob-report/

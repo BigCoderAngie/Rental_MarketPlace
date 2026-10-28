@@ -1,0 +1,34 @@
+name: Smoke tests
+
+# Runs the browser smoke tests (e2e/) each time Vercel finishes a deployment:
+# every pull request's preview, and the live site after a merge to main.
+# Account tests skip themselves on the live site. Setup: docs/setup/smoke-tests.md.
+on:
+  deployment_status:
+
+jobs:
+  smoke:
+    name: Smoke tests (${{ github.event.deployment_status.environment }})
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      E2E_BASE_URL: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url }}
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+      E2E_EMAIL: ${{ secrets.E2E_EMAIL }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
