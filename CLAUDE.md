@@ -37,6 +37,7 @@ At the start of a session and after every `git pull`, check whether new files ar
 - Small commits: one change per commit, so each pull request stays easy to review.
 - Don't add new npm packages without asking.
 - Never put secrets in code; use `.env.local` (see `.env.example`).
+- Follow docs/RELEASING.md for every database change and every release.
 
 ### The SRS is the rulebook
 - docs/SRS.md is the requirements (a copy of the online SRS). Follow it unless docs/MASTER-PLAN.md records a decision that changes it.
