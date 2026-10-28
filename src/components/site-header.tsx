@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AccountMenu } from "@/components/account-menu";
 import { Avatar } from "@/components/avatar";
 import { ButtonLink, focusRingClass } from "@/components/button";
 import { HeaderNav } from "@/components/header-nav";
@@ -10,7 +11,7 @@ import { ROUTES, type Viewer } from "@/lib/site-links";
 /**
  * The sticky white header (docs/build-kit 01-DESIGN-SYSTEM.md "Header").
  * Signed out: Sign in and Sign up free, never List an item. Signed in: List an
- * item and the avatar with the first name. Phones: logo, Sign up or the avatar,
+ * item and the avatar with the first name, which opens the account menu. Phones: logo, Sign up or the avatar,
  * and the menu button. `current` overrides which nav link is underlined (the styleguide demo).
  */
 export function SiteHeader({ viewer, current }: { viewer: Viewer; current?: string }) {
@@ -43,10 +44,7 @@ export function SiteHeader({ viewer, current }: { viewer: Viewer; current?: stri
               <ButtonLink href={ROUTES.listItem} size="sm">
                 List an item
               </ButtonLink>
-              <Link href={ROUTES.myBookings} aria-label={`Your bookings, ${viewer.name}`} className={`flex items-center gap-2.5 rounded-full font-semibold text-foreground ${focusRingClass}`}>
-                <Avatar name={viewer.name} />
-                <span className="hidden xl:inline">{viewer.name}</span>
-              </Link>
+              <AccountMenu name={viewer.name} lists={Boolean(viewer.lists)} />
             </>
           ) : (
             <>

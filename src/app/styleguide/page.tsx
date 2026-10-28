@@ -196,7 +196,7 @@ export default function StyleguidePage() {
         </ShellDemo>
         <ShellDemo label="Signed in, on Explore, Electronics picked">
           <TopStrip />
-          <SiteHeader viewer={{ name: "Tangeni" }} current="/explore" />
+          <SiteHeader viewer={{ name: "Tangeni", lists: true }} current="/explore" />
           <CategoryBar current="electronics" />
         </ShellDemo>
         <div className="flex flex-wrap gap-8">
