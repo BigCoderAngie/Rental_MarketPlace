@@ -13,7 +13,7 @@ The order from `docs/ROADMAP.md` section 3. Do these from the top, one branch an
 - [x] `release-checklist`: New · SRS: none (how we work)
 - [x] `feature-flags`: New · SRS: none (how we work)
 - [x] `error-pages`: New · SRS: NFR-08
-- [ ] `smoke-tests`: New (asks before adding @playwright/test) · SRS: none (testing)
+- [x] `smoke-tests`: New (asks before adding @playwright/test) · SRS: none (testing)
 
 **Phase 1: fix what people hit first**
 - [ ] `email-sender-setup`: in TASKS.md below · SRS: FR-AC-01
