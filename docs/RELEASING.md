@@ -73,6 +73,23 @@ Database mistakes can't be undone with a click, so they get the strictest rules.
 
 8. **If the feature has a flag**, it's off on the live site. Turn it on when you're ready (see "Feature flags").
 
+## Feature flags
+
+A feature flag is a switch that hides a new feature until you turn it on. The switches live in `src/lib/flags.ts`, one line per feature, and each reads an environment variable called `NEXT_PUBLIC_FLAG_<NAME>`. The value `on` turns the feature on; anything else, or no variable at all, keeps it off.
+
+**When a feature with a flag merges:**
+- In Vercel → **Settings → Environment Variables**, add `NEXT_PUBLIC_FLAG_<NAME>` = `on` with only **Preview** ticked (type **Config**). Previews show the feature; the live site doesn't.
+- On your computer, put `NEXT_PUBLIC_FLAG_<NAME>=on` in `.env.local` to see it while building.
+
+**To turn it on for everyone:**
+1. Vercel → **Settings → Environment Variables** → **Add Environment Variable**, type **Config**.
+2. **Key:** `NEXT_PUBLIC_FLAG_<NAME>`, **Value:** `on`, only **Production** ticked. **Save**.
+3. **Deployments** → **⋯** on the top deployment → **Redeploy**. Flags are read when the site is built, so nothing changes until the redeploy says **Ready**.
+
+**To turn it off again:** edit the Production value to `off`, then Redeploy. That's faster and safer than undoing code.
+
+**Clean-up:** two weeks after a flag is on everywhere with no problems, a small pull request removes it: the line in `src/lib/flags.ts`, the `if` around the feature, the entry in `.env.example` and both variables in Vercel.
+
 ## If the live site breaks
 
 - **The code is wrong:** Vercel → **Deployments** → the last good **Production** deployment → **⋯** → **Instant Rollback**. Then fix it in a new pull request. Details: `docs/setup/vercel.md`, "If a deploy breaks the live site".
