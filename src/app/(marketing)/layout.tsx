@@ -7,9 +7,12 @@ import { createClient } from "@/lib/supabase/server";
 // Public pages: the homepage, terms and privacy, inside the build kit shell.
 export default async function MarketingLayout({ children }: LayoutProps<"/">) {
   // Everyone sees the home page; signed-in people get List an item and their avatar.
-  const { data } = await (await createClient()).auth.getClaims();
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
   const claims = data?.claims;
-  const viewer: Viewer = claims ? { name: displayName(claims.user_metadata?.full_name, claims.email) } : null;
+  // People who list items have a business; their account menu shows "Owner dashboard".
+  const { data: businesses } = claims ? await supabase.from("businesses").select("id").limit(1) : { data: null };
+  const viewer: Viewer = claims ? { name: displayName(claims.user_metadata?.full_name, claims.email), lists: Boolean(businesses?.length) } : null;
 
   return (
     <div className="flex min-h-screen flex-col">

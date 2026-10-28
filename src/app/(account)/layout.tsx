@@ -15,8 +15,8 @@ export default async function AccountLayout({ children }: LayoutProps<"/">) {
     supabase.rpc("owner_summary"),
   ]);
   const c = claims?.claims;
-  const viewer = c ? { name: displayName(c.user_metadata?.full_name, c.email) } : null;
   const business = businesses?.[0] as { kind: string } | undefined;
+  const viewer = c ? { name: displayName(c.user_metadata?.full_name, c.email), lists: Boolean(business) } : null;
 
   return (
     <div className="flex min-h-screen">

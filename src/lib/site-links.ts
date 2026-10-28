@@ -6,8 +6,8 @@
 
 export type SiteLink = { href: string; label: string };
 
-/** Who is signed in, for the header and phone menu: null for visitors. */
-export type Viewer = { name: string } | null;
+/** Who is signed in, for the header and phone menu: null for visitors. `lists` is true for people who list items (they have a business). */
+export type Viewer = { name: string; lists?: boolean } | null;
 
 export const ROUTES = {
   home: "/",

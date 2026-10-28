@@ -18,7 +18,7 @@ The order from `docs/ROADMAP.md` section 3. Do these from the top, one branch an
 **Phase 1: fix what people hit first**
 - [ ] `email-sender-setup`: in TASKS.md below · SRS: FR-AC-01
 - [ ] `signup-bot-check`: New · SRS: NFR-05
-- [ ] `header-sign-out`: New · SRS: NFR-08
+- [x] `header-sign-out`: New · SRS: NFR-08
 - [ ] `finish-profile`: New · SRS: FR-AC-01, FR-AC-05
 - [ ] `google-sign-in`: New · SRS: FR-AC-01 (changed)
 - [ ] `share-and-link-previews`: New · SRS: FR-SR-04, NFR-02, FR-PV-01
