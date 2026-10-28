@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { startTransition, useActionState, useEffect, useState, type FormEvent } from "react";
 import { signUp, type SignupState } from "@/app/signup/actions";
 import { CheckboxRow, FormMessage, Required, SelectField } from "@/components/auth-fields";
+import { BotCheck } from "@/components/bot-check";
 import { Button, ButtonLink } from "@/components/button";
 import { ArrowLeftIcon } from "@/components/icons";
 import { StickyActions } from "@/components/signup-frame";
@@ -77,6 +78,8 @@ export function AboutStep({ next, step1Href }: { next: string; step1Href: string
           Send me WhatsApp updates about my bookings<span className="hidden text-muted-foreground md:inline"> (optional)</span>
         </CheckboxRow>
       </div>
+
+      <BotCheck />
 
       <StickyActions>
         <ButtonLink href={step1Href} variant="white" size="lg" aria-label="Previous" className="w-14 flex-none px-0 md:w-auto md:px-[22px]">

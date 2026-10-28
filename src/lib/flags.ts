@@ -13,4 +13,6 @@ export const flags = {
   googleSignIn: isOn(process.env.NEXT_PUBLIC_FLAG_GOOGLE_SIGNIN),
   // NEXT_PUBLIC_FLAG_NOTIFICATIONS=on shows the notifications bell (task notifications-ui).
   notifications: isOn(process.env.NEXT_PUBLIC_FLAG_NOTIFICATIONS),
+  // NEXT_PUBLIC_FLAG_BOT_CHECK=on shows the "I'm human" check on sign-up and sign-in (task signup-bot-check).
+  botCheck: isOn(process.env.NEXT_PUBLIC_FLAG_BOT_CHECK),
 };
