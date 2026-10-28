@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FormMessage, LineIcon, TextField } from "@/components/auth-fields";
+import { BotCheck } from "@/components/bot-check";
 import { Button, buttonClasses } from "@/components/button";
 import { SampleTag } from "@/components/sample-tag";
 import { SignInFooter, SignInHeading, TextLink } from "@/components/signin-parts";
@@ -64,6 +65,7 @@ export default async function SignInPage({ searchParams }: PageProps<"/signin">)
           <TextLink href="/signin/forgot">Forgot password?</TextLink>
           <TextLink href="/signin/code">Email me a sign-in code instead</TextLink>
         </div>
+        <BotCheck />
         <Button type="submit" size="lg" className="w-full">
           Sign in
         </Button>

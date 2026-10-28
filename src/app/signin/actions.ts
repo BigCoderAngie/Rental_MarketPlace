@@ -2,6 +2,7 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { BOT_CHECK_FAILED, captchaOption, isBotCheckError } from "@/lib/bot-check";
 import { homeAfterSignIn } from "@/lib/business";
 import { MIN_PASSWORD_LENGTH, safeNextPath } from "@/lib/signup";
 import { createClient } from "@/lib/supabase/server";
@@ -29,14 +30,16 @@ export async function signInWithPassword(formData: FormData) {
   if (!email || !password) back("/signin", { email, error: "Enter your email and password." });
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signInWithPassword({ email, password, options: captchaOption(formData) });
   if (error) {
     const message =
       error.code === "invalid_credentials"
         ? "That email and password don't match. Try again, or use Forgot password."
         : error.code === "email_not_confirmed"
           ? "Confirm your email first: open the link we sent you."
-          : error.message;
+          : isBotCheckError(error)
+            ? BOT_CHECK_FAILED
+            : error.message;
     back("/signin", { email, error: message });
   }
   await goHome(supabase, formData.get("next"));
@@ -51,9 +54,9 @@ export async function sendCode(formData: FormData) {
   // Only existing accounts: new people sign up through /join so they agree to the terms first.
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: `${origin}/auth/callback`, shouldCreateUser: false },
+    options: { emailRedirectTo: `${origin}/auth/callback`, shouldCreateUser: false, ...captchaOption(formData) },
   });
-  if (error) back("/signin/code", { email, error: error.code === "otp_disabled" ? "There is no account with this email yet. Create one first." : error.message });
+  if (error) back("/signin/code", { email, error: error.code === "otp_disabled" ? "There is no account with this email yet. Create one first." : isBotCheckError(error) ? BOT_CHECK_FAILED : error.message });
   back("/signin/code", { email, sent: "1" });
 }
 
@@ -75,8 +78,10 @@ export async function sendPasswordReset(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${origin}/auth/callback?next=${encodeURIComponent("/signin/new-password")}`,
+    ...captchaOption(formData),
   });
   // Say "sent" even for unknown emails, so the page doesn't tell strangers who has an account.
+  if (isBotCheckError(error)) back("/signin/forgot", { email, error: BOT_CHECK_FAILED });
   if (error && error.status !== 400) back("/signin/forgot", { email, error: error.message });
   back("/signin/forgot", { email, sent: "1" });
 }

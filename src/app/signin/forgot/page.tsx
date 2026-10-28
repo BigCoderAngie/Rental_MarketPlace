@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FormMessage, TextField } from "@/components/auth-fields";
+import { BotCheck } from "@/components/bot-check";
 import { Button } from "@/components/button";
 import { ArrowLeftIcon } from "@/components/icons";
 import { SignInHeading, TextLink } from "@/components/signin-parts";
@@ -33,6 +34,7 @@ export default async function ForgotPasswordPage({ searchParams }: PageProps<"/s
       {!sent && (
         <form action={sendPasswordReset} className="flex flex-col gap-[18px]">
           <TextField label="Email address" name="email" type="email" required autoComplete="email" placeholder="you@example.com" defaultValue={email} />
+          <BotCheck />
           <Button type="submit" size="lg" className="w-full">
             Email me a link
           </Button>

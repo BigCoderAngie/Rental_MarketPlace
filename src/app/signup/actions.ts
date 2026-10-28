@@ -2,6 +2,7 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { BOT_CHECK_FAILED, captchaOption, isBotCheckError } from "@/lib/bot-check";
 import { hasErrors, normalizeNamibianMobile, safeNextPath, validateAboutYou, validateAccount, type AboutYou, type AccountInput } from "@/lib/signup";
 import { ROUTES } from "@/lib/site-links";
 import { createClient } from "@/lib/supabase/server";
@@ -53,11 +54,13 @@ export async function signUp(_prev: SignupState, formData: FormData): Promise<Si
         whatsapp_updates: formData.get("whatsappUpdates") === "on",
         terms_accepted: true,
       },
+      ...captchaOption(formData),
     },
   });
 
   if (error) {
     if (error.code === "user_already_exists") return { message: "There is already an account with this email. Sign in instead." };
+    if (isBotCheckError(error)) return { message: BOT_CHECK_FAILED };
     if (error.code === "weak_password") return { errors: { password: "Choose a longer password that is harder to guess." } };
     return { message: error.message };
   }

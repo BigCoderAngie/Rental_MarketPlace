@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FormMessage, TextField } from "@/components/auth-fields";
+import { BotCheck } from "@/components/bot-check";
 import { Button } from "@/components/button";
 import { SignInFooter, SignInHeading, TextLink } from "@/components/signin-parts";
 import { sendCode, verifyCode } from "../actions";
@@ -44,6 +45,7 @@ export default async function CodeSignInPage({ searchParams }: PageProps<"/signi
       ) : (
         <form action={sendCode} className="flex flex-col gap-[18px]">
           <TextField label="Email address" name="email" type="email" required autoComplete="email" placeholder="you@example.com" defaultValue={email} />
+          <BotCheck />
           <Button type="submit" size="lg" className="w-full">
             Email me a code
           </Button>
